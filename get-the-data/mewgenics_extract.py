@@ -532,9 +532,16 @@ def main():
         print(f"Usage: python {sys.argv[0]} [path/to/steamcampaign01.sav]")
         sys.exit(1)
 
+
     cats = extract(save_path)
 
-    out_path = "mewgenics_cats.json"
+    # Ensure output is always a flat array of cat objects
+    if isinstance(cats, list) and len(cats) > 0 and isinstance(cats[0], list):
+        cats = cats[0]
+
+    # Always write output to the get-the-data directory
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    out_path = os.path.join(script_dir, "mewgenics_cats.json")
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(cats, f, indent=2, ensure_ascii=False)
 
