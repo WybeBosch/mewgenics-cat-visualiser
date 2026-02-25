@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
 	SEX_ICON,
 	SEX_COLOR,
