@@ -1,0 +1,31 @@
+# Node
+node_modules/
+
+# Vite
+/dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Misc
+*.swo
+*.swp
+.idea/
+.vscode/
+
+# Build
+/build/
+
+# Others
+*.log
