@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { STATS } from './config/config.jsx';
-import { INITIAL_CATS } from './data/initial-cats.jsx';
+// import removed: now loading from JSON
 import { RelationshipGraph } from './components/RelationshipGraph.jsx';
 import { CatTable } from './components/CatTable.jsx';
 
@@ -8,7 +8,7 @@ import { CatTable } from './components/CatTable.jsx';
 
 export default function MewgenicsCats() {
 	// --- State ---
-	const [cats, setCats] = useState(INITIAL_CATS);
+	const [cats, setCats] = useState([]);
 	const [activeRoom, setActiveRoom] = useState('');
 	const [loaded, setLoaded] = useState(false);
 	const [showForm, setShowForm] = useState(false);
@@ -59,16 +59,18 @@ export default function MewgenicsCats() {
 		// eslint-disable-next-line
 	}, [rooms]);
 
-	// Load cats from storage
+	// Load cats from JSON file in publicDir
 	useEffect(() => {
 		(async () => {
 			try {
-				const result = await window.storage.get('mewgenics-v13');
-				if (result?.value) {
-					const data = JSON.parse(result.value);
-					if (data.cats) setCats(data.cats);
-				}
-			} catch {}
+				const response = await fetch('/mewgenics_cats.json');
+				if (!response.ok) throw new Error('Failed to fetch cats JSON');
+				const data = await response.json();
+				setCats(Array.isArray(data) ? data : data.cats || []);
+			} catch (err) {
+				// fallback: empty array
+				setCats([]);
+			}
 			setLoaded(true);
 		})();
 	}, []);
