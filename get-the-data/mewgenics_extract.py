@@ -13,11 +13,42 @@ Usage:
     python get-the-data/mewgenics_extract.py /path/to/steamcampaign01.sav
 """
 
+
 import sqlite3
 import struct
 import json
 import sys
 import os
+
+
+# Native Windows process check (no external packages)
+import subprocess
+def is_process_running(process_name: str) -> bool:
+	try:
+		# Only works on Windows
+		output = subprocess.check_output(['tasklist'], creationflags=0x08000000).decode(errors='ignore')
+		return process_name.lower() in output.lower()
+	except Exception:
+		return False
+
+# =============================================================================
+# .env Loader (Standard Library Only)
+# =============================================================================
+def load_dotenv(dotenv_path):
+    if not os.path.exists(dotenv_path):
+        return
+    with open(dotenv_path, 'r', encoding='utf-8') as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue
+            if '=' not in line:
+                continue
+            key, val = line.split('=', 1)
+            key = key.strip()
+            val = val.strip().strip('"').strip("'")
+            os.environ.setdefault(key, val)
+
 
 
 # =============================================================================
@@ -410,16 +441,12 @@ def extract(save_path: str) -> list[dict]:
     housed_keys = set(room_map.keys())
     if not housed_keys:
         conn.close()
-        return []
-
-    print(f"Found {len(housed_keys)} cats with room assignments")
+        return [], 0, 0
 
     # --- 2. Fetch cat blobs only for housed cats ---
     housed_cats = fetch_cat_blobs(cur, housed_keys)
     # Remove keys that failed to parse
     housed_keys = set(housed_cats.keys())
-
-    print(f"Parsed {len(housed_cats)} housed cat blobs")
 
     # --- 3. Parse pedigree to find parent/grandparent keys ---
     cur.execute("SELECT key FROM cats ORDER BY key DESC LIMIT 1")
@@ -455,8 +482,6 @@ def extract(save_path: str) -> list[dict]:
     ancestor_cats = fetch_cat_blobs(cur, missing_keys)
 
     conn.close()
-
-    print(f"Fetched {len(ancestor_cats)} additional ancestor blobs for name lookups")
 
     # --- Build name lookup from housed + ancestor cats ---
     all_parsed = {**housed_cats, **ancestor_cats}
@@ -512,7 +537,8 @@ def extract(save_path: str) -> list[dict]:
         }
         output.append(entry)
 
-    return output
+    # Return output, number of housed cats, number of ancestor blobs fetched
+    return output, len(housed_cats), len(ancestor_cats)
 
 
 # =============================================================================
@@ -520,49 +546,74 @@ def extract(save_path: str) -> list[dict]:
 # =============================================================================
 
 def main():
+    # Safety: check if Mewgenics.exe is running (Windows only)
+    if is_process_running("Mewgenics.exe"):
+        print("Mewgenics is running. Please close the game first.")
+        sys.exit(1)
+
+    # Load .env file from script directory (if present)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    dotenv_path = os.path.join(script_dir, '.env')
+    load_dotenv(dotenv_path)
+
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
 
     if args:
         save_path = args[0]
+        source = "user argument"
     else:
-        save_path = "steamcampaign01.sav"
+        # Try env variable (case-insensitive)
+        # Support both mewgenics_save_location and MEWGENICS_SAVE_LOCATION
+        env_path = os.environ.get('mewgenics_save_location') or os.environ.get('MEWGENICS_SAVE_LOCATION')
+        if env_path:
+            expanded = os.path.expandvars(env_path)
+            if os.path.isdir(expanded):
+                save_path = os.path.join(expanded, 'steamcampaign01.sav')
+                source = ".env directory"
+            else:
+                save_path = expanded
+                source = ".env file"
+        else:
+            save_path = "steamcampaign01.sav"
+            source = "current directory"
+
+    def winpath(p):
+        # Normalize to Windows path and wrap in quotes (no space escaping)
+        path = os.path.normpath(p)
+        return '"' + path + '"'
+
+    print("\n==============================")
+    print("Reading save from:")
+    print(f"[{source}]")
+    print("\nPath:")
+    print(f"[{winpath(save_path)}]")
+    print("==============================\n")
 
     if not os.path.exists(save_path):
-        print(f"Error: Save file not found: {save_path}")
-        print(f"Usage: python {sys.argv[0]} [path/to/steamcampaign01.sav]")
+        print("\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print(f"[ ERROR: Save file not found ]\n[ Path: {save_path} ]")
+        print(f"[ Usage: python {sys.argv[0]} [path/to/steamcampaign01.sav] ]")
+        print("[ Or set mewgenics_save_location in a .env file. ]")
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
         sys.exit(1)
 
-
-    cats = extract(save_path)
-
-    # Ensure output is always a flat array of cat objects
-    if isinstance(cats, list) and len(cats) > 0 and isinstance(cats[0], list):
-        cats = cats[0]
+    cats, housed_count, ancestor_count = extract(save_path)
 
     # Always write output to the get-the-data directory
-    script_dir = os.path.dirname(os.path.abspath(__file__))
     out_path = os.path.join(script_dir, "mewgenics_cats.json")
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(cats, f, indent=2, ensure_ascii=False)
 
-    # Summary
-    bred = sum(1 for c in cats if not c["stray"])
-    strays = sum(1 for c in cats if c["stray"])
+    print("Total cats found: [{}]".format(len(cats)))
+    print("Found [{}] cats with room assignments".format(housed_count))
+    print("Fetched [{}] additional ancestor blobs for name lookups".format(ancestor_count))
+    print("\n==============================")
+    print("Updated .json file at :")
+    print(f"[{winpath(out_path)}]")
+    print("==============================\n")
 
-    print(f"\nExtracted {len(cats)} housed cats → {out_path}")
-    print(f"  {strays} strays, {bred} bred")
-
-    # Print table
-    print(f"\n{'Name':<16} {'Sex':<6} {'STR':>3} {'DEX':>3} {'CON':>3} {'INT':>3} {'SPD':>3} {'CHA':>3} {'LCK':>3}  {'Libido':<8} {'Aggr':<8} {'Room':<14} {'Loves':<16} {'Hates':<16} {'Parent1':<14} {'Parent2':<14}")
-    print("─" * 160)
-    for c in cats:
-        p1 = c["parent1"] or "—"
-        p2 = c["parent2"] or "—"
-        room = c["room"] or "—"
-        loves = c["loves"] or "—"
-        hates = c["hates"] or "—"
-        print(f"{c['name']:<16} {c['sex']:<6} {c['STR']:>3} {c['DEX']:>3} {c['CON']:>3} {c['INT']:>3} {c['SPD']:>3} {c['CHA']:>3} {c['LCK']:>3}  {c['libido']:<8} {c['aggression']:<8} {room:<14} {loves:<16} {hates:<16} {p1:<14} {p2:<14}")
+    # Table output is now disabled by default.
 
 
 if __name__ == "__main__":
-    main()
+	main()
