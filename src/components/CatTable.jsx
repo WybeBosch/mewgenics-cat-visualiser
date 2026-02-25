@@ -20,17 +20,12 @@ export function CatTable({
 	setSortAsc,
 	copied,
 	setCopied,
-	showAddRoom,
-	setShowAddRoom,
-	newRoomName,
-	setNewRoomName,
 	hoveredCatId,
 	setHoveredCatId,
 	handleAdd,
 	handleEdit,
 	handleDelete,
 	handleSort,
-	handleAddRoom,
 	resetForm,
 }) {
 	const totalStat = (cat) => STATS.reduce((sum, s) => sum + cat[s], 0);
@@ -192,80 +187,6 @@ export function CatTable({
 						</button>
 					</div>
 				))}
-				{showAddRoom ? (
-					<div
-						style={{
-							display: 'flex',
-							gap: 4,
-							padding: '6px 0',
-							marginLeft: 4,
-						}}
-					>
-						<input
-							autoFocus
-							value={newRoomName}
-							onChange={(e) => setNewRoomName(e.target.value)}
-							onKeyDown={(e) => e.key === 'Enter' && handleAddRoom()}
-							placeholder="Room name"
-							style={{
-								background: '#252547',
-								border: '1px solid #444',
-								borderRadius: 6,
-								padding: '6px 10px',
-								color: '#fff',
-								fontSize: 13,
-								width: 130,
-							}}
-						/>
-						<button
-							onClick={handleAddRoom}
-							style={{
-								background: '#16a34a',
-								color: '#fff',
-								border: 'none',
-								borderRadius: 6,
-								padding: '6px 12px',
-								cursor: 'pointer',
-								fontSize: 13,
-							}}
-						>
-							Add
-						</button>
-						<button
-							onClick={() => {
-								setShowAddRoom(false);
-								setNewRoomName('');
-							}}
-							style={{
-								background: '#444',
-								color: '#fff',
-								border: 'none',
-								borderRadius: 6,
-								padding: '6px 12px',
-								cursor: 'pointer',
-								fontSize: 13,
-							}}
-						>
-							✕
-						</button>
-					</div>
-				) : (
-					<button
-						onClick={() => setShowAddRoom(true)}
-						style={{
-							padding: '10px 16px',
-							background: 'none',
-							color: '#666',
-							border: 'none',
-							cursor: 'pointer',
-							fontSize: 18,
-							lineHeight: 1,
-						}}
-						title="Add room"
-					>
-						+
-					</button>
-				)}
 			</div>
 
 			{/* Add/Edit Form */}

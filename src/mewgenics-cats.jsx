@@ -1,68 +1,65 @@
-import { useState, useEffect } from 'react';
-
-import {
-	STAT_ICONS,
-	STATS,
-	SEX_ICON,
-	SEX_COLOR,
-	SEX_BG,
-	SEX_BG_HOVER,
-} from './config/config.jsx';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { STATS } from './config/config.jsx';
 import { INITIAL_CATS } from './data/initial-cats.jsx';
-
-import { TableTooltipPopup } from './utils/utils.jsx';
 import { RelationshipGraph } from './components/RelationshipGraph.jsx';
 import { CatTable } from './components/CatTable.jsx';
 
 /* ─── Main App ─── */
+
 export default function MewgenicsCats() {
+	// --- State ---
 	const [cats, setCats] = useState(INITIAL_CATS);
-	const [rooms, setRooms] = useState([]);
 	const [activeRoom, setActiveRoom] = useState('');
 	const [loaded, setLoaded] = useState(false);
 	const [showForm, setShowForm] = useState(false);
 	const [editIdx, setEditIdx] = useState(null);
-	const emptyForm = {
-		name: '',
-		id: '',
-		sex: 'male',
-		STR: 5,
-		DEX: 5,
-		CON: 5,
-		INT: 5,
-		SPD: 5,
-		CHA: 5,
-		LCK: 5,
-		libido: 5,
-		aggression: 5,
-		loves: '',
-		hates: '',
-		mutations: '',
-		room: '',
-		stray: false,
-		parent1: '',
-		parent2: '',
-		grandparent1: '',
-		grandparent2: '',
-		grandparent3: '',
-		grandparent4: '',
-	};
-	const [form, setForm] = useState({ ...emptyForm });
 	const [sortCol, setSortCol] = useState(null);
 	const [sortAsc, setSortAsc] = useState(true);
 	const [copied, setCopied] = useState(false);
-	const [showAddRoom, setShowAddRoom] = useState(false);
-	const [newRoomName, setNewRoomName] = useState('');
+
 	const [hoveredCatId, setHoveredCatId] = useState(null);
 
-	// Derive rooms from cats
-	useEffect(() => {
-		const r = [...new Set(cats.map((c) => c.room))];
-		setRooms(r);
-		if (!r.includes(activeRoom)) setActiveRoom(r[0] || '');
-	}, [cats]);
+	// --- Derived ---
+	const rooms = useMemo(() => [...new Set(cats.map((c) => c.room))], [cats]);
 
-	// Load
+	// --- Form State ---
+	const emptyForm = useMemo(
+		() => ({
+			name: '',
+			id: '',
+			sex: 'male',
+			STR: 5,
+			DEX: 5,
+			CON: 5,
+			INT: 5,
+			SPD: 5,
+			CHA: 5,
+			LCK: 5,
+			libido: 5,
+			aggression: 5,
+			loves: '',
+			hates: '',
+			mutations: '',
+			room: '',
+			stray: false,
+			parent1: '',
+			parent2: '',
+			grandparent1: '',
+			grandparent2: '',
+			grandparent3: '',
+			grandparent4: '',
+		}),
+		[]
+	);
+	const [form, setForm] = useState({ ...emptyForm });
+
+	// Keep activeRoom valid
+	useEffect(() => {
+		if (!rooms.includes(activeRoom)) setActiveRoom(rooms[0] || '');
+		// eslint-disable-next-line
+	}, [rooms]);
+
+	// Load cats from storage
 	useEffect(() => {
 		(async () => {
 			try {
@@ -76,7 +73,7 @@ export default function MewgenicsCats() {
 		})();
 	}, []);
 
-	// Save
+	// Save cats to storage
 	useEffect(() => {
 		if (!loaded) return;
 		(async () => {
@@ -86,9 +83,13 @@ export default function MewgenicsCats() {
 		})();
 	}, [cats, loaded]);
 
-	const resetForm = () => setForm({ ...emptyForm, room: activeRoom });
+	// --- Handlers ---
+	const resetForm = useCallback(
+		() => setForm({ ...emptyForm, room: activeRoom }),
+		[emptyForm, activeRoom]
+	);
 
-	const handleAdd = () => {
+	const handleAdd = useCallback(() => {
 		if (!form.name.trim()) return;
 		const entry = { ...form, name: form.name.trim() };
 		entry.id = entry.name
@@ -105,31 +106,34 @@ export default function MewgenicsCats() {
 		} else setCats([...cats, entry]);
 		resetForm();
 		setShowForm(false);
-	};
+	}, [form, editIdx, cats, resetForm]);
 
-	const handleEdit = (gi) => {
-		setForm({ ...cats[gi] });
-		setEditIdx(gi);
-		setShowForm(true);
-	};
-	const handleDelete = (gi) => setCats(cats.filter((_, i) => i !== gi));
-	const handleSort = (col) => {
-		if (sortCol === col) setSortAsc(!sortAsc);
-		else {
-			setSortCol(col);
-			setSortAsc(col === 'name' || col === 'sex');
-		}
-	};
+	const handleEdit = useCallback(
+		(gi) => {
+			setForm({ ...cats[gi] });
+			setEditIdx(gi);
+			setShowForm(true);
+		},
+		[cats]
+	);
 
-	const handleAddRoom = () => {
-		const t = newRoomName.trim();
-		if (!t || rooms.includes(t)) return;
-		setNewRoomName('');
-		setShowAddRoom(false);
-		setActiveRoom(t);
-		setRooms([...rooms, t]);
-	};
+	const handleDelete = useCallback(
+		(gi) => setCats(cats.filter((_, i) => i !== gi)),
+		[cats]
+	);
 
+	const handleSort = useCallback(
+		(col) => {
+			if (sortCol === col) setSortAsc(!sortAsc);
+			else {
+				setSortCol(col);
+				setSortAsc(col === 'name' || col === 'sex');
+			}
+		},
+		[sortCol]
+	);
+
+	// --- Render ---
 	return (
 		<div
 			style={{
@@ -159,17 +163,12 @@ export default function MewgenicsCats() {
 					setSortAsc={setSortAsc}
 					copied={copied}
 					setCopied={setCopied}
-					showAddRoom={showAddRoom}
-					setShowAddRoom={setShowAddRoom}
-					newRoomName={newRoomName}
-					setNewRoomName={setNewRoomName}
 					hoveredCatId={hoveredCatId}
 					setHoveredCatId={setHoveredCatId}
 					handleAdd={handleAdd}
 					handleEdit={handleEdit}
 					handleDelete={handleDelete}
 					handleSort={handleSort}
-					handleAddRoom={handleAddRoom}
 					resetForm={resetForm}
 				/>
 
