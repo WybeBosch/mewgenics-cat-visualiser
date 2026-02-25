@@ -15,18 +15,30 @@ const STATS = ["STR", "DEX", "CON", "INT", "SPD", "CHA", "LCK"];
 const DEFAULT_ROOMS = ["Breeding Room", "Royal Room", "Fight Club", "Offspring"];
 
 const INITIAL_CATS = [
-  { name: "Stripers", id: "stripers", sex: "♂", STR: 3, DEX: 5, CON: 6, INT: 5, SPD: 5, CHA: 4, LCK: 7, libido: "Avg", aggression: "Avg", loves: "Zefirka", hates: "—", mutations: "—", room: "Royal Room", stray: true, parent1: "", parent2: "", grandparent1: "", grandparent2: "", grandparent3: "", grandparent4: "" },
-  { name: "Tibb", id: "tibb", sex: "♂", STR: 6, DEX: 5, CON: 7, INT: 4, SPD: 5, CHA: 6, LCK: 6, libido: "Avg", aggression: "High", loves: "—", hates: "—", mutations: "✅", room: "Royal Room", stray: false, parent1: "mrmeowsck", parent2: "mijina", grandparent1: "miranda", grandparent2: "lea", grandparent3: "eren", grandparent4: "snoozy" },
-  { name: "Shirotabi", id: "shirotabi", sex: "♂", STR: 7, DEX: 4, CON: 5, INT: 5, SPD: 5, CHA: 6, LCK: 5, libido: "Avg", aggression: "High", loves: "Celica", hates: "Mungly Bungly", mutations: "—", room: "Breeding Room", stray: true, parent1: "", parent2: "", grandparent1: "", grandparent2: "", grandparent3: "", grandparent4: "" },
-  { name: "Zara", id: "zara", sex: "♀", STR: 6, DEX: 5, CON: 7, INT: 6, SPD: 6, CHA: 6, LCK: 6, libido: "Avg", aggression: "High", loves: "Stripers", hates: "Celica", mutations: "✅", room: "Breeding Room", stray: false, parent1: "mijina", parent2: "mrmeowsck", grandparent1: "swoozy", grandparent2: "lea", grandparent3: "miranda", grandparent4: "eren" },
-  { name: "Celica", id: "celica", sex: "♀", STR: 5, DEX: 5, CON: 7, INT: 4, SPD: 6, CHA: 6, LCK: 4, libido: "Avg", aggression: "Avg", loves: "Mungly Bungly", hates: "Milka", mutations: "✅", room: "Royal Room", stray: false, parent1: "mijina", parent2: "teo", grandparent1: "lea", grandparent2: "snoozy", grandparent3: "", grandparent4: "" },
-  { name: "Mungly Bungly", id: "munglybungly", sex: "♂", STR: 6, DEX: 5, CON: 7, INT: 7, SPD: 6, CHA: 5, LCK: 6, libido: "Avg", aggression: "Low", loves: "Vegas ☠️", hates: "Eren ☠️", mutations: "—", room: "Royal Room", stray: false, parent1: "omry", parent2: "remi", grandparent1: "lecuna", grandparent2: "beevis", grandparent3: "solomon", grandparent4: "madamemaxime" },
-  { name: "Hazel", id: "hazel", sex: "♀", STR: 6, DEX: 5, CON: 5, INT: 5, SPD: 5, CHA: 5, LCK: 5, libido: "Avg", aggression: "Avg", loves: "—", hates: "—", mutations: "🌹 Thorns", room: "Royal Room", stray: true, parent1: "", parent2: "", grandparent1: "", grandparent2: "", grandparent3: "", grandparent4: "" },
-  { name: "Tums", id: "tums", sex: "⚥", STR: 6, DEX: 6, CON: 7, INT: 7, SPD: 6, CHA: 5, LCK: 4, libido: "High", aggression: "Avg", loves: "—", hates: "—", mutations: "+2 CON, -1 LCK", room: "Breeding Room", stray: false, parent1: "munglybungly", parent2: "celica", grandparent1: "omry", grandparent2: "remi", grandparent3: "mijina", grandparent4: "teo" },
-  { name: "Big John", id: "bigjohn", sex: "♂", STR: 3, DEX: 5, CON: 7, INT: 5, SPD: 6, CHA: 4, LCK: 7, libido: "Avg", aggression: "High", loves: "—", hates: "—", mutations: "—", room: "Royal Room", stray: false, parent1: "celica", parent2: "stripers", grandparent1: "mijina", grandparent2: "teo", grandparent3: "", grandparent4: "" },
-  { name: "Lashley", id: "lashley", sex: "♂", STR: 6, DEX: 5, CON: 7, INT: 6, SPD: 6, CHA: 6, LCK: 7, libido: "Avg", aggression: "Low", loves: "—", hates: "—", mutations: "+2 CON", room: "Offspring", stray: false, parent1: "stripers", parent2: "zara", grandparent1: "", grandparent2: "", grandparent3: "mijina", grandparent4: "mrmeowsck" },
-  { name: "Einar", id: "einar", sex: "♂", STR: 6, DEX: 5, CON: 7, INT: 7, SPD: 6, CHA: 5, LCK: 6, libido: "Avg", aggression: "Low", loves: "—", hates: "—", mutations: "+2 CON, -1 LCK", room: "Offspring", stray: false, parent1: "munglybungly", parent2: "celica", grandparent1: "omry", grandparent2: "remi", grandparent3: "mijina", grandparent4: "teo" },
+  // ...existing code...
 ];
+
+function useCatsData() {
+  const [cats, setCats] = useState(INITIAL_CATS);
+
+  useEffect(() => {
+    fetch('get-the-data/mewgenics_cats.json')
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('No cats data found');
+      })
+      .then((data) => {
+        setCats(data);
+      })
+      .catch(() => {
+        setCats(INITIAL_CATS);
+      });
+  }, []);
+
+  return cats;
+}
 
 /* ─── Shared tooltip builder ─── */
 function buildTooltipLines(cat, allCats) {

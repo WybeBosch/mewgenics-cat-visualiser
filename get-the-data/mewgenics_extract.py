@@ -9,8 +9,8 @@ parent/grandparent data as needed for lineage info.
 Outputs: mewgenics_cats.json with name, sex, stats, libido, aggression, room, parents, grandparents.
 
 Usage:
-    python mewgenics_extract.py                          # looks for steamcampaign01.sav in current dir
-    python mewgenics_extract.py /path/to/steamcampaign01.sav
+    python get-the-data/mewgenics_extract.py                          # looks for steamcampaign01.sav in current dir
+    python get-the-data/mewgenics_extract.py /path/to/steamcampaign01.sav
 """
 
 import sqlite3
