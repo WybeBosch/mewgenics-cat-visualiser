@@ -243,21 +243,9 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 					>
 						<path d="M 0 0 L 10 3 L 0 6 z" fill="#ef4444" />
 					</marker>
-					<marker
-						id="arrow-parent"
-						viewBox="0 0 10 6"
-						refX="3"
-						refY="3"
-						markerWidth="9"
-						markerHeight="6"
-						markerUnits="strokeWidth"
-						orient="auto-start-reverse"
-					>
-						<path d="M 0 0 L 10 3 L 0 6 z" fill="#f97316" />
-					</marker>
 				</defs>
 
-				{/* ...existing code... (edges, external relations, shared lineage, nodes, tooltip) */}
+				{/*(edges, external relations, shared lineage, nodes, tooltip) */}
 				{edges
 					.filter((e) => {
 						if (hovIdx === null) return true;
@@ -337,10 +325,7 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 					return boxes;
 				})()}
 
-				{/* ...existing code... (external relations, shared lineage, nodes, tooltip) */}
-				{/* Removed external love/hate partner lines and labels for visual clarity */}
-
-				{/* ...existing code... (shared lineage, nodes, tooltip) */}
+				{/* (shared lineage, nodes, tooltip) */}
 				{hovIdx !== null &&
 					(() => {
 						const hovCat = ordered[hovIdx];
@@ -361,7 +346,7 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 							const otherIsParent =
 								hovCat.parent1 === other.name || hovCat.parent2 === other.name;
 							if (hovIsParent || otherIsParent) {
-								// Draw arrow from parent to child, shorten line so arrowhead is visible
+								// Draw line from parent to child, and add emoji at each end
 								let parentPos, childPos;
 								if (hovIsParent) {
 									parentPos = from;
@@ -370,15 +355,13 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 									parentPos = to;
 									childPos = from;
 								}
-								// Shorten the line by node radius so arrowhead is not hidden
 								const dx = childPos.x - parentPos.x;
 								const dy = childPos.y - parentPos.y;
 								const dist = Math.sqrt(dx * dx + dy * dy) || 1;
 								const nodeR = 28;
-								const arrowPad = 8; // extra padding for arrowhead
-								const arrowHeadPad = 18;
-								const x1 = parentPos.x + dx * ((nodeR + arrowHeadPad) / dist);
-								const y1 = parentPos.y + dy * ((nodeR + arrowHeadPad) / dist);
+								const emojiPad = 18;
+								const x1 = parentPos.x + dx * ((nodeR + emojiPad) / dist);
+								const y1 = parentPos.y + dy * ((nodeR + emojiPad) / dist);
 								const x2 = childPos.x - dx * (nodeR / dist);
 								const y2 = childPos.y - dy * (nodeR / dist);
 								return (
@@ -391,8 +374,29 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 											stroke="#f97316"
 											strokeWidth={3}
 											opacity={0.6}
-											markerStart="url(#arrow-parent)"
 										/>
+										{/* Pregnant emoji at parent end */}
+										<text
+											x={parentPos.x + dx * ((nodeR + emojiPad - 8) / dist)}
+											y={parentPos.y + dy * ((nodeR + emojiPad - 8) / dist) + 8}
+											fontSize={22}
+											textAnchor="middle"
+											dominantBaseline="middle"
+											opacity={0.95}
+										>
+											🤰
+										</text>
+										{/* Baby emoji at child end - smaller and further from node */}
+										<text
+											x={childPos.x - dx * ((nodeR + 20) / dist)}
+											y={childPos.y - dy * ((nodeR + 20) / dist) + 8}
+											fontSize={16}
+											textAnchor="middle"
+											dominantBaseline="middle"
+											opacity={0.95}
+										>
+											👶
+										</text>
 										<text
 											x={(x1 + x2) / 2}
 											y={(y1 + y2) / 2 - 8}
