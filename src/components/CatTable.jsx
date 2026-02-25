@@ -57,6 +57,8 @@ export function CatTable({
 		transition: 'background 0.15s',
 	});
 	const aggroColor = (v) => (v <= 3 ? '#86efac' : v <= 6 ? '#ccc' : '#f87171');
+	// Always sort rooms alphabetically for tab rendering
+	const sortedRooms = [...rooms].sort((a, b) => a.localeCompare(b));
 
 	return (
 		<>
@@ -180,7 +182,7 @@ export function CatTable({
 					borderBottom: '2px solid #333',
 				}}
 			>
-				{rooms.map((room) => (
+				{sortedRooms.map((room) => (
 					<div key={room} style={{ position: 'relative' }}>
 						<button onClick={() => setActiveRoom(room)} style={tabStyle(room)}>
 							{room}{' '}
