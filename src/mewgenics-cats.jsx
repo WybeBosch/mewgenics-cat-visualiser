@@ -632,6 +632,10 @@ function RelationshipGraph({ cats, allCats }) {
 /* ─── Main App ─── */
 export default function MewgenicsCats() {
 	// Loads an empty array, then fetches the JSON file locally and uses it to fill the cats array if it exists.
+
+	// Test image from get-the-data (now publicDir)
+	// Should show at the top if static serving works
+	const testImgUrl = '/mewgenics.JPG';
 	const [cats, setCats] = useState([]);
 
 	useEffect(() => {
@@ -819,6 +823,22 @@ export default function MewgenicsCats() {
 				padding: '24px',
 			}}
 		>
+			{/* Test image for static asset loading */}
+			<div style={{ textAlign: 'center', marginBottom: 24 }}>
+				<img
+					src={testImgUrl}
+					alt="Mewgenics Test"
+					style={{
+						maxWidth: 320,
+						borderRadius: 12,
+						boxShadow: '0 2px 16px #0008',
+					}}
+				/>
+				<p style={{ color: '#aaa', fontSize: 13, marginTop: 8 }}>
+					Static asset test: If you see the cat image above, static serving
+					works!
+				</p>
+			</div>
 			<div style={{ margin: '0 auto' }}>
 				{/* Header */}
 				<div
