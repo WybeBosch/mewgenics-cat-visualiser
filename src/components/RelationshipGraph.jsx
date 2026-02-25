@@ -199,45 +199,7 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 				})}
 
 				{/* ...existing code... (external relations, shared lineage, nodes, tooltip) */}
-				{ordered.map((cat, i) => {
-					const from = positions[i];
-					const externals = [];
-					if (cat.loves && !findPos(cat.loves))
-						externals.push({ label: cat.loves, type: 'love' });
-					if (cat.hates && !findPos(cat.hates))
-						externals.push({ label: cat.hates, type: 'hate' });
-					return externals.map((ext, j) => {
-						const angle = Math.atan2(from.y - cy, from.x - cx);
-						const outX = from.x + 55 * Math.cos(angle) + j * 20;
-						const outY = from.y + 55 * Math.sin(angle) + j * 14;
-						const color = ext.type === 'love' ? '#4ade80' : '#ef4444';
-						return (
-							<g key={`ext-${i}-${j}`}>
-								<line
-									x1={from.x + 28 * Math.cos(angle)}
-									y1={from.y + 28 * Math.sin(angle)}
-									x2={outX}
-									y2={outY}
-									stroke={color}
-									strokeWidth={1.5}
-									strokeDasharray={ext.type === 'hate' ? '4,3' : 'none'}
-									opacity={0.5}
-								/>
-								<text
-									x={outX + 8 * Math.cos(angle)}
-									y={outY + 8 * Math.sin(angle)}
-									textAnchor="middle"
-									fill={color}
-									fontSize={11}
-									fontStyle="italic"
-									dominantBaseline="middle"
-								>
-									{ext.type === 'love' ? '❤️' : '💔'} {ext.label}
-								</text>
-							</g>
-						);
-					});
-				})}
+				{/* Removed external love/hate partner lines and labels for visual clarity */}
 
 				{/* ...existing code... (shared lineage, nodes, tooltip) */}
 				{hovIdx !== null &&
