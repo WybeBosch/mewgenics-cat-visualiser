@@ -546,6 +546,7 @@ def extract(save_path: str) -> list[dict]:
 # =============================================================================
 
 def main():
+    import datetime
     # Safety: check if Mewgenics.exe is running (Windows only)
     if is_process_running("Mewgenics.exe"):
         print("Mewgenics is running. Please close the game first.")
@@ -555,6 +556,9 @@ def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     dotenv_path = os.path.join(script_dir, '.env')
     load_dotenv(dotenv_path)
+
+    # Capture script start time without milliseconds
+    script_start_time = datetime.datetime.now().replace(microsecond=0).isoformat()
 
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
 
@@ -610,6 +614,10 @@ def main():
 
     def cat_map(cat_list):
         return {cat["id"]: cat for cat in cat_list}
+
+    # Add script_start_time to each cat
+    for cat in cats:
+        cat["script_start_time"] = script_start_time
 
     old_map = cat_map(old_cats)
     new_map = cat_map(cats)
