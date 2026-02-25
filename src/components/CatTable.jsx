@@ -469,6 +469,8 @@ export function CatTable({
 			<div
 				style={{
 					overflowX: 'auto',
+					overflowY: 'auto',
+					maxHeight: '510px',
 					border: '1px solid #333',
 					borderTop: 'none',
 				}}
