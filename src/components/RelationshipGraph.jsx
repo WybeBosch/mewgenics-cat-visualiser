@@ -20,7 +20,7 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 			</p>
 		);
 
-	// Reorder cats so mutual love pairs are adjacent
+	// Reorder cats: 1. mutual pairs, 2. one-way lovers, 3. others
 	const ordered = (() => {
 		const pairs = [];
 		const paired = new Set();
@@ -40,13 +40,32 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 				paired.add(match.id);
 			}
 		});
+
+		// Unpaired cats
 		const unpaired = cats.filter((c) => !paired.has(c.id));
+
+		// One-way lovers: cats that love someone in the room, but are not in a mutual pair
+		const oneWayLovers = [];
+		const others = [];
+		unpaired.forEach((cat) => {
+			if (
+				cat.loves &&
+				cats.some((other) => other.id !== cat.id && other.name === cat.loves)
+			) {
+				oneWayLovers.push(cat);
+			} else {
+				others.push(cat);
+			}
+		});
+
 		const result = [];
-		// Interleave pairs with unpaired cats
 		for (const [a, b] of pairs) {
 			result.push(a, b);
 		}
-		for (const c of unpaired) {
+		for (const c of oneWayLovers) {
+			result.push(c);
+		}
+		for (const c of others) {
 			result.push(c);
 		}
 		return result;
