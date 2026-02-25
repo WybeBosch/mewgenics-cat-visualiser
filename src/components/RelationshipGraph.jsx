@@ -99,14 +99,12 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 		return positions.find((p) => p.name.toLowerCase() === clean);
 	};
 
+	// Only add hate edges, not love edges for mutual pairs
 	const edges = [];
 	ordered.forEach((cat) => {
 		const from = findPos(cat.name);
 		if (!from) return;
-		if (cat.loves) {
-			const to = findPos(cat.loves);
-			if (to) edges.push({ from, to, type: 'love' });
-		}
+		// Only add hate edges
 		if (cat.hates) {
 			const to = findPos(cat.hates);
 			if (to) edges.push({ from, to, type: 'hate' });
@@ -189,14 +187,56 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 							key={i}
 							d={`M ${p.x1} ${p.y1} Q ${p.cx} ${p.cy} ${p.x2} ${p.y2}`}
 							fill="none"
-							stroke={e.type === 'love' ? '#4ade80' : '#ef4444'}
+							stroke="#ef4444"
 							strokeWidth={2}
-							strokeDasharray={e.type === 'hate' ? '6,4' : 'none'}
-							markerEnd={`url(#arrow-${e.type})`}
+							strokeDasharray="6,4"
+							markerEnd="url(#arrow-hate)"
 							opacity={0.7}
 						/>
 					);
 				})}
+
+				{/* Draw shared box for mutual love pairs */}
+				{(() => {
+					const boxes = [];
+					const drawn = new Set();
+					for (let i = 0; i < ordered.length - 1; i++) {
+						const a = ordered[i],
+							b = ordered[i + 1];
+						if (
+							a.loves &&
+							b.loves &&
+							a.loves === b.name &&
+							b.loves === a.name &&
+							!drawn.has(a.name) &&
+							!drawn.has(b.name)
+						) {
+							const pa = positions[i],
+								pb = positions[i + 1];
+							const minX = Math.min(pa.x, pb.x) - 36;
+							const maxX = Math.max(pa.x, pb.x) + 36;
+							const minY = Math.min(pa.y, pb.y) - 36;
+							const maxY = Math.max(pa.y, pb.y) + 36;
+							boxes.push(
+								<rect
+									key={`lovebox-${a.name}-${b.name}`}
+									x={minX}
+									y={minY}
+									width={maxX - minX}
+									height={maxY - minY}
+									rx={22}
+									fill="none"
+									stroke="#4ade80"
+									strokeWidth={4}
+									opacity={0.35}
+								/>
+							);
+							drawn.add(a.name);
+							drawn.add(b.name);
+						}
+					}
+					return boxes;
+				})()}
 
 				{/* ...existing code... (external relations, shared lineage, nodes, tooltip) */}
 				{/* Removed external love/hate partner lines and labels for visual clarity */}
