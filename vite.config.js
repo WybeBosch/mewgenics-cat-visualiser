@@ -7,4 +7,5 @@ export default defineConfig({
 	build: {
 		outDir: '../dist',
 	},
+	publicDir: '../get-the-data', // Serve static files from get-the-data
 });
