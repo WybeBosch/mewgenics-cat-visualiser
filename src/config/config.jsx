@@ -12,6 +12,14 @@ const STAT_ICONS = {
 
 const STATS = ['STR', 'DEX', 'CON', 'INT', 'SPD', 'CHA', 'LCK'];
 
+const OTHER_INFO_ICONS = {
+	libido: '💕',
+	aggression: '😾',
+	loves: '❤️',
+	hates: '⚔️', // Changed to two cross swords
+	mutations: '🧬',
+};
+
 const SEX_ICON = { male: '♂', female: '♀', herm: '⚥' };
 const SEX_COLOR = {
 	male: '#60a5fa',
@@ -25,4 +33,12 @@ const SEX_BG_HOVER = {
 	herm: '#3b2a5a',
 };
 
-export { STAT_ICONS, STATS, SEX_ICON, SEX_COLOR, SEX_BG, SEX_BG_HOVER };
+export {
+	STAT_ICONS,
+	STATS,
+	SEX_ICON,
+	SEX_COLOR,
+	SEX_BG,
+	SEX_BG_HOVER,
+	OTHER_INFO_ICONS,
+};

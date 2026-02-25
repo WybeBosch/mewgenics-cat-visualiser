@@ -1,6 +1,12 @@
 import React from 'react';
 import { TableTooltipPopup } from '../utils/utils.jsx';
-import { STAT_ICONS, STATS, SEX_ICON, SEX_COLOR } from '../config/config.jsx';
+import {
+	STAT_ICONS,
+	STATS,
+	SEX_ICON,
+	SEX_COLOR,
+	OTHER_INFO_ICONS,
+} from '../config/config.jsx';
 
 export function CatTable({
 	cats,
@@ -325,7 +331,7 @@ export function CatTable({
 									marginBottom: 4,
 								}}
 							>
-								💕 Libido
+								{OTHER_INFO_ICONS.libido} Libido
 							</label>
 							<input
 								type="number"
@@ -352,7 +358,7 @@ export function CatTable({
 									marginBottom: 4,
 								}}
 							>
-								😾 Aggro
+								{OTHER_INFO_ICONS.aggression} Aggro
 							</label>
 							<input
 								type="number"
@@ -381,7 +387,7 @@ export function CatTable({
 									marginBottom: 4,
 								}}
 							>
-								❤️ Loves
+								{OTHER_INFO_ICONS.loves} Loves
 							</label>
 							<input
 								value={form.loves}
@@ -405,7 +411,7 @@ export function CatTable({
 									marginBottom: 4,
 								}}
 							>
-								💔 Hates
+								{OTHER_INFO_ICONS.hates} Hates
 							</label>
 							<input
 								value={form.hates}
@@ -429,7 +435,7 @@ export function CatTable({
 									marginBottom: 4,
 								}}
 							>
-								🧬 Mutations
+								{OTHER_INFO_ICONS.mutations} Mutations
 							</label>
 							<input
 								value={form.mutations}
@@ -488,11 +494,11 @@ export function CatTable({
 									label: `${STAT_ICONS[s]} ${s}`,
 								})),
 								{ key: 'total', label: 'Total' },
-								{ key: 'libido', label: '💕' },
-								{ key: 'aggression', label: '😾' },
-								{ key: 'loves', label: '❤️' },
-								{ key: 'hates', label: '💔' },
-								{ key: 'mutations', label: '🧬' },
+								{ key: 'libido', label: OTHER_INFO_ICONS.libido },
+								{ key: 'aggression', label: OTHER_INFO_ICONS.aggression },
+								{ key: 'loves', label: OTHER_INFO_ICONS.loves },
+								{ key: 'hates', label: OTHER_INFO_ICONS.hates },
+								{ key: 'mutations', label: OTHER_INFO_ICONS.mutations },
 								{ key: 'actions', label: '' },
 							].map((col) => (
 								<th
