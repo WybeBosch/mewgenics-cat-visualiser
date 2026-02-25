@@ -691,17 +691,6 @@ export function CatTable({
 					</tbody>
 				</table>
 			</div>
-
-			<p
-				style={{
-					color: '#555',
-					fontSize: 12,
-					marginTop: 12,
-					textAlign: 'center',
-				}}
-			>
-				Click column headers to sort • Data saves automatically between sessions
-			</p>
 		</>
 	);
 }
