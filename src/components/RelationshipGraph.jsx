@@ -7,7 +7,12 @@ import {
 } from '../config/config.jsx';
 
 /* ─── Relationship Graph ─── */
+
+import { useState } from 'react';
+
 function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
+	const [selectedCatId, setSelectedCatId] = useState(null);
+
 	if (cats.length === 0)
 		return (
 			<p style={{ color: '#666', textAlign: 'center', padding: 40 }}>
@@ -50,6 +55,8 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 	// Switch to row layout if there are 15 or more cats
 	const useRowLayout = ordered.length >= 15;
 
+	const selected = ordered.findIndex((c) => c.id === selectedCatId);
+	const selIdx = selected >= 0 ? selected : null;
 	const hovered = ordered.findIndex((c) => c.id === hoveredCatId);
 	const hovIdx = hovered >= 0 ? hovered : null;
 
@@ -155,6 +162,21 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 				position: 'relative',
 			}}
 		>
+			{/* Overlay to close tooltip on outside click */}
+			{selectedCatId !== null && (
+				<div
+					onClick={() => setSelectedCatId(null)}
+					style={{
+						position: 'absolute',
+						left: 0,
+						top: 0,
+						width: '100%',
+						height: '100%',
+						zIndex: 2,
+						background: 'transparent',
+					}}
+				/>
+			)}
 			<svg
 				width={W}
 				height={H}
@@ -183,6 +205,18 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 						orient="auto-start-reverse"
 					>
 						<path d="M 0 0 L 10 3 L 0 6 z" fill="#ef4444" />
+					</marker>
+					<marker
+						id="arrow-parent"
+						viewBox="0 0 10 6"
+						refX="3"
+						refY="3"
+						markerWidth="9"
+						markerHeight="6"
+						markerUnits="strokeWidth"
+						orient="auto-start-reverse"
+					>
+						<path d="M 0 0 L 10 3 L 0 6 z" fill="#f97316" />
 					</marker>
 				</defs>
 
@@ -286,20 +320,41 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 							const otherIsParent =
 								hovCat.parent1 === other.name || hovCat.parent2 === other.name;
 							if (hovIsParent || otherIsParent) {
+								// Draw arrow from parent to child, shorten line so arrowhead is visible
+								let parentPos, childPos;
+								if (hovIsParent) {
+									parentPos = from;
+									childPos = to;
+								} else {
+									parentPos = to;
+									childPos = from;
+								}
+								// Shorten the line by node radius so arrowhead is not hidden
+								const dx = childPos.x - parentPos.x;
+								const dy = childPos.y - parentPos.y;
+								const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+								const nodeR = 28;
+								const arrowPad = 8; // extra padding for arrowhead
+								const arrowHeadPad = 18;
+								const x1 = parentPos.x + dx * ((nodeR + arrowHeadPad) / dist);
+								const y1 = parentPos.y + dy * ((nodeR + arrowHeadPad) / dist);
+								const x2 = childPos.x - dx * (nodeR / dist);
+								const y2 = childPos.y - dy * (nodeR / dist);
 								return (
 									<g key={`kin-${oi}`}>
 										<line
-											x1={from.x}
-											y1={from.y}
-											x2={to.x}
-											y2={to.y}
+											x1={x1}
+											y1={y1}
+											x2={x2}
+											y2={y2}
 											stroke="#f97316"
 											strokeWidth={3}
 											opacity={0.6}
+											markerStart="url(#arrow-parent)"
 										/>
 										<text
-											x={(from.x + to.x) / 2}
-											y={(from.y + to.y) / 2 - 8}
+											x={(x1 + x2) / 2}
+											y={(y1 + y2) / 2 - 8}
 											textAnchor="middle"
 											fontSize={9}
 											fill="#f97316"
@@ -357,7 +412,13 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 						key={p.name}
 						onMouseEnter={() => setHoveredCatId(ordered[i].id)}
 						onMouseLeave={() => setHoveredCatId(null)}
-						style={{ cursor: 'pointer' }}
+						onClick={(e) => {
+							e.stopPropagation();
+							setSelectedCatId(
+								selectedCatId === ordered[i].id ? null : ordered[i].id
+							);
+						}}
+						style={{ cursor: 'pointer', zIndex: 3 }}
 					>
 						<circle
 							cx={p.x}
@@ -403,10 +464,10 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 				))}
 
 				{/* Tooltip */}
-				{hovIdx !== null &&
+				{selIdx !== null &&
 					(() => {
-						const cat = ordered[hovIdx],
-							pos = positions[hovIdx];
+						const cat = ordered[selIdx],
+							pos = positions[selIdx];
 						const lines = buildTooltip(cat);
 						const tipW = 220,
 							tipH = 20 + lines.length * 22;
