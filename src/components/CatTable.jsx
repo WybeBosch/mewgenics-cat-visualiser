@@ -510,9 +510,23 @@ export function CatTable({
 										fontSize: 13,
 										borderBottom: '2px solid #333',
 										whiteSpace: 'nowrap',
+										position: 'relative',
 									}}
 								>
-									{col.label} {sortCol === col.key ? (sortAsc ? '▲' : '▼') : ''}
+									{col.label}
+									{sortCol === col.key && (
+										<span
+											style={{
+												marginLeft: 4,
+												position: 'absolute',
+												right: '0',
+												top: '50%',
+												transform: 'translateY(-50%)',
+											}}
+										>
+											{sortAsc ? '▲' : '▼'}
+										</span>
+									)}
 								</th>
 							))}
 						</tr>

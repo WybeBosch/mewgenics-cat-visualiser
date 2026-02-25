@@ -126,13 +126,17 @@ export default function MewgenicsCats() {
 
 	const handleSort = useCallback(
 		(col) => {
-			if (sortCol === col) setSortAsc(!sortAsc);
-			else {
+			if (sortCol !== col) {
 				setSortCol(col);
-				setSortAsc(col === 'name' || col === 'sex');
+				setSortAsc(true);
+			} else if (sortAsc) {
+				setSortAsc(false);
+			} else {
+				setSortCol(null);
+				setSortAsc(true);
 			}
 		},
-		[sortCol]
+		[sortCol, sortAsc]
 	);
 
 	// --- Render ---
