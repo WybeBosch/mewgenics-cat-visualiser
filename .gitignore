@@ -28,4 +28,5 @@ Thumbs.db
 /build/
 
 # Others
+mewgenics_cats.json
 *.log
