@@ -10,7 +10,7 @@ import {
 } from './config/config.jsx';
 import { INITIAL_CATS } from './data/initial-cats.jsx';
 
-import { NameCellTooltip } from './utils/utils.jsx';
+import { TableTooltipPopup } from './utils/utils.jsx';
 import { RelationshipGraph } from './components/RelationshipGraph.jsx';
 
 /* ─── Main App ─── */
@@ -746,7 +746,7 @@ export default function MewgenicsCats() {
 										onMouseEnter={() => setHoveredCatId(cat.id)}
 										onMouseLeave={() => setHoveredCatId(null)}
 									>
-										<NameCellTooltip cat={cat} allCats={cats} />
+										<TableTooltipPopup cat={cat} allCats={cats} />
 										<td
 											style={{
 												padding: '10px 12px',

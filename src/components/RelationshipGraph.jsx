@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { buildTooltipLines } from '../utils/utils.jsx';
+import { sharedTooltipContents } from '../utils/utils.jsx';
 import {
 	SEX_ICON,
 	SEX_COLOR,
@@ -110,7 +110,7 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 		};
 	};
 
-	const buildTooltip = (cat) => buildTooltipLines(cat, allCats);
+	const buildTooltip = (cat) => sharedTooltipContents(cat, allCats);
 
 	return (
 		<div

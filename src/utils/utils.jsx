@@ -1,13 +1,7 @@
 import { useState } from 'react';
-import {
-	SEX_ICON,
-	SEX_COLOR,
-	SEX_BG,
-	SEX_BG_HOVER,
-} from '../config/config.jsx';
 
 /* ─── Shared tooltip builder ─── */
-function buildTooltipLines(cat, allCats) {
+function sharedTooltipContents(cat, allCats) {
 	const displayName = (n) => {
 		if (!n) return null;
 		const found = allCats.find((c) => c.name === n || c.id === n);
@@ -43,10 +37,10 @@ function buildTooltipLines(cat, allCats) {
 }
 
 /* ─── HTML tooltip for table ─── */
-function NameCellTooltip({ cat, allCats }) {
+function TableTooltipPopup({ cat, allCats }) {
 	const [show, setShow] = useState(false);
 	const [pos, setPos] = useState({ x: 0, y: 0 });
-	const lines = buildTooltipLines(cat, allCats);
+	const lines = sharedTooltipContents(cat, allCats);
 	return (
 		<td
 			style={{
@@ -110,4 +104,4 @@ function NameCellTooltip({ cat, allCats }) {
 	);
 }
 
-export { buildTooltipLines, NameCellTooltip };
+export { sharedTooltipContents, TableTooltipPopup };
