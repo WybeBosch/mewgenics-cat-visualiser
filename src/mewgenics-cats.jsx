@@ -59,18 +59,66 @@ export default function MewgenicsCats() {
 		// eslint-disable-next-line
 	}, [rooms]);
 
-	// Load cats from JSON file in publicDir
+	// Load cats from storage and JSON, merge mutations, use newer source
 	useEffect(() => {
 		(async () => {
+			let jsonCats = [];
+			let jsonTimestamp = '';
+			let storageCats = [];
+			let storageTimestamp = '';
 			try {
+				// Load JSON
 				const response = await fetch('/mewgenics_cats.json');
-				if (!response.ok) throw new Error('Failed to fetch cats JSON');
-				const data = await response.json();
-				setCats(Array.isArray(data) ? data : data.cats || []);
-			} catch (err) {
-				// fallback: empty array
-				setCats([]);
+				if (response.ok) {
+					const data = await response.json();
+					jsonCats = Array.isArray(data) ? data : data.cats || [];
+					if (jsonCats.length > 0 && jsonCats[0].script_start_time) {
+						jsonTimestamp = jsonCats[0].script_start_time;
+					}
+				}
+			} catch {}
+			try {
+				// Load storage
+				const storageRaw = await window.storage.get('mewgenics-v14');
+				if (storageRaw) {
+					const parsed = JSON.parse(storageRaw);
+					storageCats = Array.isArray(parsed.cats) ? parsed.cats : [];
+					if (storageCats.length > 0 && storageCats[0].script_start_time) {
+						storageTimestamp = storageCats[0].script_start_time;
+					}
+				}
+			} catch {}
+
+			// Compare timestamps
+			let useJson = false;
+			if (jsonTimestamp && storageTimestamp) {
+				useJson = jsonTimestamp > storageTimestamp;
+			} else if (jsonTimestamp && !storageTimestamp) {
+				useJson = true;
+			} else if (!jsonTimestamp && storageTimestamp) {
+				useJson = false;
+			} else {
+				useJson = jsonCats.length > storageCats.length;
 			}
+
+			let mergedCats = [];
+			if (useJson) {
+				// Merge mutations from storage into jsonCats
+				const storageMap = {};
+				for (const cat of storageCats) {
+					if (cat.id) storageMap[cat.id] = cat;
+				}
+				mergedCats = jsonCats.map((cat) => {
+					const stored = storageMap[cat.id];
+					if (stored && stored.mutations) {
+						return { ...cat, mutations: stored.mutations };
+					}
+					return { ...cat };
+				});
+			} else {
+				mergedCats = storageCats;
+			}
+			setCats(mergedCats);
 			setLoaded(true);
 		})();
 	}, []);
@@ -80,7 +128,7 @@ export default function MewgenicsCats() {
 		if (!loaded) return;
 		(async () => {
 			try {
-				await window.storage.set('mewgenics-v13', JSON.stringify({ cats }));
+				await window.storage.set('mewgenics-v14', JSON.stringify({ cats }));
 			} catch {}
 		})();
 	}, [cats, loaded]);
