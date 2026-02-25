@@ -37,8 +37,7 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 		});
 		const unpaired = cats.filter((c) => !paired.has(c.id));
 		const result = [];
-		let uIdx = 0;
-		// Interleave pairs with unpaired cats around the circle
+		// Interleave pairs with unpaired cats
 		for (const [a, b] of pairs) {
 			result.push(a, b);
 		}
@@ -48,24 +47,51 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 		return result;
 	})();
 
+	// Switch to row layout if there are 15 or more cats
+	const useRowLayout = ordered.length >= 15;
+
 	const hovered = ordered.findIndex((c) => c.id === hoveredCatId);
 	const hovIdx = hovered >= 0 ? hovered : null;
 
 	const W = 800,
-		H = 500;
+		H = useRowLayout ? 120 + Math.ceil(ordered.length / 10) * 80 : 500;
 	const cx = W / 2,
 		cy = H / 2;
 	const radius = Math.min(200, 60 + ordered.length * 12);
 
-	const positions = ordered.map((cat, i) => {
-		const angle = (i / ordered.length) * 2 * Math.PI - Math.PI / 2;
-		return {
-			name: cat.name,
-			sex: cat.sex,
-			x: cx + radius * Math.cos(angle),
-			y: cy + radius * Math.sin(angle),
-		};
-	});
+	let positions;
+	if (useRowLayout) {
+		// Place cats in rows, 8 per row, with more spacing
+		const perRow = 8;
+		const rowHeight = 110;
+		const startY = 70;
+		const marginX = 60;
+		const usableW = W - marginX * 2;
+		positions = ordered.map((cat, i) => {
+			const row = Math.floor(i / perRow);
+			const col = i % perRow;
+			const totalRows = Math.ceil(ordered.length / perRow);
+			const y = startY + row * rowHeight;
+			const x =
+				marginX + col * (usableW / (Math.min(perRow, ordered.length) - 1));
+			return {
+				name: cat.name,
+				sex: cat.sex,
+				x,
+				y,
+			};
+		});
+	} else {
+		positions = ordered.map((cat, i) => {
+			const angle = (i / ordered.length) * 2 * Math.PI - Math.PI / 2;
+			return {
+				name: cat.name,
+				sex: cat.sex,
+				x: cx + radius * Math.cos(angle),
+				y: cy + radius * Math.sin(angle),
+			};
+		});
+	}
 
 	const findPos = (name) => {
 		if (!name) return null;
