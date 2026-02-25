@@ -9,34 +9,1242 @@ const STAT_ICONS = {
 	CHA: '💋',
 	LCK: '🍀',
 };
-
 const STATS = ['STR', 'DEX', 'CON', 'INT', 'SPD', 'CHA', 'LCK'];
 
-const DEFAULT_ROOMS = [
-	'Breeding Room',
-	'Royal Room',
-	'Fight Club',
-	'Offspring',
-];
+const SEX_ICON = { male: '♂', female: '♀', herm: '⚥' };
+const SEX_COLOR = { male: '#60a5fa', female: '#f472b6', herm: '#c084fc' };
+const SEX_BG = { male: '#1a2a4a', female: '#3b1a3b', herm: '#2a1a4a' };
+const SEX_BG_HOVER = { male: '#2a3a6a', female: '#5a2a5a', herm: '#3b2a5a' };
 
 const INITIAL_CATS = [
-	// ...existing code...
+	{
+		name: 'Snoozy',
+		id: 'snoozy',
+		sex: 'male',
+		STR: 6,
+		DEX: 5,
+		CON: 7,
+		INT: 6,
+		SPD: 5,
+		CHA: 6,
+		LCK: 4,
+		libido: 'average',
+		libido_raw: 0.4264,
+		aggression: 'high',
+		aggression_raw: 0.723,
+		loves: 'Madame Maxime',
+		hates: 'Omry',
+		room: 'Attic',
+		stray: false,
+		parent1: 'Lucille',
+		parent2: 'Fatman',
+		grandparent1: '',
+		grandparent2: '',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Mijina',
+		id: 'mijina',
+		sex: 'female',
+		STR: 6,
+		DEX: 5,
+		CON: 7,
+		INT: 4,
+		SPD: 5,
+		CHA: 6,
+		LCK: 4,
+		libido: 'average',
+		libido_raw: 0.5437,
+		aggression: 'low',
+		aggression_raw: 0.2808,
+		loves: 'Yuval',
+		hates: 'Nyusha',
+		room: 'Attic',
+		stray: false,
+		parent1: 'Lea',
+		parent2: 'Snoozy',
+		grandparent1: 'Estrella',
+		grandparent2: 'Vegas',
+		grandparent3: 'Lucille',
+		grandparent4: 'Fatman',
+		mutations: '',
+	},
+	{
+		name: 'Scott',
+		id: 'scott',
+		sex: 'male',
+		STR: 5,
+		DEX: 5,
+		CON: 7,
+		INT: 6,
+		SPD: 5,
+		CHA: 5,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.5133,
+		aggression: 'low',
+		aggression_raw: 0.0981,
+		loves: 'Miranda',
+		hates: 'Yomayo',
+		room: 'Attic',
+		stray: false,
+		parent1: 'Remie',
+		parent2: 'Mungly Bungly',
+		grandparent1: '',
+		grandparent2: '',
+		grandparent3: 'Remi',
+		grandparent4: 'Omry',
+		mutations: '',
+	},
+	{
+		name: 'Mr. Meowsck',
+		id: 'mr._meowsck',
+		sex: 'male',
+		STR: 5,
+		DEX: 5,
+		CON: 7,
+		INT: 6,
+		SPD: 6,
+		CHA: 5,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.6421,
+		aggression: 'average',
+		aggression_raw: 0.5779,
+		loves: 'Mijina',
+		hates: 'Yuval',
+		room: 'Attic',
+		stray: false,
+		parent1: 'Miranda',
+		parent2: 'Eren',
+		grandparent1: 'Vegas',
+		grandparent2: 'Humbert',
+		grandparent3: 'Lecuna',
+		grandparent4: 'Omry',
+		mutations: '',
+	},
+	{
+		name: 'Stripers',
+		id: 'stripers',
+		sex: 'male',
+		STR: 3,
+		DEX: 5,
+		CON: 6,
+		INT: 5,
+		SPD: 5,
+		CHA: 4,
+		LCK: 7,
+		libido: 'average',
+		libido_raw: 0.4655,
+		aggression: 'average',
+		aggression_raw: 0.3409,
+		loves: 'Zefirka',
+		hates: 'Big John',
+		room: 'Attic',
+		stray: true,
+		parent1: '',
+		parent2: '',
+		grandparent1: '',
+		grandparent2: '',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Yaddiel',
+		id: 'yaddiel',
+		sex: 'male',
+		STR: 4,
+		DEX: 5,
+		CON: 4,
+		INT: 6,
+		SPD: 5,
+		CHA: 4,
+		LCK: 7,
+		libido: 'average',
+		libido_raw: 0.5132,
+		aggression: 'low',
+		aggression_raw: 0.2437,
+		loves: 'Mijina',
+		hates: 'Yuval',
+		room: 'Attic',
+		stray: true,
+		parent1: '',
+		parent2: '',
+		grandparent1: '',
+		grandparent2: '',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Milka',
+		id: 'milka',
+		sex: 'female',
+		STR: 4,
+		DEX: 4,
+		CON: 4,
+		INT: 6,
+		SPD: 5,
+		CHA: 7,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.4195,
+		aggression: 'low',
+		aggression_raw: 0.2974,
+		loves: 'Mungly Bungly',
+		hates: '?key281',
+		room: 'Attic',
+		stray: true,
+		parent1: '',
+		parent2: '',
+		grandparent1: '',
+		grandparent2: '',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Tibb',
+		id: 'tibb',
+		sex: 'male',
+		STR: 6,
+		DEX: 5,
+		CON: 7,
+		INT: 4,
+		SPD: 5,
+		CHA: 6,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.4105,
+		aggression: 'high',
+		aggression_raw: 0.9748,
+		loves: 'Celica',
+		hates: 'Yomayo',
+		room: 'Attic',
+		stray: false,
+		parent1: 'Mijina',
+		parent2: 'Mr. Meowsck',
+		grandparent1: 'Lea',
+		grandparent2: 'Snoozy',
+		grandparent3: 'Miranda',
+		grandparent4: 'Eren',
+		mutations: '',
+	},
+	{
+		name: 'Yuval',
+		id: 'yuval',
+		sex: 'male',
+		STR: 6,
+		DEX: 5,
+		CON: 4,
+		INT: 6,
+		SPD: 6,
+		CHA: 5,
+		LCK: 5,
+		libido: 'average',
+		libido_raw: 0.5869,
+		aggression: 'average',
+		aggression_raw: 0.4486,
+		loves: 'Mijina',
+		hates: 'Lashley',
+		room: 'Attic',
+		stray: false,
+		parent1: 'Miranda',
+		parent2: 'Omry',
+		grandparent1: 'Vegas',
+		grandparent2: 'Humbert',
+		grandparent3: 'Madame Maxime',
+		grandparent4: 'Solomon',
+		mutations: '',
+	},
+	{
+		name: 'Bigeon',
+		id: 'bigeon',
+		sex: 'herm',
+		STR: 4,
+		DEX: 4,
+		CON: 4,
+		INT: 7,
+		SPD: 5,
+		CHA: 5,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.5165,
+		aggression: 'average',
+		aggression_raw: 0.4272,
+		loves: '',
+		hates: 'Theft',
+		room: 'Floor1_Small',
+		stray: false,
+		parent1: 'Milka',
+		parent2: 'Mungly Bungly',
+		grandparent1: '',
+		grandparent2: '',
+		grandparent3: 'Remi',
+		grandparent4: 'Omry',
+		mutations: '',
+	},
+	{
+		name: 'Celica',
+		id: 'celica',
+		sex: 'female',
+		STR: 5,
+		DEX: 5,
+		CON: 7,
+		INT: 4,
+		SPD: 6,
+		CHA: 6,
+		LCK: 4,
+		libido: 'average',
+		libido_raw: 0.6247,
+		aggression: 'average',
+		aggression_raw: 0.4946,
+		loves: 'Mungly Bungly',
+		hates: '?key281',
+		room: 'Attic',
+		stray: false,
+		parent1: 'Mijina',
+		parent2: 'Teo',
+		grandparent1: 'Lea',
+		grandparent2: 'Snoozy',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Shirotabi',
+		id: 'shirotabi',
+		sex: 'male',
+		STR: 7,
+		DEX: 4,
+		CON: 5,
+		INT: 5,
+		SPD: 5,
+		CHA: 6,
+		LCK: 5,
+		libido: 'average',
+		libido_raw: 0.6519,
+		aggression: 'high',
+		aggression_raw: 0.9984,
+		loves: 'Celica',
+		hates: 'Yomayo',
+		room: 'Attic',
+		stray: true,
+		parent1: '',
+		parent2: '',
+		grandparent1: '',
+		grandparent2: '',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Einar',
+		id: 'einar',
+		sex: 'male',
+		STR: 6,
+		DEX: 5,
+		CON: 7,
+		INT: 7,
+		SPD: 6,
+		CHA: 5,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.4223,
+		aggression: 'low',
+		aggression_raw: 0.0217,
+		loves: '',
+		hates: '',
+		room: 'Attic',
+		stray: false,
+		parent1: 'Celica',
+		parent2: 'Mungly Bungly',
+		grandparent1: 'Mijina',
+		grandparent2: 'Teo',
+		grandparent3: 'Remi',
+		grandparent4: 'Omry',
+		mutations: '',
+	},
+	{
+		name: 'Zara',
+		id: 'zara',
+		sex: 'female',
+		STR: 6,
+		DEX: 5,
+		CON: 7,
+		INT: 6,
+		SPD: 6,
+		CHA: 6,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.4095,
+		aggression: 'high',
+		aggression_raw: 0.9435,
+		loves: 'Stripers',
+		hates: 'Milka',
+		room: 'Attic',
+		stray: false,
+		parent1: 'Mijina',
+		parent2: 'Mr. Meowsck',
+		grandparent1: 'Lea',
+		grandparent2: 'Snoozy',
+		grandparent3: 'Miranda',
+		grandparent4: 'Eren',
+		mutations: '',
+	},
+	{
+		name: 'Girard',
+		id: 'girard',
+		sex: 'male',
+		STR: 5,
+		DEX: 5,
+		CON: 7,
+		INT: 4,
+		SPD: 6,
+		CHA: 6,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.3533,
+		aggression: 'low',
+		aggression_raw: 0.1686,
+		loves: '',
+		hates: 'Gideon',
+		room: 'Floor1_Small',
+		stray: false,
+		parent1: 'Celica',
+		parent2: 'Mungly Bungly',
+		grandparent1: 'Mijina',
+		grandparent2: 'Teo',
+		grandparent3: 'Remi',
+		grandparent4: 'Omry',
+		mutations: '',
+	},
+	{
+		name: 'Lashley',
+		id: 'lashley',
+		sex: 'male',
+		STR: 6,
+		DEX: 5,
+		CON: 7,
+		INT: 6,
+		SPD: 6,
+		CHA: 6,
+		LCK: 7,
+		libido: 'average',
+		libido_raw: 0.37,
+		aggression: 'low',
+		aggression_raw: 0.1416,
+		loves: 'Mijina',
+		hates: 'Yuval',
+		room: 'Attic',
+		stray: false,
+		parent1: 'Zara',
+		parent2: 'Stripers',
+		grandparent1: 'Mijina',
+		grandparent2: 'Mr. Meowsck',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Big John',
+		id: 'big_john',
+		sex: 'male',
+		STR: 3,
+		DEX: 5,
+		CON: 7,
+		INT: 5,
+		SPD: 6,
+		CHA: 4,
+		LCK: 7,
+		libido: 'average',
+		libido_raw: 0.3711,
+		aggression: 'high',
+		aggression_raw: 0.7738,
+		loves: 'Milka',
+		hates: 'Shirotabi',
+		room: 'Attic',
+		stray: false,
+		parent1: 'Celica',
+		parent2: 'Stripers',
+		grandparent1: 'Mijina',
+		grandparent2: 'Teo',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Tums',
+		id: 'tums',
+		sex: 'herm',
+		STR: 6,
+		DEX: 5,
+		CON: 7,
+		INT: 7,
+		SPD: 6,
+		CHA: 5,
+		LCK: 4,
+		libido: 'high',
+		libido_raw: 0.8888,
+		aggression: 'low',
+		aggression_raw: 0.3126,
+		loves: 'Rolo',
+		hates: 'Ukiyo',
+		room: 'Floor1_Large',
+		stray: false,
+		parent1: 'Celica',
+		parent2: 'Mungly Bungly',
+		grandparent1: 'Mijina',
+		grandparent2: 'Teo',
+		grandparent3: 'Remi',
+		grandparent4: 'Omry',
+		mutations: '',
+	},
+	{
+		name: 'Nouke',
+		id: 'nouke',
+		sex: 'herm',
+		STR: 6,
+		DEX: 5,
+		CON: 7,
+		INT: 4,
+		SPD: 5,
+		CHA: 4,
+		LCK: 7,
+		libido: 'average',
+		libido_raw: 0.6455,
+		aggression: 'low',
+		aggression_raw: 0.0885,
+		loves: 'Draks',
+		hates: '',
+		room: 'Floor1_Large',
+		stray: false,
+		parent1: 'Mijina',
+		parent2: 'Yaddiel',
+		grandparent1: 'Lea',
+		grandparent2: 'Snoozy',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Rolo',
+		id: 'rolo',
+		sex: 'male',
+		STR: 7,
+		DEX: 6,
+		CON: 4,
+		INT: 4,
+		SPD: 5,
+		CHA: 6,
+		LCK: 5,
+		libido: 'average',
+		libido_raw: 0.466,
+		aggression: 'high',
+		aggression_raw: 0.8521,
+		loves: 'Tums',
+		hates: 'Mr. Meowsck',
+		room: 'Floor1_Large',
+		stray: true,
+		parent1: '',
+		parent2: '',
+		grandparent1: '',
+		grandparent2: '',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Draks',
+		id: 'draks',
+		sex: 'male',
+		STR: 7,
+		DEX: 6,
+		CON: 7,
+		INT: 7,
+		SPD: 6,
+		CHA: 5,
+		LCK: 4,
+		libido: 'low',
+		libido_raw: 0.2765,
+		aggression: 'high',
+		aggression_raw: 0.9405,
+		loves: 'Nouke',
+		hates: 'Ukiyo',
+		room: 'Floor1_Large',
+		stray: false,
+		parent1: 'Tums',
+		parent2: 'Rolo',
+		grandparent1: 'Celica',
+		grandparent2: 'Mungly Bungly',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Chirya',
+		id: 'chirya',
+		sex: 'female',
+		STR: 6,
+		DEX: 4,
+		CON: 7,
+		INT: 6,
+		SPD: 5,
+		CHA: 6,
+		LCK: 5,
+		libido: 'average',
+		libido_raw: 0.4809,
+		aggression: 'low',
+		aggression_raw: 0.2891,
+		loves: '',
+		hates: 'Girard',
+		room: 'Floor1_Small',
+		stray: false,
+		parent1: 'Zara',
+		parent2: 'Shirotabi',
+		grandparent1: 'Mijina',
+		grandparent2: 'Mr. Meowsck',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Ukiyo',
+		id: 'ukiyo',
+		sex: 'female',
+		STR: 5,
+		DEX: 5,
+		CON: 7,
+		INT: 6,
+		SPD: 5,
+		CHA: 7,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.4857,
+		aggression: 'average',
+		aggression_raw: 0.5305,
+		loves: 'Rolo',
+		hates: 'Porter',
+		room: 'Floor1_Large',
+		stray: false,
+		parent1: 'Milka',
+		parent2: 'Scott',
+		grandparent1: '',
+		grandparent2: '',
+		grandparent3: 'Remie',
+		grandparent4: 'Mungly Bungly',
+		mutations: '',
+	},
+	{
+		name: 'Mjollig',
+		id: 'mjollig',
+		sex: 'herm',
+		STR: 6,
+		DEX: 5,
+		CON: 5,
+		INT: 6,
+		SPD: 6,
+		CHA: 6,
+		LCK: 5,
+		libido: 'average',
+		libido_raw: 0.5219,
+		aggression: 'average',
+		aggression_raw: 0.5968,
+		loves: '',
+		hates: '',
+		room: 'Floor1_Small',
+		stray: false,
+		parent1: 'Zara',
+		parent2: 'Shirotabi',
+		grandparent1: 'Mijina',
+		grandparent2: 'Mr. Meowsck',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Bimba',
+		id: 'bimba',
+		sex: 'female',
+		STR: 6,
+		DEX: 5,
+		CON: 7,
+		INT: 4,
+		SPD: 6,
+		CHA: 6,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.4142,
+		aggression: 'average',
+		aggression_raw: 0.5353,
+		loves: '',
+		hates: 'Gideon',
+		room: 'Floor1_Small',
+		stray: false,
+		parent1: 'Celica',
+		parent2: 'Tibb',
+		grandparent1: 'Mijina',
+		grandparent2: 'Teo',
+		grandparent3: 'Mijina',
+		grandparent4: 'Mr. Meowsck',
+		mutations: '',
+	},
+	{
+		name: 'Tonetta',
+		id: 'tonetta',
+		sex: 'female',
+		STR: 6,
+		DEX: 5,
+		CON: 7,
+		INT: 5,
+		SPD: 5,
+		CHA: 5,
+		LCK: 5,
+		libido: 'average',
+		libido_raw: 0.5327,
+		aggression: 'average',
+		aggression_raw: 0.4959,
+		loves: '',
+		hates: 'Cherry',
+		room: 'Floor1_Small',
+		stray: false,
+		parent1: '?key281',
+		parent2: 'Mungly Bungly',
+		grandparent1: '',
+		grandparent2: '',
+		grandparent3: 'Remi',
+		grandparent4: 'Omry',
+		mutations: '',
+	},
+	{
+		name: 'Tihon',
+		id: 'tihon',
+		sex: 'male',
+		STR: 3,
+		DEX: 7,
+		CON: 5,
+		INT: 5,
+		SPD: 5,
+		CHA: 5,
+		LCK: 5,
+		libido: 'average',
+		libido_raw: 0.4731,
+		aggression: 'low',
+		aggression_raw: 0.0232,
+		loves: '',
+		hates: 'Agnes',
+		room: 'Attic',
+		stray: true,
+		parent1: '',
+		parent2: '',
+		grandparent1: '',
+		grandparent2: '',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Allie Cat',
+		id: 'allie_cat',
+		sex: 'female',
+		STR: 6,
+		DEX: 6,
+		CON: 7,
+		INT: 4,
+		SPD: 5,
+		CHA: 4,
+		LCK: 7,
+		libido: 'high',
+		libido_raw: 0.6994,
+		aggression: 'low',
+		aggression_raw: 0.3099,
+		loves: '',
+		hates: 'Bigeon',
+		room: 'Floor1_Small',
+		stray: false,
+		parent1: 'Nouke',
+		parent2: 'Draks',
+		grandparent1: 'Mijina',
+		grandparent2: 'Yaddiel',
+		grandparent3: 'Tums',
+		grandparent4: 'Rolo',
+		mutations: '',
+	},
+	{
+		name: 'Norburt',
+		id: 'norburt',
+		sex: 'male',
+		STR: 4,
+		DEX: 5,
+		CON: 7,
+		INT: 6,
+		SPD: 5,
+		CHA: 7,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.3773,
+		aggression: 'low',
+		aggression_raw: 0.3148,
+		loves: 'Rozi',
+		hates: 'Girard',
+		room: 'Attic',
+		stray: false,
+		parent1: 'Milka',
+		parent2: 'Tibb',
+		grandparent1: '',
+		grandparent2: '',
+		grandparent3: 'Mijina',
+		grandparent4: 'Mr. Meowsck',
+		mutations: '',
+	},
+	{
+		name: 'Rozi',
+		id: 'rozi',
+		sex: 'female',
+		STR: 5,
+		DEX: 5,
+		CON: 7,
+		INT: 6,
+		SPD: 6,
+		CHA: 5,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.3481,
+		aggression: 'low',
+		aggression_raw: 0.1748,
+		loves: 'Norburt',
+		hates: '',
+		room: 'Attic',
+		stray: false,
+		parent1: 'Tums',
+		parent2: 'Mr. Meowsck',
+		grandparent1: 'Celica',
+		grandparent2: 'Mungly Bungly',
+		grandparent3: 'Miranda',
+		grandparent4: 'Eren',
+		mutations: '',
+	},
+	{
+		name: 'Sabiha',
+		id: 'sabiha',
+		sex: 'female',
+		STR: 6,
+		DEX: 5,
+		CON: 7,
+		INT: 4,
+		SPD: 5,
+		CHA: 6,
+		LCK: 4,
+		libido: 'average',
+		libido_raw: 0.4746,
+		aggression: 'low',
+		aggression_raw: 0.0505,
+		loves: '',
+		hates: 'Chirya',
+		room: 'Floor1_Small',
+		stray: false,
+		parent1: 'Celica',
+		parent2: 'Yomayo',
+		grandparent1: 'Mijina',
+		grandparent2: 'Teo',
+		grandparent3: 'Vegas',
+		grandparent4: 'Allistair',
+		mutations: '',
+	},
+	{
+		name: 'Jon',
+		id: 'jon',
+		sex: 'male',
+		STR: 6,
+		DEX: 5,
+		CON: 6,
+		INT: 4,
+		SPD: 5,
+		CHA: 6,
+		LCK: 5,
+		libido: 'high',
+		libido_raw: 0.7969,
+		aggression: 'high',
+		aggression_raw: 0.9474,
+		loves: '',
+		hates: '',
+		room: 'Floor1_Small',
+		stray: false,
+		parent1: 'Celica',
+		parent2: 'Yomayo',
+		grandparent1: 'Mijina',
+		grandparent2: 'Teo',
+		grandparent3: 'Vegas',
+		grandparent4: 'Allistair',
+		mutations: '',
+	},
+	{
+		name: 'Santo',
+		id: 'santo',
+		sex: 'male',
+		STR: 4,
+		DEX: 4,
+		CON: 4,
+		INT: 6,
+		SPD: 6,
+		CHA: 7,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.3487,
+		aggression: 'average',
+		aggression_raw: 0.593,
+		loves: '',
+		hates: 'Girard',
+		room: 'Floor1_Small',
+		stray: false,
+		parent1: 'Milka',
+		parent2: 'Big John',
+		grandparent1: '',
+		grandparent2: '',
+		grandparent3: 'Celica',
+		grandparent4: 'Stripers',
+		mutations: '',
+	},
+	{
+		name: 'Lunch',
+		id: 'lunch',
+		sex: 'male',
+		STR: 6,
+		DEX: 6,
+		CON: 7,
+		INT: 6,
+		SPD: 6,
+		CHA: 6,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.3981,
+		aggression: 'low',
+		aggression_raw: 0.1097,
+		loves: '',
+		hates: '',
+		room: 'Floor1_Small',
+		stray: false,
+		parent1: 'Zara',
+		parent2: 'Rolo',
+		grandparent1: 'Mijina',
+		grandparent2: 'Mr. Meowsck',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Tyger',
+		id: 'tyger',
+		sex: 'male',
+		STR: 5,
+		DEX: 5,
+		CON: 7,
+		INT: 4,
+		SPD: 5,
+		CHA: 5,
+		LCK: 5,
+		libido: 'high',
+		libido_raw: 0.6965,
+		aggression: 'average',
+		aggression_raw: 0.5341,
+		loves: '',
+		hates: 'Dalton',
+		room: 'Floor1_Small',
+		stray: false,
+		parent1: 'Celica',
+		parent2: 'Yomayo',
+		grandparent1: 'Mijina',
+		grandparent2: 'Teo',
+		grandparent3: 'Vegas',
+		grandparent4: 'Allistair',
+		mutations: '',
+	},
+	{
+		name: 'Banana Peels',
+		id: 'banana_peels',
+		sex: 'herm',
+		STR: 4,
+		DEX: 5,
+		CON: 7,
+		INT: 6,
+		SPD: 6,
+		CHA: 7,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.4708,
+		aggression: 'average',
+		aggression_raw: 0.6094,
+		loves: '',
+		hates: '',
+		room: 'Floor1_Small',
+		stray: false,
+		parent1: 'Rozi',
+		parent2: 'Norburt',
+		grandparent1: 'Tums',
+		grandparent2: 'Mr. Meowsck',
+		grandparent3: 'Milka',
+		grandparent4: 'Tibb',
+		mutations: '',
+	},
+	{
+		name: 'Dantes',
+		id: 'dantes',
+		sex: 'male',
+		STR: 4,
+		DEX: 5,
+		CON: 6,
+		INT: 6,
+		SPD: 5,
+		CHA: 7,
+		LCK: 7,
+		libido: 'average',
+		libido_raw: 0.4894,
+		aggression: 'high',
+		aggression_raw: 0.8846,
+		loves: '',
+		hates: '',
+		room: 'Floor1_Large',
+		stray: false,
+		parent1: 'Milka',
+		parent2: 'Stripers',
+		grandparent1: '',
+		grandparent2: '',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Brunetiere',
+		id: 'brunetiere',
+		sex: 'female',
+		STR: 6,
+		DEX: 7,
+		CON: 3,
+		INT: 6,
+		SPD: 5,
+		CHA: 6,
+		LCK: 4,
+		libido: 'average',
+		libido_raw: 0.3675,
+		aggression: 'average',
+		aggression_raw: 0.3818,
+		loves: '',
+		hates: 'Mistglow',
+		room: 'Attic',
+		stray: false,
+		parent1: 'Doris',
+		parent2: 'Judd',
+		grandparent1: '',
+		grandparent2: '',
+		grandparent3: 'Chuviha',
+		grandparent4: 'Dudly',
+		mutations: '',
+	},
+	{
+		name: 'Shinji',
+		id: 'shinji',
+		sex: 'male',
+		STR: 7,
+		DEX: 5,
+		CON: 7,
+		INT: 4,
+		SPD: 5,
+		CHA: 6,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.381,
+		aggression: 'high',
+		aggression_raw: 0.8286,
+		loves: '',
+		hates: '',
+		room: 'Floor1_Large',
+		stray: false,
+		parent1: 'Ukiyo',
+		parent2: 'Rolo',
+		grandparent1: 'Milka',
+		grandparent2: 'Scott',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Korihor',
+		id: 'korihor',
+		sex: 'male',
+		STR: 6,
+		DEX: 5,
+		CON: 7,
+		INT: 4,
+		SPD: 6,
+		CHA: 6,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.4356,
+		aggression: 'high',
+		aggression_raw: 0.8021,
+		loves: '',
+		hates: '',
+		room: 'Floor1_Small',
+		stray: false,
+		parent1: 'Zara',
+		parent2: 'Tibb',
+		grandparent1: 'Mijina',
+		grandparent2: 'Mr. Meowsck',
+		grandparent3: 'Mijina',
+		grandparent4: 'Mr. Meowsck',
+		mutations: '',
+	},
+	{
+		name: 'Dutchess',
+		id: 'dutchess',
+		sex: 'female',
+		STR: 5,
+		DEX: 5,
+		CON: 7,
+		INT: 6,
+		SPD: 5,
+		CHA: 4,
+		LCK: 7,
+		libido: 'average',
+		libido_raw: 0.3539,
+		aggression: 'high',
+		aggression_raw: 0.9768,
+		loves: '',
+		hates: '',
+		room: 'Floor1_Large',
+		stray: false,
+		parent1: 'Ukiyo',
+		parent2: 'Nouke',
+		grandparent1: 'Milka',
+		grandparent2: 'Scott',
+		grandparent3: 'Mijina',
+		grandparent4: 'Yaddiel',
+		mutations: '',
+	},
+	{
+		name: 'Azi',
+		id: 'azi',
+		sex: 'herm',
+		STR: 6,
+		DEX: 5,
+		CON: 7,
+		INT: 4,
+		SPD: 6,
+		CHA: 5,
+		LCK: 5,
+		libido: 'average',
+		libido_raw: 0.3595,
+		aggression: 'low',
+		aggression_raw: 0.1844,
+		loves: '',
+		hates: '',
+		room: 'Attic',
+		stray: false,
+		parent1: 'Mijina',
+		parent2: 'Yuval',
+		grandparent1: 'Lea',
+		grandparent2: 'Snoozy',
+		grandparent3: 'Miranda',
+		grandparent4: 'Omry',
+		mutations: '',
+	},
+	{
+		name: 'Jorj',
+		id: 'jorj',
+		sex: 'male',
+		STR: 7,
+		DEX: 4,
+		CON: 4,
+		INT: 6,
+		SPD: 5,
+		CHA: 6,
+		LCK: 6,
+		libido: 'low',
+		libido_raw: 0.1802,
+		aggression: 'high',
+		aggression_raw: 0.9065,
+		loves: '',
+		hates: '',
+		room: 'Attic',
+		stray: false,
+		parent1: 'Milka',
+		parent2: 'Shirotabi',
+		grandparent1: '',
+		grandparent2: '',
+		grandparent3: '',
+		grandparent4: '',
+		mutations: '',
+	},
+	{
+		name: 'Alonso',
+		id: 'alonso',
+		sex: 'male',
+		STR: 5,
+		DEX: 5,
+		CON: 7,
+		INT: 6,
+		SPD: 5,
+		CHA: 5,
+		LCK: 6,
+		libido: 'average',
+		libido_raw: 0.4493,
+		aggression: 'average',
+		aggression_raw: 0.6376,
+		loves: '',
+		hates: '',
+		room: 'Attic',
+		stray: false,
+		parent1: 'Rozi',
+		parent2: 'Norburt',
+		grandparent1: 'Tums',
+		grandparent2: 'Mr. Meowsck',
+		grandparent3: 'Milka',
+		grandparent4: 'Tibb',
+		mutations: '',
+	},
+	{
+		name: 'Krenko',
+		id: 'krenko',
+		sex: 'male',
+		STR: 7,
+		DEX: 4,
+		CON: 5,
+		INT: 5,
+		SPD: 6,
+		CHA: 6,
+		LCK: 4,
+		libido: 'average',
+		libido_raw: 0.4097,
+		aggression: 'high',
+		aggression_raw: 0.8323,
+		loves: '',
+		hates: '',
+		room: 'Floor1_Small',
+		stray: false,
+		parent1: 'Bimba',
+		parent2: 'Stickers',
+		grandparent1: 'Celica',
+		grandparent2: 'Tibb',
+		grandparent3: 'Celica',
+		grandparent4: 'Mungly Bungly',
+		mutations: '',
+	},
 ];
-
-// ...existing code...
 
 /* ─── Shared tooltip builder ─── */
 function buildTooltipLines(cat, allCats) {
-	const displayName = (id) => {
-		if (!id) return null;
-		const found = allCats.find((c) => c.id === id);
-		return found ? found.name : id;
+	const displayName = (n) => {
+		if (!n) return null;
+		const found = allCats.find((c) => c.name === n || c.id === n);
+		return found ? found.name : n;
 	};
 	const isParentStray = (c, num) => {
 		if (num === 1) return !c.grandparent1 && !c.grandparent2;
 		return !c.grandparent3 && !c.grandparent4;
 	};
-
 	if (cat.stray) return [{ label: 'Stray', value: 'Yes' }];
 	const lines = [];
 	if (cat.parent1 || cat.parent2) {
@@ -55,15 +1263,9 @@ function buildTooltipLines(cat, allCats) {
 		cat.grandparent4,
 	];
 	if (gps.some((g) => g)) {
-		const gpNames = gps.map((g) => (g ? displayName(g) : '—'));
-		lines.push({
-			label: 'GP (P1 side)',
-			value: `${gpNames[0]}  ×  ${gpNames[1]}`,
-		});
-		lines.push({
-			label: 'GP (P2 side)',
-			value: `${gpNames[2]}  ×  ${gpNames[3]}`,
-		});
+		const gpn = gps.map((g) => (g ? displayName(g) : '—'));
+		lines.push({ label: 'GP (P1 side)', value: `${gpn[0]}  ×  ${gpn[1]}` });
+		lines.push({ label: 'GP (P2 side)', value: `${gpn[2]}  ×  ${gpn[3]}` });
 	}
 	return lines;
 }
@@ -73,11 +1275,6 @@ function NameCellTooltip({ cat, allCats }) {
 	const [show, setShow] = useState(false);
 	const [pos, setPos] = useState({ x: 0, y: 0 });
 	const lines = buildTooltipLines(cat, allCats);
-
-	const handleMouseMove = (e) => {
-		setPos({ x: e.clientX, y: e.clientY });
-	};
-
 	return (
 		<td
 			style={{
@@ -88,7 +1285,7 @@ function NameCellTooltip({ cat, allCats }) {
 			}}
 			onMouseEnter={() => setShow(true)}
 			onMouseLeave={() => setShow(false)}
-			onMouseMove={handleMouseMove}
+			onMouseMove={(e) => setPos({ x: e.clientX, y: e.clientY })}
 		>
 			<span style={{ borderBottom: '1px dashed #666' }}>{cat.name}</span>
 			{show && (
@@ -140,9 +1337,9 @@ function NameCellTooltip({ cat, allCats }) {
 		</td>
 	);
 }
-function RelationshipGraph({ cats, allCats }) {
-	const [hovered, setHovered] = useState(null);
 
+/* ─── Relationship Graph ─── */
+function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 	if (cats.length === 0)
 		return (
 			<p style={{ color: '#666', textAlign: 'center', padding: 40 }}>
@@ -150,14 +1347,50 @@ function RelationshipGraph({ cats, allCats }) {
 			</p>
 		);
 
+	// Reorder cats so mutual love pairs are adjacent
+	const ordered = (() => {
+		const pairs = [];
+		const paired = new Set();
+		cats.forEach((a) => {
+			if (paired.has(a.id)) return;
+			const match = cats.find(
+				(b) =>
+					b.id !== a.id &&
+					a.loves &&
+					b.loves &&
+					a.loves === b.name &&
+					b.loves === a.name
+			);
+			if (match && !paired.has(match.id)) {
+				pairs.push([a, match]);
+				paired.add(a.id);
+				paired.add(match.id);
+			}
+		});
+		const unpaired = cats.filter((c) => !paired.has(c.id));
+		const result = [];
+		let uIdx = 0;
+		// Interleave pairs with unpaired cats around the circle
+		for (const [a, b] of pairs) {
+			result.push(a, b);
+		}
+		for (const c of unpaired) {
+			result.push(c);
+		}
+		return result;
+	})();
+
+	const hovered = ordered.findIndex((c) => c.id === hoveredCatId);
+	const hovIdx = hovered >= 0 ? hovered : null;
+
 	const W = 800,
 		H = 500;
 	const cx = W / 2,
 		cy = H / 2;
-	const radius = Math.min(180, 60 + cats.length * 20);
+	const radius = Math.min(200, 60 + ordered.length * 12);
 
-	const positions = cats.map((cat, i) => {
-		const angle = (i / cats.length) * 2 * Math.PI - Math.PI / 2;
+	const positions = ordered.map((cat, i) => {
+		const angle = (i / ordered.length) * 2 * Math.PI - Math.PI / 2;
 		return {
 			name: cat.name,
 			sex: cat.sex,
@@ -167,20 +1400,20 @@ function RelationshipGraph({ cats, allCats }) {
 	});
 
 	const findPos = (name) => {
-		if (!name || name === '—') return null;
+		if (!name) return null;
 		const clean = name.replace(/\s*☠️/g, '').trim().toLowerCase();
 		return positions.find((p) => p.name.toLowerCase() === clean);
 	};
 
 	const edges = [];
-	cats.forEach((cat) => {
+	ordered.forEach((cat) => {
 		const from = findPos(cat.name);
 		if (!from) return;
-		if (cat.loves && cat.loves !== '—') {
+		if (cat.loves) {
 			const to = findPos(cat.loves);
 			if (to) edges.push({ from, to, type: 'love' });
 		}
-		if (cat.hates && cat.hates !== '—') {
+		if (cat.hates) {
 			const to = findPos(cat.hates);
 			if (to) edges.push({ from, to, type: 'hate' });
 		}
@@ -189,7 +1422,7 @@ function RelationshipGraph({ cats, allCats }) {
 	const getPath = (from, to, type) => {
 		const dx = to.x - from.x,
 			dy = to.y - from.y;
-		const dist = Math.sqrt(dx * dx + dy * dy);
+		const dist = Math.sqrt(dx * dx + dy * dy) || 1;
 		const nodeR = 28;
 		const x1 = from.x + dx * (nodeR / dist),
 			y1 = from.y + dy * (nodeR / dist);
@@ -206,13 +1439,6 @@ function RelationshipGraph({ cats, allCats }) {
 			cx: mx + (-dy / dist) * offset,
 			cy: my + (dx / dist) * offset,
 		};
-	};
-
-	// Lookup a display name for a parent ID
-	const displayName = (id) => {
-		if (!id) return null;
-		const found = allCats.find((c) => c.id === id);
-		return found ? found.name : id;
 	};
 
 	const buildTooltip = (cat) => buildTooltipLines(cat, allCats);
@@ -276,13 +1502,13 @@ function RelationshipGraph({ cats, allCats }) {
 					);
 				})}
 
-				{/* External relations (cats not in this room) */}
-				{cats.map((cat, i) => {
+				{/* External relations */}
+				{ordered.map((cat, i) => {
 					const from = positions[i];
 					const externals = [];
-					if (cat.loves && cat.loves !== '—' && !findPos(cat.loves))
+					if (cat.loves && !findPos(cat.loves))
 						externals.push({ label: cat.loves, type: 'love' });
-					if (cat.hates && cat.hates !== '—' && !findPos(cat.hates))
+					if (cat.hates && !findPos(cat.hates))
 						externals.push({ label: cat.hates, type: 'hate' });
 					return externals.map((ext, j) => {
 						const angle = Math.atan2(from.y - cy, from.x - cx);
@@ -318,10 +1544,10 @@ function RelationshipGraph({ cats, allCats }) {
 				})}
 
 				{/* Shared lineage lines on hover */}
-				{hovered !== null &&
+				{hovIdx !== null &&
 					(() => {
-						const hovCat = cats[hovered];
-						const hovAncestors = [
+						const hovCat = ordered[hovIdx];
+						const hovAnc = [
 							hovCat.parent1,
 							hovCat.parent2,
 							hovCat.grandparent1,
@@ -329,18 +1555,15 @@ function RelationshipGraph({ cats, allCats }) {
 							hovCat.grandparent3,
 							hovCat.grandparent4,
 						].filter(Boolean);
-
-						return cats.map((other, oi) => {
-							if (oi === hovered) return null;
-							const from = positions[hovered];
-							const to = positions[oi];
-
-							// Check direct parent relationship (either direction)
-							const hovIsParentOfOther =
-								other.parent1 === hovCat.id || other.parent2 === hovCat.id;
-							const otherIsParentOfHov =
-								hovCat.parent1 === other.id || hovCat.parent2 === other.id;
-							if (hovIsParentOfOther || otherIsParentOfHov) {
+						return ordered.map((other, oi) => {
+							if (oi === hovIdx) return null;
+							const from = positions[hovIdx],
+								to = positions[oi];
+							const hovIsParent =
+								other.parent1 === hovCat.name || other.parent2 === hovCat.name;
+							const otherIsParent =
+								hovCat.parent1 === other.name || hovCat.parent2 === other.name;
+							if (hovIsParent || otherIsParent) {
 								return (
 									<g key={`kin-${oi}`}>
 										<line
@@ -365,9 +1588,7 @@ function RelationshipGraph({ cats, allCats }) {
 									</g>
 								);
 							}
-
-							// Check sibling / related
-							const otherAncestors = [
+							const otherAnc = [
 								other.parent1,
 								other.parent2,
 								other.grandparent1,
@@ -375,17 +1596,13 @@ function RelationshipGraph({ cats, allCats }) {
 								other.grandparent3,
 								other.grandparent4,
 							].filter(Boolean);
-							const shared = hovAncestors.filter((a) =>
-								otherAncestors.includes(a)
-							);
+							const shared = hovAnc.filter((a) => otherAnc.includes(a));
 							if (shared.length === 0) return null;
-
-							const isParentMatch = shared.some(
+							const isSibling = shared.some(
 								(s) =>
 									[hovCat.parent1, hovCat.parent2].includes(s) &&
 									[other.parent1, other.parent2].includes(s)
 							);
-
 							return (
 								<g key={`kin-${oi}`}>
 									<line
@@ -393,9 +1610,9 @@ function RelationshipGraph({ cats, allCats }) {
 										y1={from.y}
 										x2={to.x}
 										y2={to.y}
-										stroke={isParentMatch ? '#fbbf24' : '#a78bfa'}
-										strokeWidth={isParentMatch ? 3 : 2}
-										strokeDasharray={isParentMatch ? 'none' : '8,4'}
+										stroke={isSibling ? '#fbbf24' : '#a78bfa'}
+										strokeWidth={isSibling ? 3 : 2}
+										strokeDasharray={isSibling ? 'none' : '8,4'}
 										opacity={0.6}
 									/>
 									<text
@@ -403,10 +1620,10 @@ function RelationshipGraph({ cats, allCats }) {
 										y={(from.y + to.y) / 2 - 8}
 										textAnchor="middle"
 										fontSize={9}
-										fill={isParentMatch ? '#fbbf24' : '#a78bfa'}
+										fill={isSibling ? '#fbbf24' : '#a78bfa'}
 										opacity={0.8}
 									>
-										{isParentMatch ? 'sibling' : 'related'}
+										{isSibling ? 'sibling' : 'related'}
 									</text>
 								</g>
 							);
@@ -416,8 +1633,8 @@ function RelationshipGraph({ cats, allCats }) {
 				{positions.map((p, i) => (
 					<g
 						key={p.name}
-						onMouseEnter={() => setHovered(i)}
-						onMouseLeave={() => setHovered(null)}
+						onMouseEnter={() => setHoveredCatId(ordered[i].id)}
+						onMouseLeave={() => setHoveredCatId(null)}
 						style={{ cursor: 'pointer' }}
 					>
 						<circle
@@ -425,26 +1642,12 @@ function RelationshipGraph({ cats, allCats }) {
 							cy={p.y}
 							r={28}
 							fill={
-								hovered === i
-									? cats[i].sex === '♀'
-										? '#5a2a5a'
-										: cats[i].sex === '⚥'
-											? '#3b2a5a'
-											: '#2a3a6a'
-									: cats[i].sex === '♀'
-										? '#3b1a3b'
-										: cats[i].sex === '⚥'
-											? '#2a1a4a'
-											: '#1a2a4a'
+								hovIdx === i
+									? SEX_BG_HOVER[ordered[i].sex]
+									: SEX_BG[ordered[i].sex]
 							}
-							stroke={
-								cats[i].sex === '♀'
-									? '#f472b6'
-									: cats[i].sex === '⚥'
-										? '#c084fc'
-										: '#60a5fa'
-							}
-							strokeWidth={hovered === i ? 3.5 : 2.5}
+							stroke={SEX_COLOR[ordered[i].sex]}
+							strokeWidth={hovIdx === i ? 3.5 : 2.5}
 						/>
 						<text
 							x={p.x}
@@ -452,45 +1655,44 @@ function RelationshipGraph({ cats, allCats }) {
 							textAnchor="middle"
 							dominantBaseline="middle"
 							fill="#fff"
-							fontSize={cats[i].name.length > 8 ? 9 : 11}
+							fontSize={
+								ordered[i].name.length > 10
+									? 8
+									: ordered[i].name.length > 8
+										? 9
+										: 11
+							}
 							fontWeight={600}
 						>
-							{cats[i].name.length > 12
-								? cats[i].name.slice(0, 11) + '…'
-								: cats[i].name}
+							{ordered[i].name.length > 14
+								? ordered[i].name.slice(0, 13) + '…'
+								: ordered[i].name}
 						</text>
 						<text
 							x={p.x}
 							y={p.y + 12}
 							textAnchor="middle"
-							fill={
-								cats[i].sex === '♀'
-									? '#f472b6'
-									: cats[i].sex === '⚥'
-										? '#c084fc'
-										: '#60a5fa'
-							}
+							fill={SEX_COLOR[ordered[i].sex]}
 							fontSize={10}
 						>
-							{cats[i].sex}
+							{SEX_ICON[ordered[i].sex] || ordered[i].sex}
 						</text>
 					</g>
 				))}
 
 				{/* Tooltip */}
-				{hovered !== null &&
+				{hovIdx !== null &&
 					(() => {
-						const cat = cats[hovered];
-						const pos = positions[hovered];
+						const cat = ordered[hovIdx],
+							pos = positions[hovIdx];
 						const lines = buildTooltip(cat);
 						const tipW = 220,
 							tipH = 20 + lines.length * 22;
-						let tx = pos.x - tipW / 2;
-						let ty = pos.y - 40 - tipH;
+						let tx = pos.x - tipW / 2,
+							ty = pos.y - 40 - tipH;
 						if (ty < 5) ty = pos.y + 38;
 						if (tx < 5) tx = 5;
 						if (tx + tipW > W - 5) tx = W - tipW - 5;
-
 						return (
 							<g>
 								<rect
@@ -587,7 +1789,7 @@ function RelationshipGraph({ cats, allCats }) {
 						strokeWidth={1.5}
 					/>
 					<text x={382} y={4} fill="#aaa" fontSize={11}>
-						Intersex
+						Herm
 					</text>
 					<line
 						x1={440}
@@ -631,41 +1833,16 @@ function RelationshipGraph({ cats, allCats }) {
 
 /* ─── Main App ─── */
 export default function MewgenicsCats() {
-	// Loads an empty array, then fetches the JSON file locally and uses it to fill the cats array if it exists.
-
-	// Test image from get-the-data (now publicDir)
-	// Should show at the top if static serving works
-	const testImgUrl = '/mewgenics.JPG';
-	const [cats, setCats] = useState([]);
-
-	useEffect(() => {
-		console.log('[MewgenicsCats] Fetching cats JSON...');
-		fetch('get-the-data/mewgenics_cats.json')
-			.then((response) => {
-				console.log('[MewgenicsCats] Fetch response:', response);
-				if (response.ok) {
-					return response.json();
-				}
-				throw new Error('No cats data found');
-			})
-			.then((data) => {
-				console.log(`[MewgenicsCats] JSON data loaded: [${data.length}]`, data);
-				setCats(data);
-			})
-			.catch((err) => {
-				console.log('[MewgenicsCats] Fetch failed, using INITIAL_CATS:', err);
-				setCats(INITIAL_CATS);
-			});
-	}, []);
-	const [rooms, setRooms] = useState(DEFAULT_ROOMS);
-	const [activeRoom, setActiveRoom] = useState(DEFAULT_ROOMS[0]);
+	const [cats, setCats] = useState(INITIAL_CATS);
+	const [rooms, setRooms] = useState([]);
+	const [activeRoom, setActiveRoom] = useState('');
 	const [loaded, setLoaded] = useState(false);
 	const [showForm, setShowForm] = useState(false);
 	const [editIdx, setEditIdx] = useState(null);
 	const emptyForm = {
 		name: '',
 		id: '',
-		sex: '♂',
+		sex: 'male',
 		STR: 5,
 		DEX: 5,
 		CON: 5,
@@ -673,12 +1850,12 @@ export default function MewgenicsCats() {
 		SPD: 5,
 		CHA: 5,
 		LCK: 5,
-		libido: 'Avg',
-		aggression: 'Avg',
-		loves: '—',
-		hates: '—',
-		mutations: '—',
-		room: DEFAULT_ROOMS[0],
+		libido: 5,
+		aggression: 5,
+		loves: '',
+		hates: '',
+		mutations: '',
+		room: '',
 		stray: false,
 		parent1: '',
 		parent2: '',
@@ -693,19 +1870,23 @@ export default function MewgenicsCats() {
 	const [copied, setCopied] = useState(false);
 	const [showAddRoom, setShowAddRoom] = useState(false);
 	const [newRoomName, setNewRoomName] = useState('');
+	const [hoveredCatId, setHoveredCatId] = useState(null);
+
+	// Derive rooms from cats
+	useEffect(() => {
+		const r = [...new Set(cats.map((c) => c.room))];
+		setRooms(r);
+		if (!r.includes(activeRoom)) setActiveRoom(r[0] || '');
+	}, [cats]);
 
 	// Load
 	useEffect(() => {
 		(async () => {
 			try {
-				const result = await window.storage.get('mewgenics-v8');
+				const result = await window.storage.get('mewgenics-v13');
 				if (result?.value) {
 					const data = JSON.parse(result.value);
 					if (data.cats) setCats(data.cats);
-					if (data.rooms) {
-						setRooms(data.rooms);
-						setActiveRoom(data.rooms[0]);
-					}
 				}
 			} catch {}
 			setLoaded(true);
@@ -717,43 +1898,38 @@ export default function MewgenicsCats() {
 		if (!loaded) return;
 		(async () => {
 			try {
-				await window.storage.set(
-					'mewgenics-v8',
-					JSON.stringify({ cats, rooms })
-				);
+				await window.storage.set('mewgenics-v13', JSON.stringify({ cats }));
 			} catch {}
 		})();
-	}, [cats, rooms, loaded]);
+	}, [cats, loaded]);
 
 	const resetForm = () => setForm({ ...emptyForm, room: activeRoom });
 
 	const handleAdd = () => {
 		if (!form.name.trim()) return;
 		const entry = { ...form, name: form.name.trim() };
-		entry.id = entry.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+		entry.id = entry.name
+			.toLowerCase()
+			.replace(/[^a-z0-9_.]/g, (c) => (c === ' ' ? '_' : c === '.' ? '.' : ''));
 		STATS.forEach((s) => (entry[s] = Number(entry[s])));
+		entry.libido = Number(entry.libido);
+		entry.aggression = Number(entry.aggression);
 		if (editIdx !== null) {
-			const updated = [...cats];
-			updated[editIdx] = entry;
-			setCats(updated);
+			const u = [...cats];
+			u[editIdx] = entry;
+			setCats(u);
 			setEditIdx(null);
-		} else {
-			setCats([...cats, entry]);
-		}
+		} else setCats([...cats, entry]);
 		resetForm();
 		setShowForm(false);
 	};
 
-	const handleEdit = (globalIdx) => {
-		setForm({ ...cats[globalIdx] });
-		setEditIdx(globalIdx);
+	const handleEdit = (gi) => {
+		setForm({ ...cats[gi] });
+		setEditIdx(gi);
 		setShowForm(true);
 	};
-
-	const handleDelete = (globalIdx) => {
-		setCats(cats.filter((_, idx) => idx !== globalIdx));
-	};
-
+	const handleDelete = (gi) => setCats(cats.filter((_, i) => i !== gi));
 	const handleSort = (col) => {
 		if (sortCol === col) setSortAsc(!sortAsc);
 		else {
@@ -763,29 +1939,17 @@ export default function MewgenicsCats() {
 	};
 
 	const handleAddRoom = () => {
-		const trimmed = newRoomName.trim();
-		if (!trimmed || rooms.includes(trimmed)) return;
-		setRooms([...rooms, trimmed]);
+		const t = newRoomName.trim();
+		if (!t || rooms.includes(t)) return;
+		// Add a placeholder cat to create the room, then remove it — or just set active
 		setNewRoomName('');
 		setShowAddRoom(false);
-	};
-
-	const handleDeleteRoom = (roomName) => {
-		if (rooms.length <= 1) return;
-		const catsInRoom = cats.filter((c) => c.room === roomName);
-		if (catsInRoom.length > 0) {
-			const fallback = rooms.find((r) => r !== roomName);
-			setCats(
-				cats.map((c) => (c.room === roomName ? { ...c, room: fallback } : c))
-			);
-		}
-		setRooms(rooms.filter((r) => r !== roomName));
-		if (activeRoom === roomName)
-			setActiveRoom(rooms.find((r) => r !== roomName));
+		setActiveRoom(t);
+		// Rooms derive from cats, so we need at least one cat. We'll add room to the list manually.
+		setRooms([...rooms, t]);
 	};
 
 	const totalStat = (cat) => STATS.reduce((sum, s) => sum + cat[s], 0);
-
 	const roomCats = cats.filter((c) => c.room === activeRoom);
 
 	const sorted = [...roomCats].sort((a, b) => {
@@ -813,6 +1977,9 @@ export default function MewgenicsCats() {
 		transition: 'background 0.15s',
 	});
 
+	const aggroLabel = (v) => (v <= 3 ? 'Low' : v <= 6 ? 'Mid' : 'High');
+	const aggroColor = (v) => (v <= 3 ? '#86efac' : v <= 6 ? '#ccc' : '#f87171');
+
 	return (
 		<div
 			style={{
@@ -823,22 +1990,6 @@ export default function MewgenicsCats() {
 				padding: '24px',
 			}}
 		>
-			{/* Test image for static asset loading */}
-			<div style={{ textAlign: 'center', marginBottom: 24 }}>
-				<img
-					src={testImgUrl}
-					alt="Mewgenics Test"
-					style={{
-						maxWidth: 320,
-						borderRadius: 12,
-						boxShadow: '0 2px 16px #0008',
-					}}
-				/>
-				<p style={{ color: '#aaa', fontSize: 13, marginTop: 8 }}>
-					Static asset test: If you see the cat image above, static serving
-					works!
-				</p>
-			</div>
 			<div style={{ margin: '0 auto' }}>
 				{/* Header */}
 				<div
@@ -874,33 +2025,32 @@ export default function MewgenicsCats() {
 									...STATS,
 									'Total',
 									'Libido',
-									'Aggression',
+									'Aggro',
 									'Loves',
 									'Hates',
 									'Mutations',
 									'Room',
 									'Stray',
-									'Parent1',
-									'Parent2',
+									'P1',
+									'P2',
 									'GP1',
 									'GP2',
 									'GP3',
 									'GP4',
 								].join(' | ');
-								const divider = header.replace(/[^|]/g, '-');
-								const rows = cats.map((c) => {
-									const total = STATS.reduce((s, k) => s + c[k], 0);
-									return [
+								const div = header.replace(/[^|]/g, '-');
+								const rows = cats.map((c) =>
+									[
 										c.name,
 										c.id,
 										c.sex,
 										...STATS.map((s) => c[s]),
-										total,
+										totalStat(c),
 										c.libido,
 										c.aggression,
-										c.loves,
-										c.hates,
-										c.mutations,
+										c.loves || '—',
+										c.hates || '—',
+										c.mutations || '—',
 										c.room,
 										c.stray ? 'yes' : 'no',
 										c.parent1 || '—',
@@ -909,10 +2059,11 @@ export default function MewgenicsCats() {
 										c.grandparent2 || '—',
 										c.grandparent3 || '—',
 										c.grandparent4 || '—',
-									].join(' | ');
-								});
-								const text = `Mewgenics Cat Roster (${cats.length} cats)\nBase stats only (inheritable by kittens). Stats range ~1-10, 7+ is strong.\nID field is the normalized name (lowercase, no spaces/special chars) used for genealogy references.\nParent/grandparent fields use normalized IDs. GP1-2 are Parent1's parents, GP3-4 are Parent2's parents.\nRooms: ${rooms.join(', ')}\n\n${header}\n${divider}\n${rows.join('\n')}`;
-								navigator.clipboard.writeText(text);
+									].join(' | ')
+								);
+								navigator.clipboard.writeText(
+									`Mewgenics Cat Roster (${cats.length} cats)\nBase stats only. Stats ~1-10, 7+ strong. Libido/Aggro 1-10.\nRooms: ${rooms.join(', ')}\n\n${header}\n${div}\n${rows.join('\n')}`
+								);
 								setCopied(true);
 								setTimeout(() => setCopied(false), 2000);
 							}}
@@ -966,34 +2117,11 @@ export default function MewgenicsCats() {
 								onClick={() => setActiveRoom(room)}
 								style={tabStyle(room)}
 							>
-								{room}
+								{room}{' '}
 								<span style={{ marginLeft: 8, fontSize: 12, opacity: 0.6 }}>
 									({cats.filter((c) => c.room === room).length})
 								</span>
 							</button>
-							{rooms.length > 1 && (
-								<button
-									onClick={(e) => {
-										e.stopPropagation();
-										handleDeleteRoom(room);
-									}}
-									style={{
-										position: 'absolute',
-										top: 2,
-										right: 2,
-										background: 'none',
-										border: 'none',
-										color: '#666',
-										cursor: 'pointer',
-										fontSize: 10,
-										padding: '2px 4px',
-										lineHeight: 1,
-									}}
-									title={`Delete ${room}`}
-								>
-									✕
-								</button>
-							)}
 						</div>
 					))}
 					{showAddRoom ? (
@@ -1139,9 +2267,9 @@ export default function MewgenicsCats() {
 										color: '#fff',
 									}}
 								>
-									<option value="♂">♂ Male</option>
-									<option value="♀">♀ Female</option>
-									<option value="⚥">⚥ Intersex</option>
+									<option value="male">♂ Male</option>
+									<option value="female">♀ Female</option>
+									<option value="herm">⚥ Herm</option>
 								</select>
 							</div>
 							<div>
@@ -1213,7 +2341,10 @@ export default function MewgenicsCats() {
 								>
 									💕 Libido
 								</label>
-								<select
+								<input
+									type="number"
+									min={1}
+									max={10}
 									value={form.libido}
 									onChange={(e) => setForm({ ...form, libido: e.target.value })}
 									style={{
@@ -1222,12 +2353,9 @@ export default function MewgenicsCats() {
 										borderRadius: 6,
 										padding: '8px 12px',
 										color: '#fff',
+										width: 60,
 									}}
-								>
-									<option value="Low">Low</option>
-									<option value="Avg">Avg</option>
-									<option value="High">High</option>
-								</select>
+								/>
 							</div>
 							<div>
 								<label
@@ -1240,7 +2368,10 @@ export default function MewgenicsCats() {
 								>
 									😾 Aggro
 								</label>
-								<select
+								<input
+									type="number"
+									min={1}
+									max={10}
 									value={form.aggression}
 									onChange={(e) =>
 										setForm({ ...form, aggression: e.target.value })
@@ -1251,12 +2382,9 @@ export default function MewgenicsCats() {
 										borderRadius: 6,
 										padding: '8px 12px',
 										color: '#fff',
+										width: 60,
 									}}
-								>
-									<option value="Low">Low</option>
-									<option value="Avg">Avg</option>
-									<option value="High">High</option>
-								</select>
+								/>
 							</div>
 							<div>
 								<label
@@ -1355,7 +2483,6 @@ export default function MewgenicsCats() {
 				<div
 					style={{
 						overflowX: 'auto',
-						borderRadius: showForm ? '0' : '0 12px 0 0',
 						border: '1px solid #333',
 						borderTop: 'none',
 					}}
@@ -1412,42 +2539,39 @@ export default function MewgenicsCats() {
 										colSpan={14}
 										style={{ padding: 40, textAlign: 'center', color: '#666' }}
 									>
-										No cats in this room. Add one above!
+										No cats in this room.
 									</td>
 								</tr>
 							)}
 							{sorted.map((cat, i) => {
-								const globalIdx = cats.indexOf(cat);
+								const gi = cats.indexOf(cat);
 								const total = totalStat(cat);
+								const isHovered = hoveredCatId === cat.id;
+								const rowBg = isHovered
+									? '#2a2a5a'
+									: i % 2 === 0
+										? '#1a1a2e'
+										: '#1f1f3a';
 								return (
 									<tr
-										key={cat.name + i}
+										key={cat.id + i}
 										style={{
-											background: i % 2 === 0 ? '#1a1a2e' : '#1f1f3a',
+											background: rowBg,
 											borderBottom: '1px solid #2a2a4a',
+											transition: 'background 0.1s',
 										}}
-										onMouseEnter={(e) =>
-											(e.currentTarget.style.background = '#2a2a5a')
-										}
-										onMouseLeave={(e) =>
-											(e.currentTarget.style.background =
-												i % 2 === 0 ? '#1a1a2e' : '#1f1f3a')
-										}
+										onMouseEnter={() => setHoveredCatId(cat.id)}
+										onMouseLeave={() => setHoveredCatId(null)}
 									>
 										<NameCellTooltip cat={cat} allCats={cats} />
 										<td
 											style={{
 												padding: '10px 12px',
 												textAlign: 'center',
-												color:
-													cat.sex === '♀'
-														? '#f472b6'
-														: cat.sex === '⚥'
-															? '#c084fc'
-															: '#60a5fa',
+												color: SEX_COLOR[cat.sex],
 											}}
 										>
-											{cat.sex}
+											{SEX_ICON[cat.sex] || cat.sex}
 										</td>
 										{STATS.map((s) => (
 											<td
@@ -1489,12 +2613,7 @@ export default function MewgenicsCats() {
 												padding: '10px 12px',
 												textAlign: 'center',
 												fontSize: 12,
-												color:
-													cat.aggression === 'High'
-														? '#f87171'
-														: cat.aggression === 'Low'
-															? '#86efac'
-															: '#ccc',
+												color: aggroColor(cat.aggression),
 											}}
 										>
 											{cat.aggression}
@@ -1504,11 +2623,11 @@ export default function MewgenicsCats() {
 												padding: '10px 12px',
 												textAlign: 'center',
 												fontSize: 12,
-												color: '#f9a8d4',
+												color: '#a7f3d0',
 												whiteSpace: 'nowrap',
 											}}
 										>
-											{cat.loves}
+											{cat.loves || '—'}
 										</td>
 										<td
 											style={{
@@ -1519,7 +2638,7 @@ export default function MewgenicsCats() {
 												whiteSpace: 'nowrap',
 											}}
 										>
-											{cat.hates}
+											{cat.hates || '—'}
 										</td>
 										<td
 											style={{
@@ -1530,7 +2649,7 @@ export default function MewgenicsCats() {
 												whiteSpace: 'nowrap',
 											}}
 										>
-											{cat.mutations}
+											{cat.mutations || '—'}
 										</td>
 										<td
 											style={{
@@ -1540,7 +2659,7 @@ export default function MewgenicsCats() {
 											}}
 										>
 											<button
-												onClick={() => handleEdit(globalIdx)}
+												onClick={() => handleEdit(gi)}
 												style={{
 													background: 'none',
 													border: 'none',
@@ -1553,7 +2672,7 @@ export default function MewgenicsCats() {
 												✏️
 											</button>
 											<button
-												onClick={() => handleDelete(globalIdx)}
+												onClick={() => handleDelete(gi)}
 												style={{
 													background: 'none',
 													border: 'none',
@@ -1596,7 +2715,12 @@ export default function MewgenicsCats() {
 					>
 						💞 {activeRoom} — Relationships
 					</h2>
-					<RelationshipGraph cats={roomCats} allCats={cats} />
+					<RelationshipGraph
+						cats={roomCats}
+						allCats={cats}
+						hoveredCatId={hoveredCatId}
+						setHoveredCatId={setHoveredCatId}
+					/>
 				</div>
 			</div>
 		</div>
