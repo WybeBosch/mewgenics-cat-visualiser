@@ -599,8 +599,52 @@ def main():
 
     cats, housed_count, ancestor_count = extract(save_path)
 
-    # Always write output to the get-the-data directory
     out_path = os.path.join(script_dir, "mewgenics_cats.json")
+    old_cats = []
+    if os.path.exists(out_path):
+        try:
+            with open(out_path, "r", encoding="utf-8") as f:
+                old_cats = json.load(f)
+        except Exception:
+            print("Warning: Failed to load existing .json for diff.")
+
+    def cat_map(cat_list):
+        return {cat["id"]: cat for cat in cat_list}
+
+    old_map = cat_map(old_cats)
+    new_map = cat_map(cats)
+
+    added = [cat for cid, cat in new_map.items() if cid not in old_map]
+    removed = [cat for cid, cat in old_map.items() if cid not in new_map]
+    modified = []
+    for cid in old_map:
+        if cid in new_map:
+            # Compare relevant fields
+            old = old_map[cid]
+            new = new_map[cid]
+            # Ignore fields that are not relevant for diff
+            fields = ["name", "sex", "STR", "DEX", "CON", "INT", "SPD", "CHA", "LCK", "libido", "aggression", "room", "parent1", "parent2", "grandparent1", "grandparent2", "grandparent3", "grandparent4", "loves", "hates", "stray"]
+            if any(old.get(f) != new.get(f) for f in fields):
+                modified.append(new)
+
+    if old_cats:
+        if added or removed or modified:
+            print("\n==============================")
+            print("Existing .json found, however our data is newer.")
+            print(f"[{len(removed)} cat(s) removed, {len(added)} cat(s) added, {len(modified)} cat(s) modified]")
+            print("Do you want to overwrite? (y/n): ", end="")
+            resp = input().strip().lower()
+            print("=========================\n")
+            if resp != "y":
+                print("Aborting procedure. No changes written.")
+                sys.exit(0)
+        else:
+            print("\n==============================")
+            print("Existing .json found. No changes in newer output compared to old file detected.")
+            print("Aborting procedure, make sure you have the right save file.")
+            print("Sometimes you need to press 'end of day' for it to save things to the save file.")
+            sys.exit(0)
+
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(cats, f, indent=2, ensure_ascii=False)
 
