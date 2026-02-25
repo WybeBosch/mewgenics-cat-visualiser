@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { sharedTooltipContents } from '../utils/utils.jsx';
 import {
 	SEX_ICON,
