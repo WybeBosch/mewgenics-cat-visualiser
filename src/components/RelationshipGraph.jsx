@@ -106,12 +106,12 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 		return positions.find((p) => p.name.toLowerCase() === clean);
 	};
 
-	// Only add hate edges, not love edges for mutual pairs
+	// Add hate edges and one-way love edges (not mutual pairs)
 	const edges = [];
 	ordered.forEach((cat) => {
 		const from = findPos(cat.name);
 		if (!from) return;
-		// Only add hate edges
+		// Hate edges
 		if (cat.hates) {
 			const to = findPos(cat.hates);
 			if (to)
@@ -122,6 +122,24 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 					fromId: cat.id,
 					toName: cat.hates,
 				});
+		}
+		// Love edges (one-way, not mutual)
+		if (cat.loves) {
+			const to = findPos(cat.loves);
+			if (to) {
+				const isMutual = ordered.some(
+					(other) => other.name === cat.loves && other.loves === cat.name
+				);
+				if (!isMutual) {
+					edges.push({
+						from,
+						to,
+						type: 'love',
+						fromId: cat.id,
+						toName: cat.loves,
+					});
+				}
+			}
 		}
 	});
 
@@ -231,20 +249,24 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 							(hoveredCat.hates &&
 								e.toName === hoveredCat.hates &&
 								e.fromId === hoveredCat.id) ||
-							hoveredCat.name === e.to.name
+							hoveredCat.name === e.to.name ||
+							(hoveredCat.loves &&
+								e.toName === hoveredCat.loves &&
+								e.fromId === hoveredCat.id)
 						);
 					})
 					.map((e, i) => {
 						const p = getPath(e.from, e.to, e.type);
+						const isLove = e.type === 'love';
 						return (
 							<path
 								key={i}
 								d={`M ${p.x1} ${p.y1} Q ${p.cx} ${p.cy} ${p.x2} ${p.y2}`}
 								fill="none"
-								stroke="#ef4444"
+								stroke={isLove ? '#4ade80' : '#ef4444'}
 								strokeWidth={2}
-								strokeDasharray="6,4"
-								markerEnd="url(#arrow-hate)"
+								strokeDasharray={isLove ? '0' : '6,4'}
+								markerEnd={isLove ? 'url(#arrow-love)' : 'url(#arrow-hate)'}
 								opacity={0.7}
 							/>
 						);
