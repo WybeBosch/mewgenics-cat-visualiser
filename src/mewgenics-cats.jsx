@@ -10,7 +10,8 @@ import {
 } from './config/config.jsx';
 import { INITIAL_CATS } from './data/initial-cats.jsx';
 
-import { NameCellTooltip, RelationshipGraph } from './utils/utils.jsx';
+import { NameCellTooltip } from './utils/utils.jsx';
+import { RelationshipGraph } from './components/RelationshipGraph.jsx';
 
 /* ─── Main App ─── */
 export default function MewgenicsCats() {
