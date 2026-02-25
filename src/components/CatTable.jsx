@@ -488,6 +488,7 @@ export function CatTable({
 						<tr style={{ background: '#252547' }}>
 							{[
 								{ key: 'name', label: 'Name' },
+								{ key: 'partnerRoom', label: '💞' },
 								{ key: 'sex', label: 'Sex' },
 								...STATS.map((s) => ({
 									key: s,
@@ -504,14 +505,17 @@ export function CatTable({
 								<th
 									key={col.key}
 									onClick={
-										col.key !== 'actions'
+										col.key !== 'actions' && col.key !== 'partnerRoom'
 											? () => handleSort(col.key)
 											: undefined
 									}
 									style={{
 										padding: '12px 12px',
 										textAlign: col.key === 'name' ? 'left' : 'center',
-										cursor: col.key !== 'actions' ? 'pointer' : 'default',
+										cursor:
+											col.key !== 'actions' && col.key !== 'partnerRoom'
+												? 'pointer'
+												: 'default',
 										userSelect: 'none',
 										fontWeight: 600,
 										color: sortCol === col.key ? '#6366f1' : '#aaa',
@@ -559,6 +563,23 @@ export function CatTable({
 								: i % 2 === 0
 									? '#1a1a2e'
 									: '#1f1f3a';
+
+							// Check if partner is in another room
+							let partnerInOtherRoom = false;
+							if (cat.loves) {
+								const partner = cats.find(
+									(c) => c.name === cat.loves || c.id === cat.loves
+								);
+								if (
+									partner &&
+									partner.room &&
+									cat.room &&
+									partner.room !== cat.room
+								) {
+									partnerInOtherRoom = true;
+								}
+							}
+
 							return (
 								<tr
 									key={cat.id + i}
@@ -571,6 +592,15 @@ export function CatTable({
 									onMouseLeave={() => setHoveredCatId(null)}
 								>
 									<TableTooltipPopup cat={cat} allCats={cats} />
+									<td
+										style={{
+											padding: '10px 12px',
+											textAlign: 'center',
+											fontSize: 18,
+										}}
+									>
+										{partnerInOtherRoom ? '🕵️‍♂️' : ''}
+									</td>
 									<td
 										style={{
 											padding: '10px 12px',

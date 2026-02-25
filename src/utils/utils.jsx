@@ -33,6 +33,19 @@ function sharedTooltipContents(cat, allCats) {
 		lines.push({ label: 'GP (P1 side)', value: `${gpn[0]}  ×  ${gpn[1]}` });
 		lines.push({ label: 'GP (P2 side)', value: `${gpn[2]}  ×  ${gpn[3]}` });
 	}
+	// Partner in other room logic (always last)
+	if (cat.loves) {
+		const partner = allCats.find(
+			(c) => c.name === cat.loves || c.id === cat.loves
+		);
+		if (partner && partner.room && cat.room && partner.room !== cat.room) {
+			lines.push({ label: '—', value: '' }); // separator line
+			lines.push({
+				label: 'Partner in other room',
+				value: `${partner.name}, ${partner.room}`,
+			});
+		}
+	}
 	return lines;
 }
 
