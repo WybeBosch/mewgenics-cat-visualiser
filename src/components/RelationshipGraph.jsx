@@ -107,7 +107,14 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 		// Only add hate edges
 		if (cat.hates) {
 			const to = findPos(cat.hates);
-			if (to) edges.push({ from, to, type: 'hate' });
+			if (to)
+				edges.push({
+					from,
+					to,
+					type: 'hate',
+					fromId: cat.id,
+					toName: cat.hates,
+				});
 		}
 	});
 
@@ -180,26 +187,40 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 				</defs>
 
 				{/* ...existing code... (edges, external relations, shared lineage, nodes, tooltip) */}
-				{edges.map((e, i) => {
-					const p = getPath(e.from, e.to, e.type);
-					return (
-						<path
-							key={i}
-							d={`M ${p.x1} ${p.y1} Q ${p.cx} ${p.cy} ${p.x2} ${p.y2}`}
-							fill="none"
-							stroke="#ef4444"
-							strokeWidth={2}
-							strokeDasharray="6,4"
-							markerEnd="url(#arrow-hate)"
-							opacity={0.7}
-						/>
-					);
-				})}
+				{edges
+					.filter((e) => {
+						if (hovIdx === null) return true;
+						// Only show edges where hovered cat is involved
+						const hoveredCat = ordered[hovIdx];
+						return (
+							e.fromId === hoveredCat.id ||
+							(hoveredCat.hates &&
+								e.toName === hoveredCat.hates &&
+								e.fromId === hoveredCat.id) ||
+							hoveredCat.name === e.to.name
+						);
+					})
+					.map((e, i) => {
+						const p = getPath(e.from, e.to, e.type);
+						return (
+							<path
+								key={i}
+								d={`M ${p.x1} ${p.y1} Q ${p.cx} ${p.cy} ${p.x2} ${p.y2}`}
+								fill="none"
+								stroke="#ef4444"
+								strokeWidth={2}
+								strokeDasharray="6,4"
+								markerEnd="url(#arrow-hate)"
+								opacity={0.7}
+							/>
+						);
+					})}
 
 				{/* Draw shared box for mutual love pairs */}
 				{(() => {
 					const boxes = [];
 					const drawn = new Set();
+					const boxOpacity = hovIdx !== null ? 0.05 : 0.7;
 					for (let i = 0; i < ordered.length - 1; i++) {
 						const a = ordered[i],
 							b = ordered[i + 1];
@@ -228,7 +249,10 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 									fill="none"
 									stroke="#4ade80"
 									strokeWidth={4}
-									opacity={0.35}
+									opacity={boxOpacity}
+									style={{
+										transition: 'opacity 0.45s cubic-bezier(0.4,0,0.2,1)',
+									}}
 								/>
 							);
 							drawn.add(a.name);
