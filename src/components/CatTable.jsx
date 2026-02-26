@@ -100,20 +100,25 @@ export function CatTable({
 				</div>
 				<div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
 					{/* Upload JSON Button */}
-					<label style={{
-						display: 'flex',
-						alignItems: 'center',
-						background: '#374151',
-						color: '#fff',
-						border: 'none',
-						borderRadius: 8,
-						padding: '10px 16px',
-						cursor: 'pointer',
-						fontWeight: 600,
-						fontSize: 14,
-						marginRight: 0,
-					}}>
-						<span role="img" aria-label="Upload" style={{marginRight: 6}}>⬆️</span> Upload JSON
+					<label
+						style={{
+							display: 'flex',
+							alignItems: 'center',
+							background: '#374151',
+							color: '#fff',
+							border: 'none',
+							borderRadius: 8,
+							padding: '10px 16px',
+							cursor: 'pointer',
+							fontWeight: 600,
+							fontSize: 14,
+							marginRight: 0,
+						}}
+					>
+						<span role="img" aria-label="Upload" style={{ marginRight: 6 }}>
+							⬆️
+						</span>{' '}
+						Upload JSON
 						<input
 							type="file"
 							accept=".json,application/json"
