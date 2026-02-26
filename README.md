@@ -7,6 +7,7 @@ This project is a local web-based inspector for visualizing cat data from the ga
 - Upload or load cat data from JSON files
 - Visualize cat relationships and attributes
 - No persistent storage or editing
+(Yall can just use some other mod to edit your game)
 
 ## Project Structure
 
@@ -15,24 +16,19 @@ This project is a local web-based inspector for visualizing cat data from the ga
 - `package.json` — Project dependencies and scripts
 - `vite.config.js` — Vite configuration
 
-## Git Ignore
-
-(See below for ignored files)
-
 ## Deployment
 
 You can deploy this project to GitHub Pages for a live view. See instructions in this README or ask for help.
 
 ---
 
-## How to Use
+## How to Use locally
 
 1. Run `npm install` to install dependencies.
 2. Start the local server with `npm run dev`.
 3. Upload or load your cat data JSON file.
 
----
 
-## License
+## How to use on the web
 
-MIT
+Just go to xxxxx and use it kek
