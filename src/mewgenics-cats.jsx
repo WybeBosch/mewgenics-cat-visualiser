@@ -243,6 +243,15 @@ export default function MewgenicsCats() {
 						allCats={cats}
 						hoveredCatId={hoveredCatId}
 						setHoveredCatId={setHoveredCatId}
+						getAge={(cat) => {
+							if (
+								typeof cat.saveDay === 'number' &&
+								typeof cat.birthday === 'number'
+							) {
+								return cat.saveDay - cat.birthday;
+							}
+							return null;
+						}}
 					/>
 				</div>
 			</div>

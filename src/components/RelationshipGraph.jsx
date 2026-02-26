@@ -10,7 +10,13 @@ import {
 
 import { useState } from 'react';
 
-function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
+function RelationshipGraph({
+	cats,
+	allCats,
+	hoveredCatId,
+	setHoveredCatId,
+	getAge,
+}) {
 	const [selectedCatId, setSelectedCatId] = useState(null);
 
 	if (cats.length === 0)
@@ -85,6 +91,15 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 		cy = H / 2;
 	const radius = Math.min(200, 60 + ordered.length * 12);
 
+	// Node radius based on age
+	const getNodeRadius = (cat) => {
+		if (getAge) {
+			const age = getAge(cat);
+			if (age !== null && age <= 1) return 18; // kitten
+		}
+		return 28;
+	};
+
 	let positions;
 	if (useRowLayout) {
 		// Place cats in rows, 8 per row, with more spacing
@@ -105,6 +120,7 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 				sex: cat.sex,
 				x,
 				y,
+				nodeR: getNodeRadius(cat),
 			};
 		});
 	} else {
@@ -115,6 +131,7 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 				sex: cat.sex,
 				x: cx + radius * Math.cos(angle),
 				y: cy + radius * Math.sin(angle),
+				nodeR: getNodeRadius(cat),
 			};
 		});
 	}
@@ -166,11 +183,12 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 		const dx = to.x - from.x,
 			dy = to.y - from.y;
 		const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-		const nodeR = 28;
-		const x1 = from.x + dx * (nodeR / dist),
-			y1 = from.y + dy * (nodeR / dist);
-		const x2 = from.x + dx * ((dist - nodeR) / dist),
-			y2 = from.y + dy * ((dist - nodeR) / dist);
+		const nodeR1 = from.nodeR || 28;
+		const nodeR2 = to.nodeR || 28;
+		const x1 = from.x + dx * (nodeR1 / dist),
+			y1 = from.y + dy * (nodeR1 / dist);
+		const x2 = from.x + dx * ((dist - nodeR2) / dist),
+			y2 = from.y + dy * ((dist - nodeR2) / dist);
 		const mx = (x1 + x2) / 2,
 			my = (y1 + y2) / 2;
 		const offset = type === 'love' ? 25 : -25;
@@ -468,7 +486,7 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 						<circle
 							cx={p.x}
 							cy={p.y}
-							r={28}
+							r={p.nodeR || 28}
 							fill={
 								hovIdx === i
 									? SEX_BG_HOVER[ordered[i].sex]

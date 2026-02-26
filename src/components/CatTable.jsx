@@ -32,6 +32,12 @@ export function CatTable({
 	resetForm,
 }) {
 	const totalStat = (cat) => STATS.reduce((sum, s) => sum + cat[s], 0);
+	const getAge = (cat) => {
+		if (typeof cat.saveDay === 'number' && typeof cat.birthday === 'number') {
+			return cat.saveDay - cat.birthday;
+		}
+		return null;
+	};
 	const roomCats = cats.filter((c) => c.room === activeRoom);
 	const sorted = [...roomCats].sort((a, b) => {
 		if (!sortCol) return 0;
@@ -497,6 +503,7 @@ export function CatTable({
 									label: `${STAT_ICONS[s]} ${s}`,
 								})),
 								{ key: 'total', label: 'Total' },
+								{ key: 'age', label: 'Age' },
 								{ key: 'libido', label: OTHER_INFO_ICONS.libido },
 								{ key: 'aggression', label: OTHER_INFO_ICONS.aggression },
 								{ key: 'loves', label: OTHER_INFO_ICONS.loves },
@@ -559,6 +566,7 @@ export function CatTable({
 						{sorted.map((cat, i) => {
 							const gi = cats.indexOf(cat);
 							const total = totalStat(cat);
+							const age = getAge(cat);
 							const isHovered = hoveredCatId === cat.id;
 							const rowBg = isHovered
 								? '#2a2a5a'
@@ -602,6 +610,27 @@ export function CatTable({
 										}}
 									>
 										{partnerInOtherRoom ? '🕵️‍♂️' : ''}
+									</td>
+									<td
+										style={{
+											padding: '10px 12px',
+											textAlign: 'center',
+											fontWeight: 600,
+											color:
+												age !== null
+													? age <= 1
+														? '#fbbf24'
+														: '#38bdf8'
+													: '#888',
+											fontSize: age !== null && age <= 1 ? '0.95em' : '1em',
+										}}
+										title={
+											age !== null
+												? `${age} day${age === 1 ? '' : 's'} old`
+												: 'Unknown'
+										}
+									>
+										{age !== null ? age : '—'}
 									</td>
 									<td
 										style={{
