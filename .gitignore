@@ -30,3 +30,5 @@ Thumbs.db
 # Others
 mewgenics_cats.json
 *.log
+
+.claude
