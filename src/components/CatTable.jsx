@@ -45,6 +45,11 @@ export function CatTable({
 			return sortAsc
 				? totalStat(a) - totalStat(b)
 				: totalStat(b) - totalStat(a);
+		if (sortCol === 'age') {
+			const av = getAge(a);
+			const bv = getAge(b);
+			return sortAsc ? av - bv : bv - av;
+		}
 		const av = a[sortCol],
 			bv = b[sortCol];
 		if (typeof av === 'string')
@@ -497,13 +502,13 @@ export function CatTable({
 							{[
 								{ key: 'name', label: 'Name' },
 								{ key: 'partnerRoom', label: '💞' },
+								{ key: 'age', label: 'Age' },
 								{ key: 'sex', label: 'Sex' },
 								...STATS.map((s) => ({
 									key: s,
 									label: `${STAT_ICONS[s]} ${s}`,
 								})),
 								{ key: 'total', label: 'Total' },
-								{ key: 'age', label: 'Age' },
 								{ key: 'libido', label: OTHER_INFO_ICONS.libido },
 								{ key: 'aggression', label: OTHER_INFO_ICONS.aggression },
 								{ key: 'loves', label: OTHER_INFO_ICONS.loves },
