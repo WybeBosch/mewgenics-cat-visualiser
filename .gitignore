@@ -32,3 +32,5 @@ mewgenics_cats.json
 *.log
 
 .claude
+
+__pycache__
