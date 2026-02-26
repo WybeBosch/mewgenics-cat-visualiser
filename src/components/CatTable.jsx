@@ -99,6 +99,28 @@ export function CatTable({
 					</p>
 				</div>
 				<div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+					{/* Upload Save File Button */}
+					<button
+						style={{
+							display: 'flex',
+							alignItems: 'center',
+							background: '#374151',
+							color: '#fff',
+							border: 'none',
+							borderRadius: 8,
+							padding: '10px 16px',
+							cursor: 'pointer',
+							fontWeight: 600,
+							fontSize: 14,
+							marginRight: 0,
+						}}
+					>
+						<span role="img" aria-label="Save File" style={{ marginRight: 6 }}>
+							💾
+						</span>
+						Upload Save File
+					</button>
+
 					{/* Upload JSON Button */}
 					<label
 						style={{
