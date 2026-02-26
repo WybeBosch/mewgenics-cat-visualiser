@@ -108,4 +108,4 @@ You can deploy this project to GitHub Pages for a live view. See instructions in
 
 ## How to use on the web
 
-Just go to xxxxx and use it kek
+https://wybebosch.github.io/mewgenics-cat-visualiser/
