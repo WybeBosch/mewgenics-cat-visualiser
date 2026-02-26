@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { TableTooltipPopup } from '../utils/utils.jsx';
 import {
 	STAT_ICONS,
