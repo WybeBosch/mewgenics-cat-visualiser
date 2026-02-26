@@ -1,0 +1,5 @@
+- move more logic from the svg inside chunk components
+- for matched pairs, allow them to have lines to each other again.
+- make the "hover over something" and it highlighting in the graph and the table work again
+- move to tailwind, or just give everything nice classnames, and move it to nested postcss
+- implement typescript
