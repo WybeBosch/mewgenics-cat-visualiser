@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import catsJson from './data-grabber/python/public/mewgenics_cats.json';
 import { logIfEnabled } from './utils/utils.jsx';
 
 export function useMewgenicsCatsLogic() {
@@ -19,20 +20,18 @@ export function useMewgenicsCatsLogic() {
 
 	// Load cats from storage and JSON, merge mutations, use newer source
 	useEffect(() => {
+		let cancelled = false;
 		(async () => {
 			let jsonCats = [];
 			let jsonTimestamp = '';
 			let storageCats = [];
 			let storageTimestamp = '';
 			try {
-				// Load JSON
-				const response = await fetch('/mewgenics_cats.json');
-				if (response.ok) {
-					const data = await response.json();
-					jsonCats = Array.isArray(data) ? data : data.cats || [];
-					if (jsonCats.length > 0 && jsonCats[0].script_start_time) {
-						jsonTimestamp = jsonCats[0].script_start_time;
-					}
+				// Load JSON from import
+				const data = catsJson;
+				jsonCats = Array.isArray(data) ? data : data.cats || [];
+				if (jsonCats.length > 0 && jsonCats[0].script_start_time) {
+					jsonTimestamp = jsonCats[0].script_start_time;
 				}
 			} catch {}
 			try {
@@ -76,10 +75,15 @@ export function useMewgenicsCatsLogic() {
 			} else {
 				mergedCats = storageCats;
 			}
-			logIfEnabled('[cats] mergedCats:', mergedCats);
-			setCats(mergedCats);
-			setLoaded(true);
+			if (!cancelled) {
+				logIfEnabled('[cats] mergedCats:', mergedCats);
+				setCats(mergedCats);
+				setLoaded(true);
+			}
 		})();
+		return () => {
+			cancelled = true;
+		};
 	}, []);
 
 	// Save cats to storage
