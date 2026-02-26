@@ -732,7 +732,10 @@ def main():
             print(f"[DEBUG] Cat '{debug_catname}' not found in extracted data.")
         sys.exit(0)
 
-    out_path = os.path.join(script_dir, "mewgenics_cats.json")
+    # Output to public subfolder by default
+    public_dir = os.path.join(script_dir, "public")
+    os.makedirs(public_dir, exist_ok=True)
+    out_path = os.path.join(public_dir, "mewgenics_cats.json")
     old_cats = []
     if os.path.exists(out_path):
         try:

@@ -1,33 +1,87 @@
-# get-the-data
+# Mewgenics Cat Extractor (Python)
 
-This folder contains scripts and data files for extracting cat information from Mewgenics save files.
+Extracts cat data from a Mewgenics save file (`steamcampaign01.sav`) to `mewgenics_cats.json`.
 
-## How to Generate Cat Data
+- Looks for the save in this folder, or at a path you provide, or from a `.env` variable.
 
-You have two options to create cat data for use in the visualizer:
+## Usage
 
-1. **Python Script (Local File):**
-	- Run `mewgenics_extract.py` to extract cat data from a save file and generate a `.json` file on your drive.
-	- Place the resulting `.json` file in this folder.
+Run with no arguments (looks for `steamcampaign01.sav` in the current folder, or uses `.env` variable for path if present):
 
-2. **Browser (JavaScript + SQL WASM):**
-	- Use the web app to upload a save file and extract cat data directly in your browser using JavaScript and SQL WASM.
-	- No need to generate a local file; everything happens client-side.
+```sh
+python mewgenics_extract.py
+```
 
+Or pass the save path directly: (make sure to use quotes)
 
-## Contents
+```sh
+python mewgenics_extract.py "C:/path/to/steamcampaign01.sav"
+```
 
-- `mewgenics_extract.py` — Python script for extracting cat data
-- `mewgenics_cats.json` / `mewgenics_cats_old.json` — Example cat data files
-- `steamcampaign01.sav` — Example save file
-- `__pycache__/` — Python cache files (ignored)
+## Requirements
 
+- Python 3 (standard library only)
+- Windows-only process check
 
-## Git Ignore
+## Features
 
-The following files and folders in this directory are currently ignored by git:
+- Only cats with room assignments
+- Includes stats, lineage, traits
+- Prompts before overwriting JSON
 
-- `.env` — Environment files
-- `__pycache__/` — Python cache files
-- `mewgenics_cats.json` — Generated cat data
-- `steamcampaign01.sav` — Save file
+## Example Output
+
+```
+==============================
+Reading save from:
+[.env file]
+
+Path:
+["C:/Users/.../Mewgenics/.../steamcampaign01.sav"]
+==============================
+
+Total cats found: [43]
+Found [43] cats with room assignments
+Fetched [26] additional ancestor blobs for name lookups
+
+==============================
+Updated .json file at :
+["./mewgenics_cats.json"]
+==============================
+```
+
+Example `mewgenics_cats.json`:
+
+```json
+[
+  {
+    "name": "Snoozy",
+    "id": "snoozy",
+    "sex": "male",
+    "STR": 6,
+    "DEX": 5,
+    "CON": 7,
+    "INT": 6,
+    "SPD": 5,
+    "CHA": 6,
+    "LCK": 4,
+    "libido": "average",
+    "libido_raw": 0.4264,
+    "aggression": "high",
+    "aggression_raw": 0.723,
+    "loves": "Madame Maxime",
+    "hates": "Omry",
+    "room": "Attic",
+    "stray": false,
+    "parent1": "Lucille",
+    "parent2": "Fatman",
+    "grandparent1": "",
+    "grandparent2": "",
+    "grandparent3": "",
+    "grandparent4": "",
+    "saveDay": 113,
+    "birthday": 38,
+    "script_start_time": "2026-02-26T12:01:14"
+  }
+]
+```
