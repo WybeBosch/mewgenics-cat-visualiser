@@ -20,6 +20,8 @@ import json
 import sys
 import os
 
+from typing import Optional, Tuple
+
 
 # Native Windows process check (no external packages)
 import subprocess
@@ -109,7 +111,79 @@ def lz4_decompress_block(src: bytes, uncompressed_size: int) -> bytes:
 # Cat Blob Parser
 # =============================================================================
 
-def parse_cat_blob(key: int, blob: bytes) -> dict | None:
+def u64_le(b: bytes, off: int) -> int:
+    return struct.unpack_from('<Q', b, off)[0]
+
+def i64_le(b: bytes, off: int) -> int:
+    return struct.unpack_from('<q', b, off)[0]
+
+def find_birthday_info(dec: bytes, current_day: Optional[int] = None) -> Tuple[str, Optional[int], Optional[int]]:
+    """
+    Find (class_name, birthday_day, birthday_off) in a decompressed cat blob.
+
+    - Near the end of the blob there is a length-prefixed ASCII identifier that is the class name:
+          <u64 len> <ASCII bytes...>
+    - 12 bytes AFTER the end of that string is:
+          <i64 birthday_day>
+    - Immediately after birthday_day is a sentinel:
+          <i64 -1>   (0xFF..FF)
+
+    Age shown in UI is:
+        age_days = current_day - birthday_day
+    """
+    n = len(dec)
+    if n < 64:
+        return ("", None, None)
+
+    AGE_CAP = 500_000
+
+    def _accept(bday: int) -> bool:
+        if current_day is None:
+            return True
+        age = int(current_day) - int(bday)
+        return 0 <= age <= AGE_CAP
+
+    def _looks_ascii_ident(sb: bytes) -> bool:
+        return all(32 <= b < 127 for b in sb)
+
+    def _scan_range(start: int, end: int) -> Optional[Tuple[str, int, int]]:
+        best: Optional[Tuple[str, int, int]] = None
+        for off in range(start, max(start, end - 8)):
+            if off + 8 > n:
+                break
+            ln = u64_le(dec, off)
+            if ln < 3 or ln > 64:
+                continue
+            str_off = off + 8
+            str_end = str_off + int(ln)
+            bday_off = str_end + 12
+            if bday_off + 16 > n:
+                continue
+            sb = dec[str_off:str_end]
+            if not _looks_ascii_ident(sb):
+                continue
+            bday = i64_le(dec, bday_off)
+            sentinel = i64_le(dec, bday_off + 8)
+            if sentinel != -1:
+                continue
+            if not _accept(int(bday)):
+                continue
+            cls = sb.decode("ascii", errors="strict")
+            cand = (cls, int(bday), int(bday_off))
+            if best is None or cand[2] > best[2]:
+                best = cand
+        return best
+
+    tail = 2048
+    found = _scan_range(max(0, n - tail), n)
+    if found:
+        return found
+    found = _scan_range(0, n)
+    if found:
+        return found
+    return ("", None, None)
+
+def parse_cat_blob(key: int, blob: bytes, save_day: Optional[int] = None) -> dict | None:
     """Parse a single cat record from its LZ4-compressed blob.
 
     Blob layout (after decompression):
@@ -255,6 +329,13 @@ def parse_cat_blob(key: int, blob: bytes) -> dict | None:
             return "average"
         return "high"
 
+    # Birthday extraction
+
+    _, birthday_day, _ = find_birthday_info(dec, save_day)
+    # Birthday should match game's value exactly, including for kittens (can be > saveDay)
+    # For kittens, birthday = saveDay - age + 2 (age=1, so birthday = saveDay + 1)
+    # The value from find_birthday_info is correct as-is, so just use it directly as integer
+
     return {
         "key": key,
         "name": name,
@@ -272,6 +353,7 @@ def parse_cat_blob(key: int, blob: bytes) -> dict | None:
         "aggression_raw": round(aggression_raw, 4),
         "loves_key": loves_key,
         "hates_key": hates_key,
+        "birthday": birthday_day,
     }
 
 
@@ -400,7 +482,7 @@ def parse_pedigree(pedigree: bytes, max_cat_key: int) -> dict[int, tuple[int, in
 # Main Extraction
 # =============================================================================
 
-def fetch_cat_blobs(cur, keys: set[int]) -> dict[int, dict]:
+def fetch_cat_blobs(cur, keys: set[int], save_day: Optional[int] = None) -> dict[int, dict]:
     """Fetch and parse cat blobs for a specific set of keys."""
     if not keys:
         return {}
@@ -409,7 +491,7 @@ def fetch_cat_blobs(cur, keys: set[int]) -> dict[int, dict]:
                 list(keys))
     cats = {}
     for key, blob in cur.fetchall():
-        cat = parse_cat_blob(key, blob)
+        cat = parse_cat_blob(key, blob, save_day)
         if cat:
             cats[key] = cat
     return cats
@@ -443,12 +525,9 @@ def extract(save_path: str) -> list[dict]:
         conn.close()
         return [], 0, 0
 
-    # --- 2. Fetch cat blobs only for housed cats ---
-    housed_cats = fetch_cat_blobs(cur, housed_keys)
-    # Remove keys that failed to parse
-    housed_keys = set(housed_cats.keys())
 
-    # --- 3. Parse pedigree to find parent/grandparent keys ---
+    # --- 2. Fetch cat blobs only for housed cats ---
+    # We need save_day for birthday extraction, so parse pedigree first
     cur.execute("SELECT key FROM cats ORDER BY key DESC LIMIT 1")
     max_key = cur.fetchone()[0]
 
@@ -459,6 +538,14 @@ def extract(save_path: str) -> list[dict]:
 
     # saveDay: current in-game day, stored as int32 at offset 4584 in the pedigree blob
     save_day = struct.unpack_from('<i', pedigree_blob, 4584)[0] if pedigree_blob and len(pedigree_blob) >= 4588 else 0
+
+    housed_cats = fetch_cat_blobs(cur, housed_keys, save_day)
+    # Remove keys that failed to parse
+    housed_keys = set(housed_cats.keys())
+
+
+    # --- 3. Parse pedigree to find parent/grandparent keys ---
+    # (already done above)
 
     # Collect ancestor keys we need names for
     ancestor_keys = set()
@@ -483,7 +570,7 @@ def extract(save_path: str) -> list[dict]:
     missing_keys = ancestor_keys - housed_keys
 
     # --- 4. Fetch ancestor blobs for name lookups ---
-    ancestor_cats = fetch_cat_blobs(cur, missing_keys)
+    ancestor_cats = fetch_cat_blobs(cur, missing_keys, save_day)
 
     conn.close()
 
@@ -539,6 +626,7 @@ def extract(save_path: str) -> list[dict]:
             "grandparent3": get_name(gp_keys[2]),
             "grandparent4": get_name(gp_keys[3]),
             "saveDay": save_day,
+            "birthday": c.get("birthday"),
         }
         output.append(entry)
 
