@@ -3,7 +3,7 @@ import { STATS } from './config/config.jsx';
 // import removed: now loading from JSON
 import { RelationshipGraph } from './components/RelationshipGraph.jsx';
 import { CatTable } from './components/CatTable.jsx';
-
+import { logIfEnabled } from './utils/utils.jsx';
 /* ─── Main App ─── */
 
 export default function MewgenicsCats() {
@@ -18,6 +18,8 @@ export default function MewgenicsCats() {
 	const [copied, setCopied] = useState(false);
 
 	const [hoveredCatId, setHoveredCatId] = useState(null);
+	const [savLoading, setSavLoading] = useState(false);
+	const [savError, setSavError] = useState(null);
 
 	// --- Derived ---
 	const rooms = useMemo(() => [...new Set(cats.map((c) => c.room))], [cats]);
@@ -118,6 +120,7 @@ export default function MewgenicsCats() {
 			} else {
 				mergedCats = storageCats;
 			}
+			logIfEnabled('[cats] mergedCats:', mergedCats);
 			setCats(mergedCats);
 			setLoaded(true);
 		})();
@@ -129,6 +132,7 @@ export default function MewgenicsCats() {
 		(async () => {
 			try {
 				await window.storage.set('mewgenics-v14', JSON.stringify({ cats }));
+				logIfEnabled('[cats] saved to storage:', cats);
 			} catch {}
 		})();
 	}, [cats, loaded]);
@@ -188,6 +192,37 @@ export default function MewgenicsCats() {
 	);
 
 	// --- Render ---
+	// Handler for uploaded .sav file
+	const handleUploadSav = useCallback(async (file) => {
+		setSavLoading(true);
+		setSavError(null);
+		try {
+			const { extractSaveFile } =
+				await import('./data-grabber/extractSaveFile.js');
+			const extractedCats = await extractSaveFile(file);
+			if (!extractedCats.length) {
+				setSavError('No housed cats found in save file.');
+				return;
+			}
+			setCats(extractedCats);
+			setLoaded(true);
+			setActiveRoom([...new Set(extractedCats.map((c) => c.room))][0] || '');
+			try {
+				await window.storage.set(
+					'mewgenics-v14',
+					JSON.stringify({ cats: extractedCats })
+				);
+				logIfEnabled('[sav] saved extractedCats:', extractedCats);
+			} catch {}
+		} catch (err) {
+			logIfEnabled('[extractSaveFile] Error:', err);
+			logIfEnabled('[extractSaveFile] Error:', err);
+			setSavError(`Error reading save file: ${err.message}`);
+		} finally {
+			setSavLoading(false);
+		}
+	}, []);
+
 	// Handler for uploaded JSON
 	const handleUploadJson = useCallback((uploadedCats) => {
 		setCats(uploadedCats);
@@ -202,6 +237,7 @@ export default function MewgenicsCats() {
 					'mewgenics-v14',
 					JSON.stringify({ cats: uploadedCats })
 				);
+				logIfEnabled('[json] saved uploadedCats:', uploadedCats);
 			} catch {}
 		})();
 	}, []);
@@ -243,6 +279,9 @@ export default function MewgenicsCats() {
 					handleSort={handleSort}
 					resetForm={resetForm}
 					onUploadJson={handleUploadJson}
+					onUploadSav={handleUploadSav}
+					savLoading={savLoading}
+					savError={savError}
 				/>
 
 				{/* Relationship Graph */}

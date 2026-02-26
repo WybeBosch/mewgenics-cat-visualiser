@@ -31,6 +31,9 @@ export function CatTable({
 	handleSort,
 	resetForm,
 	onUploadJson,
+	onUploadSav,
+	savLoading,
+	savError,
 }) {
 	const totalStat = (cat) => STATS.reduce((sum, s) => sum + cat[s], 0);
 	const getAge = (cat) => {
@@ -100,26 +103,42 @@ export function CatTable({
 				</div>
 				<div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
 					{/* Upload Save File Button */}
-					<button
+					<label
 						style={{
 							display: 'flex',
 							alignItems: 'center',
-							background: '#374151',
-							color: '#fff',
+							background: savLoading ? '#1f2937' : '#374151',
+							color: savLoading ? '#9ca3af' : '#fff',
 							border: 'none',
 							borderRadius: 8,
 							padding: '10px 16px',
-							cursor: 'pointer',
+							cursor: savLoading ? 'not-allowed' : 'pointer',
 							fontWeight: 600,
 							fontSize: 14,
 							marginRight: 0,
 						}}
 					>
 						<span role="img" aria-label="Save File" style={{ marginRight: 6 }}>
-							💾
+							{savLoading ? '⏳' : '💾'}
 						</span>
-						Upload Save File
-					</button>
+						{savLoading ? 'Reading...' : 'Upload Save File'}
+						<input
+							type="file"
+							accept=".sav"
+							disabled={savLoading}
+							style={{ display: 'none' }}
+							onChange={(e) => {
+								const file = e.target.files?.[0];
+								if (file) onUploadSav?.(file);
+								e.target.value = '';
+							}}
+						/>
+					</label>
+					{savError && (
+						<span style={{ color: '#f87171', fontSize: 12, maxWidth: 220 }}>
+							{savError}
+						</span>
+					)}
 
 					{/* Upload JSON Button */}
 					<label

@@ -117,4 +117,12 @@ function TableTooltipPopup({ cat, allCats }) {
 	);
 }
 
-export { sharedTooltipContents, TableTooltipPopup };
+function logIfEnabled(...args) {
+	const enableLogging = false;
+	if (enableLogging) {
+		// eslint-disable-next-line no-console
+		console.log(...args);
+	}
+}
+
+export { sharedTooltipContents, TableTooltipPopup, logIfEnabled };
