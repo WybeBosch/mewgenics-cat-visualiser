@@ -255,7 +255,7 @@ function RelationshipGraph({
 						</marker>
 					</defs>
 
-					{/*(edges, external relations, shared lineage, nodes, tooltip) */}
+					{/*(edges, external relations, shared lineage, nodes) */}
 					{edges
 						.filter((e) => {
 							if (hovIdx === null) return true;
@@ -335,7 +335,7 @@ function RelationshipGraph({
 						return boxes;
 					})()}
 
-					{/* (shared lineage, nodes, tooltip) */}
+					{/* (shared lineage, nodes) */}
 					{hovIdx !== null &&
 						(() => {
 							const hovCat = ordered[hovIdx];
@@ -466,6 +466,7 @@ function RelationshipGraph({
 							});
 						})()}
 
+					{/* Drawing the circles on the map for each cat*/}
 					{positions.map((p, i) => (
 						<g
 							key={p.name}
