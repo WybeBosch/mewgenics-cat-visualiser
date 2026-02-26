@@ -348,25 +348,6 @@ export function CatTable({
 					>
 						{'⬇️ Download JSON'}
 					</button>
-					<button
-						onClick={() => {
-							resetForm();
-							setEditIdx(null);
-							setShowForm(!showForm);
-						}}
-						style={{
-							background: showForm ? '#444' : '#6366f1',
-							color: '#fff',
-							border: 'none',
-							borderRadius: 8,
-							padding: '10px 20px',
-							cursor: 'pointer',
-							fontWeight: 600,
-							fontSize: 14,
-						}}
-					>
-						{showForm ? 'Cancel' : '+ Add Cat'}
-					</button>
 				</div>
 			</div>
 
