@@ -129,7 +129,13 @@ export function CatTable({
 							style={{ display: 'none' }}
 							onChange={(e) => {
 								const file = e.target.files?.[0];
-								if (file) onUploadSav?.(file);
+								if (file) {
+									if (!file.name.endsWith('.sav')) {
+										alert('Please upload a .sav file for the database.');
+									} else {
+										onUploadSav?.(file);
+									}
+								}
 								e.target.value = '';
 							}}
 						/>
@@ -167,6 +173,11 @@ export function CatTable({
 							onChange={async (e) => {
 								const file = e.target.files && e.target.files[0];
 								if (!file) return;
+								if (!file.name.endsWith('.json')) {
+									alert('Please upload a .json file for the JSON button.');
+									e.target.value = '';
+									return;
+								}
 								try {
 									const text = await file.text();
 									let data = JSON.parse(text);
