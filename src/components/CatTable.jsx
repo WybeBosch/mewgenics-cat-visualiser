@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { TableTooltipPopup } from '../utils/utils.jsx';
 import {
 	STAT_ICONS,
@@ -75,28 +75,82 @@ export function CatTable({
 	rooms,
 	activeRoom,
 	setActiveRoom,
-	showForm,
-	setShowForm,
-	form,
-	setForm,
-	editIdx,
-	setEditIdx,
-	sortCol,
-	sortAsc,
-	copied,
-	setCopied,
-	hoveredCatId,
-	setHoveredCatId,
-	handleAdd,
-	handleEdit,
-	handleDelete,
-	handleSort,
-	resetForm,
 	onUploadJson,
 	onUploadSav,
 	savLoading,
 	savError,
 }) {
+	// Table-specific state
+	const defaultForm = {
+		name: '',
+		id: '',
+		sex: 'male',
+		STR: 5,
+		DEX: 5,
+		CON: 5,
+		INT: 5,
+		SPD: 5,
+		CHA: 5,
+		LCK: 5,
+		libido: 5,
+		aggression: 5,
+		loves: '',
+		hates: '',
+		mutations: '',
+		room: '',
+		stray: false,
+		parent1: '',
+		parent2: '',
+		grandparent1: '',
+		grandparent2: '',
+		grandparent3: '',
+		grandparent4: '',
+	};
+	const [showForm, setShowForm] = useState(false);
+	const [form, setForm] = useState({ ...defaultForm, room: activeRoom });
+	const [editIdx, setEditIdx] = useState(null);
+	const [sortCol, setSortCol] = useState(null);
+	const [sortAsc, setSortAsc] = useState(true);
+	const [hoveredCatId, setHoveredCatId] = useState(null);
+
+	// Handlers
+	const resetForm = useCallback(
+		() => setForm({ ...defaultForm, room: activeRoom }),
+		[activeRoom]
+	);
+
+	// Removed handleAdd and add cat functionality
+
+	const handleEdit = useCallback(
+		(gi) => {
+			setForm({ ...cats[gi] });
+			setEditIdx(gi);
+			setShowForm(true);
+		},
+		[cats]
+	);
+
+	const handleDelete = useCallback(
+		(gi) => {
+			// TODO: Add callback to update cats in main.jsx
+		},
+		[cats]
+	);
+
+	const handleSort = useCallback(
+		(col) => {
+			if (sortCol !== col) {
+				setSortCol(col);
+				setSortAsc(true);
+			} else if (sortAsc) {
+				setSortAsc(false);
+			} else {
+				setSortCol(null);
+				setSortAsc(true);
+			}
+		},
+		[sortCol, sortAsc]
+	);
 	const totalStat = (cat) => STATS.reduce((sum, s) => sum + cat[s], 0);
 	const getAge = (cat) => {
 		if (typeof cat.saveDay === 'number' && typeof cat.birthday === 'number') {
@@ -597,21 +651,40 @@ export function CatTable({
 								}}
 							/>
 						</div>
-						<button
-							onClick={handleAdd}
-							style={{
-								background: '#16a34a',
-								color: '#fff',
-								border: 'none',
-								borderRadius: 6,
-								padding: '8px 20px',
-								cursor: 'pointer',
-								fontWeight: 600,
-								height: 38,
-							}}
-						>
-							{editIdx !== null ? 'Save' : 'Add'}
-						</button>
+						{editIdx !== null && (
+							<button
+								onClick={() => {
+									if (!form.name.trim()) return;
+									const entry = { ...form, name: form.name.trim() };
+									entry.id = entry.name
+										.toLowerCase()
+										.replace(/[^a-z0-9_.]/g, (c) =>
+											c === ' ' ? '_' : c === '.' ? '.' : ''
+										);
+									STATS.forEach((s) => (entry[s] = Number(entry[s])));
+									entry.libido = Number(entry.libido);
+									entry.aggression = Number(entry.aggression);
+									const u = [...cats];
+									u[editIdx] = entry;
+									// TODO: Add callback to update cats in main.jsx
+									setEditIdx(null);
+									resetForm();
+									setShowForm(false);
+								}}
+								style={{
+									background: '#16a34a',
+									color: '#fff',
+									border: 'none',
+									borderRadius: 6,
+									padding: '8px 20px',
+									cursor: 'pointer',
+									fontWeight: 600,
+									height: 38,
+								}}
+							>
+								Save
+							</button>
+						)}
 					</div>
 				</div>
 			)}

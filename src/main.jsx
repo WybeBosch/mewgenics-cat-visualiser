@@ -16,49 +16,6 @@ function MewgenicsCats() {
 	const [cats, setCats] = useState([]);
 	const [activeRoom, setActiveRoom] = useState('');
 	const [loaded, setLoaded] = useState(false);
-	const [showForm, setShowForm] = useState(false);
-	const [editIdx, setEditIdx] = useState(null);
-	const [sortCol, setSortCol] = useState(null);
-	const [sortAsc, setSortAsc] = useState(true);
-	const [copied, setCopied] = useState(false);
-
-	const [hoveredCatId, setHoveredCatId] = useState(null);
-	const [savLoading, setSavLoading] = useState(false);
-	const [savError, setSavError] = useState(null);
-
-	// --- Derived ---
-	const rooms = useMemo(() => [...new Set(cats.map((c) => c.room))], [cats]);
-
-	// --- Form State ---
-	const emptyForm = useMemo(
-		() => ({
-			name: '',
-			id: '',
-			sex: 'male',
-			STR: 5,
-			DEX: 5,
-			CON: 5,
-			INT: 5,
-			SPD: 5,
-			CHA: 5,
-			LCK: 5,
-			libido: 5,
-			aggression: 5,
-			loves: '',
-			hates: '',
-			mutations: '',
-			room: '',
-			stray: false,
-			parent1: '',
-			parent2: '',
-			grandparent1: '',
-			grandparent2: '',
-			grandparent3: '',
-			grandparent4: '',
-		}),
-		[]
-	);
-	const [form, setForm] = useState({ ...emptyForm });
 
 	// Keep activeRoom valid
 	useEffect(() => {
@@ -147,25 +104,6 @@ function MewgenicsCats() {
 		() => setForm({ ...emptyForm, room: activeRoom }),
 		[emptyForm, activeRoom]
 	);
-
-	const handleAdd = useCallback(() => {
-		if (!form.name.trim()) return;
-		const entry = { ...form, name: form.name.trim() };
-		entry.id = entry.name
-			.toLowerCase()
-			.replace(/[^a-z0-9_.]/g, (c) => (c === ' ' ? '_' : c === '.' ? '.' : ''));
-		STATS.forEach((s) => (entry[s] = Number(entry[s])));
-		entry.libido = Number(entry.libido);
-		entry.aggression = Number(entry.aggression);
-		if (editIdx !== null) {
-			const u = [...cats];
-			u[editIdx] = entry;
-			setCats(u);
-			setEditIdx(null);
-		} else setCats([...cats, entry]);
-		resetForm();
-		setShowForm(false);
-	}, [form, editIdx, cats, resetForm]);
 
 	const handleEdit = useCallback(
 		(gi) => {
@@ -263,26 +201,6 @@ function MewgenicsCats() {
 					rooms={rooms}
 					activeRoom={activeRoom}
 					setActiveRoom={setActiveRoom}
-					showForm={showForm}
-					setShowForm={setShowForm}
-					form={form}
-					setForm={setForm}
-					editIdx={editIdx}
-					setEditIdx={setEditIdx}
-					emptyForm={emptyForm}
-					sortCol={sortCol}
-					setSortCol={setSortCol}
-					sortAsc={sortAsc}
-					setSortAsc={setSortAsc}
-					copied={copied}
-					setCopied={setCopied}
-					hoveredCatId={hoveredCatId}
-					setHoveredCatId={setHoveredCatId}
-					handleAdd={handleAdd}
-					handleEdit={handleEdit}
-					handleDelete={handleDelete}
-					handleSort={handleSort}
-					resetForm={resetForm}
 					onUploadJson={handleUploadJson}
 					onUploadSav={handleUploadSav}
 					savLoading={savLoading}
