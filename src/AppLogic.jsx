@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
 // Reactivate this below import, if you know you  have a local .json file made by the python script.
+// This also cannot be hot reloaded so you have to press F5 in your browser
 // import catsJson from './data-grabber/python/public/mewgenics_cats.json';
 import { logIfEnabled } from './utils/utils.jsx';
 
