@@ -12,6 +12,8 @@ import { useState } from 'react';
 
 import RelationshipHeader from './partials/RelationshipHeader.jsx';
 import RelationshipLegendBar from './partials/RelationshipLegendBar.jsx';
+import TooltipCloseArea from './partials/TooltipCloseArea.jsx';
+import Tooltip from './partials/Tooltip.jsx';
 
 function RelationshipGraph({
 	cats,
@@ -218,21 +220,10 @@ function RelationshipGraph({
 					position: 'relative',
 				}}
 			>
-				{/* Overlay to close tooltip on outside click */}
-				{selectedCatId !== null && (
-					<div
-						onClick={() => setSelectedCatId(null)}
-						style={{
-							position: 'absolute',
-							left: 0,
-							top: 0,
-							width: '100%',
-							height: '100%',
-							zIndex: 2,
-							background: 'transparent',
-						}}
-					/>
-				)}
+				<TooltipCloseArea
+					selectedCatId={selectedCatId}
+					setSelectedCatId={setSelectedCatId}
+				/>
 				<svg
 					width={W}
 					height={H}
@@ -530,67 +521,13 @@ function RelationshipGraph({
 							</text>
 						</g>
 					))}
-
-					{/* Tooltip */}
-					{selIdx !== null &&
-						(() => {
-							const cat = ordered[selIdx],
-								pos = positions[selIdx];
-							const lines = buildTooltip(cat);
-							const tipW = 220,
-								tipH = 20 + lines.length * 22;
-							let tx = pos.x - tipW / 2,
-								ty = pos.y - 40 - tipH;
-							if (ty < 5) ty = pos.y + 38;
-							if (tx < 5) tx = 5;
-							if (tx + tipW > W - 5) tx = W - tipW - 5;
-							return (
-								<g>
-									<rect
-										x={tx}
-										y={ty}
-										width={tipW}
-										height={tipH}
-										rx={8}
-										fill="#1e1e3a"
-										stroke="#555"
-										strokeWidth={1}
-										opacity={0.95}
-									/>
-									<text
-										x={tx + tipW / 2}
-										y={ty + 16}
-										textAnchor="middle"
-										fill="#fff"
-										fontSize={12}
-										fontWeight={700}
-									>
-										{cat.name}
-									</text>
-									{lines.map((line, li) => (
-										<g key={li}>
-											<text
-												x={tx + 10}
-												y={ty + 36 + li * 22}
-												fill="#888"
-												fontSize={10}
-											>
-												{line.label}:
-											</text>
-											<text
-												x={tx + tipW - 10}
-												y={ty + 36 + li * 22}
-												textAnchor="end"
-												fill="#ddd"
-												fontSize={10}
-											>
-												{line.value}
-											</text>
-										</g>
-									))}
-								</g>
-							);
-						})()}
+					<Tooltip
+						selIdx={selIdx}
+						ordered={ordered}
+						positions={positions}
+						buildTooltip={buildTooltip}
+						W={W}
+					/>
 				</svg>
 				<RelationshipLegendBar />
 			</div>
