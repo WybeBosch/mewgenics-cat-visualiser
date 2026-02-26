@@ -34,3 +34,5 @@ mewgenics_cats.json
 .claude
 
 __pycache__
+
+*.sav
