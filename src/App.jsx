@@ -1,6 +1,6 @@
 import { RelationshipGraph } from './components/RelationshipGraph.jsx';
-import { CatTable } from './components/CatTable.jsx';
-import { Header } from './components/header/Header.jsx';
+import { CatTable } from './components/CatTable/CatTable.jsx';
+import { Header } from './components/Header/Header.jsx';
 import { useMewgenicsCatsLogic } from './AppLogic.jsx';
 
 console.log('Mewgenics cat tracker v14');
