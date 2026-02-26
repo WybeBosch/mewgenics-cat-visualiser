@@ -1,5 +1,6 @@
 import { RelationshipGraph } from './components/RelationshipGraph.jsx';
 import { CatTable } from './components/CatTable.jsx';
+import { Header } from './components/header/Header.jsx';
 import { useMewgenicsCatsLogic } from './AppLogic.jsx';
 
 console.log('Mewgenics cat tracker v14');
@@ -21,6 +22,7 @@ export default function App() {
 
 	return (
 		<div
+			id="App"
 			style={{
 				fontFamily: "'Inter', system-ui, sans-serif",
 				background: '#1a1a2e',
@@ -29,16 +31,20 @@ export default function App() {
 				padding: '24px',
 			}}
 		>
-			<div style={{ margin: '0 auto' }}>
+			<Header
+				cats={cats}
+				rooms={rooms}
+				onUploadJson={handleUploadJson}
+				onUploadSav={handleUploadSav}
+				savLoading={savLoading}
+				savError={savError}
+			/>
+			<main>
 				<CatTable
 					cats={cats}
 					rooms={rooms}
 					activeRoom={activeRoom}
 					setActiveRoom={setActiveRoom}
-					onUploadJson={handleUploadJson}
-					onUploadSav={handleUploadSav}
-					savLoading={savLoading}
-					savError={savError}
 				/>
 				<RelationshipGraph
 					cats={cats.filter((c) => c.room === activeRoom)}
@@ -48,7 +54,7 @@ export default function App() {
 					getAge={getAge}
 					activeRoom={activeRoom}
 				/>
-			</div>
+			</main>
 		</div>
 	);
 }
