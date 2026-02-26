@@ -1,5 +1,14 @@
 import { useState } from 'react';
 
+function logIfEnabled(...args) {
+	const enableLogging = false;
+
+	if (enableLogging || window.enableLogging === true) {
+		// eslint-disable-next-line no-console
+		console.log(...args);
+	}
+}
+
 /* ─── Shared tooltip builder ─── */
 function sharedTooltipContents(cat, allCats) {
 	const displayName = (n) => {
@@ -115,14 +124,6 @@ function TableTooltipPopup({ cat, allCats }) {
 			)}
 		</td>
 	);
-}
-
-function logIfEnabled(...args) {
-	const enableLogging = false;
-	if (enableLogging) {
-		// eslint-disable-next-line no-console
-		console.log(...args);
-	}
 }
 
 export { sharedTooltipContents, TableTooltipPopup, logIfEnabled };
