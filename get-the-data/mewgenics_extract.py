@@ -560,7 +560,26 @@ def main():
     # Capture script start time without milliseconds
     script_start_time = datetime.datetime.now().replace(microsecond=0).isoformat()
 
-    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+
+    # --- Debug mode CLI argument parsing ---
+    import shlex
+    debug_mode = False
+    debug_catname = None
+    args = []
+    argv = shlex.split(' '.join(sys.argv[1:]))
+    i = 0
+    while i < len(argv):
+        a = argv[i]
+        if a == "--debug":
+            debug_mode = True
+            if i + 1 < len(argv) and not argv[i + 1].startswith("--"):
+                debug_catname = argv[i + 1]
+                i += 1
+        elif not a.startswith("--"):
+            args.append(a)
+        i += 1
+    if debug_mode and not debug_catname:
+        debug_catname = "yaddiel"
 
     if args:
         save_path = args[0]
@@ -601,7 +620,24 @@ def main():
         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
         sys.exit(1)
 
+
     cats, housed_count, ancestor_count = extract(save_path)
+
+    # Add script_start_time to each cat
+    for cat in cats:
+        cat["script_start_time"] = script_start_time
+
+    # --- Debug mode output ---
+    if debug_mode:
+        found = False
+        for cat in cats:
+            if cat["name"].lower() == debug_catname.lower():
+                print(f"\n[DEBUG] Cat '{cat['name']}' found:")
+                print(json.dumps(cat, indent=2, ensure_ascii=False))
+                found = True
+        if not found:
+            print(f"[DEBUG] Cat '{debug_catname}' not found in extracted data.")
+        sys.exit(0)
 
     out_path = os.path.join(script_dir, "mewgenics_cats.json")
     old_cats = []
@@ -614,10 +650,6 @@ def main():
 
     def cat_map(cat_list):
         return {cat["id"]: cat for cat in cat_list}
-
-    # Add script_start_time to each cat
-    for cat in cats:
-        cat["script_start_time"] = script_start_time
 
     old_map = cat_map(old_cats)
     new_map = cat_map(cats)
@@ -663,8 +695,6 @@ def main():
     print("Updated .json file at :")
     print(f"[{winpath(out_path)}]")
     print("==============================\n")
-
-    # Table output is now disabled by default.
 
 
 if __name__ == "__main__":
