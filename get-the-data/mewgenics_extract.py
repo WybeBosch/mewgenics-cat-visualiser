@@ -454,7 +454,11 @@ def extract(save_path: str) -> list[dict]:
 
     cur.execute("SELECT data FROM files WHERE key='pedigree'")
     row = cur.fetchone()
-    parent_map = parse_pedigree(row[0], max_key) if row else {}
+    pedigree_blob = row[0] if row else None
+    parent_map = parse_pedigree(pedigree_blob, max_key) if pedigree_blob else {}
+
+    # saveDay: current in-game day, stored as int32 at offset 4584 in the pedigree blob
+    save_day = struct.unpack_from('<i', pedigree_blob, 4584)[0] if pedigree_blob and len(pedigree_blob) >= 4588 else 0
 
     # Collect ancestor keys we need names for
     ancestor_keys = set()
@@ -534,6 +538,7 @@ def extract(save_path: str) -> list[dict]:
             "grandparent2": get_name(gp_keys[1]),
             "grandparent3": get_name(gp_keys[2]),
             "grandparent4": get_name(gp_keys[3]),
+            "saveDay": save_day,
         }
         output.append(entry)
 
