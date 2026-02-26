@@ -6,6 +6,8 @@ import { CatTable } from './components/CatTable.jsx';
 import { logIfEnabled } from './utils/utils.jsx';
 /* ─── Main App ─── */
 
+console.log('Mewgenics cat tracker v14');
+
 export default function MewgenicsCats() {
 	// --- State ---
 	const [cats, setCats] = useState([]);
