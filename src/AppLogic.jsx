@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import catsJson from './data-grabber/python/public/mewgenics_cats.json';
+
+// Reactivate this below import, if you know you  have a local .json file made by the python script.
+// import catsJson from './data-grabber/python/public/mewgenics_cats.json';
 import { logIfEnabled } from './utils/utils.jsx';
 
 export function useMewgenicsCatsLogic() {
