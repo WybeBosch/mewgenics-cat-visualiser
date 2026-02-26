@@ -10,7 +10,7 @@
  * @returns {Promise<Array<object>>}  Cat objects matching the mewgenics_cats.json schema
  */
 
-import { logIfEnabled } from '../utils/utils.jsx';
+import { logIfEnabled } from '../../utils/utils.jsx';
 import {
 	parseRoomAssignments,
 	parsePedigree,
@@ -21,7 +21,7 @@ import { lz4DecompressBlock } from './lz4.js';
 // Lazy-loading still works because extractSaveFile.js itself is dynamically
 // imported from mewgenics-cats.jsx (only loaded when the user clicks the button).
 import initSqlJs from 'sql.js';
-import wasmUrl from '../../get-the-data/sql-wasm.wasm?url';
+import wasmUrl from './public/compiled-binaries/sql-wasm.wasm?url';
 
 // Module-level cache — WASM is loaded once per session, not on every upload
 let sqlJsInstance = null;

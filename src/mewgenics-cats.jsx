@@ -200,7 +200,7 @@ export default function MewgenicsCats() {
 		setSavError(null);
 		try {
 			const { extractSaveFile } =
-				await import('./data-grabber/extractSaveFile.js');
+				await import('./data-grabber/javascript-with-wasm/extractSaveFile.js');
 			const extractedCats = await extractSaveFile(file);
 			if (!extractedCats.length) {
 				setSavError('No housed cats found in save file.');

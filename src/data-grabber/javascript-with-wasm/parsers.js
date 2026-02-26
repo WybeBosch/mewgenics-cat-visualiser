@@ -1,4 +1,4 @@
-import { logIfEnabled } from '../utils/utils.jsx';
+import { logIfEnabled } from '../../utils/utils.jsx';
 // Cat extractor version v4
 logIfEnabled('Cat extractor version v4');
 /**
