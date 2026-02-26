@@ -36,3 +36,4 @@ __pycache__
 
 *.sav
 src/data-grabber/python/public/*.json
+!src/data-grabber/python/public/example_mewgenics_cats.json
