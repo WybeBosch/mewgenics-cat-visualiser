@@ -15,7 +15,6 @@ export function useMewgenicsCatsLogic() {
 	// Keep activeRoom valid
 	useEffect(() => {
 		if (!rooms.includes(activeRoom)) setActiveRoom(rooms[0] || '');
-		// eslint-disable-next-line
 	}, [rooms]);
 
 	// Load cats from storage and JSON, merge mutations, use newer source

@@ -1,14 +1,10 @@
-import { createRoot } from 'react-dom/client';
 import { RelationshipGraph } from './components/RelationshipGraph.jsx';
 import { CatTable } from './components/CatTable.jsx';
-import { useMewgenicsCatsLogic } from './main-logic.jsx';
+import { useMewgenicsCatsLogic } from './AppLogic.jsx';
 
 console.log('Mewgenics cat tracker v14');
 
-const root = createRoot(document.getElementById('root'));
-root.render(<MewgenicsCats />);
-
-function MewgenicsCats() {
+export default function App() {
 	const {
 		cats,
 		rooms,

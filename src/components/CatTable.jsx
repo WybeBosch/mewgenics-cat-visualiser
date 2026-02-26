@@ -132,7 +132,7 @@ export function CatTable({
 
 	const handleDelete = useCallback(
 		(gi) => {
-			// TODO: Add callback to update cats in main.jsx
+			// TODO: Add callback to update cats in App.jsx
 		},
 		[cats]
 	);
@@ -666,7 +666,7 @@ export function CatTable({
 									entry.aggression = Number(entry.aggression);
 									const u = [...cats];
 									u[editIdx] = entry;
-									// TODO: Add callback to update cats in main.jsx
+									// TODO: Add callback to update cats in App.jsx
 									setEditIdx(null);
 									resetForm();
 									setShowForm(false);
