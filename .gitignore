@@ -28,7 +28,6 @@ Thumbs.db
 /build/
 
 # Others
-get-the-data/**.json
 *.log
 
 .claude
@@ -36,3 +35,4 @@ get-the-data/**.json
 __pycache__
 
 *.sav
+src/data-grabber/python/public/*.json
