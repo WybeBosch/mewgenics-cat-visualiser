@@ -40,27 +40,14 @@ export default function App() {
 					savLoading={savLoading}
 					savError={savError}
 				/>
-
-				{/* Relationship Graph */}
-				<div style={{ marginTop: 32 }}>
-					<h2
-						style={{
-							fontSize: 20,
-							fontWeight: 700,
-							color: '#fff',
-							marginBottom: 16,
-						}}
-					>
-						💞 {activeRoom} — Relationships
-					</h2>
-					<RelationshipGraph
-						cats={cats.filter((c) => c.room === activeRoom)}
-						allCats={cats}
-						hoveredCatId={hoveredCatId}
-						setHoveredCatId={setHoveredCatId}
-						getAge={getAge}
-					/>
-				</div>
+				<RelationshipGraph
+					cats={cats.filter((c) => c.room === activeRoom)}
+					allCats={cats}
+					hoveredCatId={hoveredCatId}
+					setHoveredCatId={setHoveredCatId}
+					getAge={getAge}
+					activeRoom={activeRoom}
+				/>
 			</div>
 		</div>
 	);
