@@ -140,57 +140,19 @@ export function CatTable({
 					</label>
 					<button
 						onClick={() => {
-							const header = [
-								'Name',
-								'ID',
-								'Sex',
-								...STATS,
-								'Total',
-								'Libido',
-								'Aggro',
-								'Loves',
-								'Hates',
-								'Mutations',
-								'Room',
-								'Stray',
-								'P1',
-								'P2',
-								'GP1',
-								'GP2',
-								'GP3',
-								'GP4',
-							].join(' | ');
-							const div = header.replace(/[^|]/g, '-');
-							const rows = cats.map((c) =>
-								[
-									c.name,
-									c.id,
-									c.sex,
-									...STATS.map((s) => c[s]),
-									totalStat(c),
-									c.libido,
-									c.aggression,
-									c.loves || '—',
-									c.hates || '—',
-									c.mutations || '—',
-									c.room,
-									c.stray ? 'yes' : 'no',
-									c.parent1 || '—',
-									c.parent2 || '—',
-									c.grandparent1 || '—',
-									c.grandparent2 || '—',
-									c.grandparent3 || '—',
-									c.grandparent4 || '—',
-								].join(' | ')
-							);
-							navigator.clipboard.writeText(
-								`Mewgenics Cat Roster (${cats.length} cats)\nBase stats only. Stats ~1-10, 7+ strong. Libido/Aggro 1-10.\nRooms: ${rooms.join(', ')}\n\n${header}\n${div}\n${rows.join('\n')}`
-							);
-							setCopied(true);
-							setTimeout(() => setCopied(false), 2000);
+							const dataStr = JSON.stringify(cats, null, 2);
+							const blob = new Blob([dataStr], { type: 'application/json' });
+							const url = URL.createObjectURL(blob);
+							const a = document.createElement('a');
+							a.href = url;
+							a.download = 'mewgenics_cats.json';
+							document.body.appendChild(a);
+							a.click();
+							document.body.removeChild(a);
+							URL.revokeObjectURL(url);
 						}}
 						style={{
-							background: copied ? '#16a34a' : '#374151',
+							background: '#374151',
 							color: '#fff',
 							border: 'none',
 							borderRadius: 8,
@@ -200,7 +162,7 @@ export function CatTable({
 							fontSize: 14,
 						}}
 					>
-						{copied ? '✅ Copied!' : '📋 Copy All'}
+						{'⬇️ Download JSON'}
 					</button>
 					<button
 						onClick={() => {
