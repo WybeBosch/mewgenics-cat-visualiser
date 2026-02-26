@@ -30,6 +30,7 @@ export function CatTable({
 	handleDelete,
 	handleSort,
 	resetForm,
+	onUploadJson,
 }) {
 	const totalStat = (cat) => STATS.reduce((sum, s) => sum + cat[s], 0);
 	const getAge = (cat) => {
@@ -97,7 +98,41 @@ export function CatTable({
 						{cats.length} total cats across {rooms.length} rooms
 					</p>
 				</div>
-				<div style={{ display: 'flex', gap: 10 }}>
+				<div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+					{/* Upload JSON Button */}
+					<label style={{
+						display: 'flex',
+						alignItems: 'center',
+						background: '#374151',
+						color: '#fff',
+						border: 'none',
+						borderRadius: 8,
+						padding: '10px 16px',
+						cursor: 'pointer',
+						fontWeight: 600,
+						fontSize: 14,
+						marginRight: 0,
+					}}>
+						<span role="img" aria-label="Upload" style={{marginRight: 6}}>⬆️</span> Upload JSON
+						<input
+							type="file"
+							accept=".json,application/json"
+							style={{ display: 'none' }}
+							onChange={async (e) => {
+								const file = e.target.files && e.target.files[0];
+								if (!file) return;
+								try {
+									const text = await file.text();
+									let data = JSON.parse(text);
+									if (!Array.isArray(data)) data = data.cats || [];
+									onUploadJson && onUploadJson(data);
+								} catch (err) {
+									alert('Invalid JSON file.');
+								}
+								e.target.value = '';
+							}}
+						/>
+					</label>
 					<button
 						onClick={() => {
 							const header = [

@@ -188,6 +188,24 @@ export default function MewgenicsCats() {
 	);
 
 	// --- Render ---
+	// Handler for uploaded JSON
+	const handleUploadJson = useCallback((uploadedCats) => {
+		setCats(uploadedCats);
+		setLoaded(true);
+		// Optionally, set activeRoom to first room in uploaded data
+		const newRooms = [...new Set(uploadedCats.map((c) => c.room))];
+		setActiveRoom(newRooms[0] || '');
+		// Save to storage for persistence
+		(async () => {
+			try {
+				await window.storage.set(
+					'mewgenics-v14',
+					JSON.stringify({ cats: uploadedCats })
+				);
+			} catch {}
+		})();
+	}, []);
+
 	return (
 		<div
 			style={{
@@ -224,6 +242,7 @@ export default function MewgenicsCats() {
 					handleDelete={handleDelete}
 					handleSort={handleSort}
 					resetForm={resetForm}
+					onUploadJson={handleUploadJson}
 				/>
 
 				{/* Relationship Graph */}
