@@ -4,6 +4,8 @@ This project can be run locally
 or by visiting the web url:
 
  https://wybebosch.github.io/mewgenics-cat-visualiser/
+ <img width="1497" height="1233" alt="afbeelding" src="https://github.com/user-attachments/assets/7aecdb7e-bc4a-43ee-b334-469cfb55cae2" />
+
 
 ## Features
 
@@ -109,3 +111,4 @@ You can deploy this project to GitHub Pages for a live view. See instructions in
 ## How to use on the web
 
 https://wybebosch.github.io/mewgenics-cat-visualiser/
+
