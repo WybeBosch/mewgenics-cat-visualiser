@@ -13,6 +13,7 @@ export default function App() {
 		cats,
 		rooms,
 		getAge,
+		dataTimeLineText,
 		activeRoom,
 		setActiveRoom,
 		savLoading,
@@ -38,6 +39,7 @@ export default function App() {
 				cats={cats}
 				rooms={rooms}
 				getAge={getAge}
+				dataTimeLineText={dataTimeLineText}
 				onUploadJson={handleUploadJson}
 				onUploadSav={handleUploadSav}
 				savLoading={savLoading}

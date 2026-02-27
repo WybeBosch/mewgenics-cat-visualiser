@@ -7,6 +7,7 @@ export function Header({
 	cats,
 	rooms,
 	getAge,
+	dataTimeLineText,
 	onUploadJson,
 	onUploadSav,
 	savLoading,
@@ -23,7 +24,12 @@ export function Header({
 					marginBottom: 24,
 				}}
 			>
-				<Heading cats={cats} rooms={rooms} getAge={getAge} />
+				<Heading
+					cats={cats}
+					rooms={rooms}
+					getAge={getAge}
+					dataTimeLineText={dataTimeLineText}
+				/>
 				<div
 					className="button-bar"
 					style={{

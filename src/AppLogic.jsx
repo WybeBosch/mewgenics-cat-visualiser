@@ -6,11 +6,63 @@ import { logIfEnabled } from './utils/utils.jsx';
 
 export function useMewgenicsCatsLogic() {
 	const [cats, setCats] = useState([]);
+	const [sourceMeta, setSourceMeta] = useState(null);
 	const [activeRoom, setActiveRoom] = useState('');
 	const [loaded, setLoaded] = useState(false);
 	const [savLoading, setSavLoading] = useState(false);
 	const [savError, setSavError] = useState(null);
 	const [hoveredCatId, setHoveredCatId] = useState(null);
+
+	const formatDateText = useCallback((value) => {
+		if (value === null || value === undefined || value === '') return '';
+
+		const parsedValue =
+			typeof value === 'number'
+				? value
+				: typeof value === 'string' && /^\d+$/.test(value)
+					? Number(value)
+					: value;
+
+		const date = new Date(parsedValue);
+		if (Number.isNaN(date.getTime())) return String(value);
+		return date.toLocaleString();
+	}, []);
+
+	const getSourceMetaDateText = useCallback(
+		(meta) => {
+			if (!meta) return 'Loaded now';
+
+			const fileDateText = formatDateText(meta.fileModifiedAt);
+			if (fileDateText) return fileDateText;
+
+			const scriptDateText = formatDateText(meta.scriptStartTime);
+			if (scriptDateText) return scriptDateText;
+
+			const loadedDateText = formatDateText(meta.loadedAt);
+			if (loadedDateText) return loadedDateText;
+
+			return 'Loaded now';
+		},
+		[formatDateText]
+	);
+
+	const getSourceLabel = useCallback((sourceType) => {
+		switch (sourceType) {
+			case 'preload-json':
+				return '[local .JSON]';
+			case 'upload-json':
+				return '[.JSON]';
+			case 'upload-sav':
+				return '[.SAV]';
+			default:
+				return '[data]';
+		}
+	}, []);
+
+	const dataTimeLineText =
+		cats.length === 0
+			? 'No data loaded yet'
+			: `${getSourceLabel(sourceMeta?.sourceType)} - Data Time: ${getSourceMetaDateText(sourceMeta)}`;
 
 	// Compute rooms from cats
 	const rooms = Array.from(new Set(cats.map((c) => c.room)));
@@ -25,8 +77,10 @@ export function useMewgenicsCatsLogic() {
 		let cancelled = false;
 		(async () => {
 			let jsonCats = [];
+			let jsonSourceMeta = null;
 			let jsonTimestamp = '';
 			let storageCats = [];
+			let storageSourceMeta = null;
 			let storageTimestamp = '';
 			try {
 				// Optional preload JSON (safe when missing)
@@ -45,6 +99,11 @@ export function useMewgenicsCatsLogic() {
 				if (jsonCats.length > 0 && jsonCats[0].script_start_time) {
 					jsonTimestamp = jsonCats[0].script_start_time;
 				}
+				jsonSourceMeta = {
+					sourceType: 'preload-json',
+					scriptStartTime: jsonTimestamp || '',
+					loadedAt: new Date().toISOString(),
+				};
 			} catch (err) {
 				logIfEnabled(
 					'[cats] optional preload JSON not used:',
@@ -57,8 +116,16 @@ export function useMewgenicsCatsLogic() {
 				if (storageRaw) {
 					const parsed = JSON.parse(storageRaw);
 					storageCats = Array.isArray(parsed.cats) ? parsed.cats : [];
+					storageSourceMeta = parsed.sourceMeta || null;
 					if (storageCats.length > 0 && storageCats[0].script_start_time) {
 						storageTimestamp = storageCats[0].script_start_time;
+					}
+					if (!storageSourceMeta) {
+						storageSourceMeta = {
+							sourceType: 'legacy-storage',
+							scriptStartTime: storageTimestamp || '',
+							loadedAt: new Date().toISOString(),
+						};
 					}
 				}
 			} catch {}
@@ -95,6 +162,7 @@ export function useMewgenicsCatsLogic() {
 			if (!cancelled) {
 				logIfEnabled('[cats] mergedCats:', mergedCats);
 				setCats(mergedCats);
+				setSourceMeta(useJson ? jsonSourceMeta : storageSourceMeta);
 				setLoaded(true);
 			}
 		})();
@@ -108,11 +176,14 @@ export function useMewgenicsCatsLogic() {
 		if (!loaded) return;
 		(async () => {
 			try {
-				await window.storage.set('mewgenics-v14', JSON.stringify({ cats }));
+				await window.storage.set(
+					'mewgenics-v14',
+					JSON.stringify({ cats, sourceMeta })
+				);
 				logIfEnabled('[cats] saved to storage:', cats);
 			} catch {}
 		})();
-	}, [cats, loaded]);
+	}, [cats, loaded, sourceMeta]);
 
 	// Handler for uploaded .sav file
 	const handleUploadSav = useCallback(async (file) => {
@@ -126,13 +197,21 @@ export function useMewgenicsCatsLogic() {
 				setSavError('No housed cats found in save file.');
 				return;
 			}
+			const nextSourceMeta = {
+				sourceType: 'upload-sav',
+				fileModifiedAt:
+					typeof file?.lastModified === 'number' ? file.lastModified : '',
+				scriptStartTime: extractedCats[0]?.script_start_time || '',
+				loadedAt: new Date().toISOString(),
+			};
 			setCats(extractedCats);
+			setSourceMeta(nextSourceMeta);
 			setLoaded(true);
 			setActiveRoom([...new Set(extractedCats.map((c) => c.room))][0] || '');
 			try {
 				await window.storage.set(
 					'mewgenics-v14',
-					JSON.stringify({ cats: extractedCats })
+					JSON.stringify({ cats: extractedCats, sourceMeta: nextSourceMeta })
 				);
 				logIfEnabled('[sav] saved extractedCats:', extractedCats);
 			} catch {}
@@ -145,8 +224,16 @@ export function useMewgenicsCatsLogic() {
 	}, []);
 
 	// Handler for uploaded JSON
-	const handleUploadJson = useCallback((uploadedCats) => {
+	const handleUploadJson = useCallback((uploadedCats, file) => {
+		const nextSourceMeta = {
+			sourceType: 'upload-json',
+			fileModifiedAt:
+				typeof file?.lastModified === 'number' ? file.lastModified : '',
+			scriptStartTime: uploadedCats[0]?.script_start_time || '',
+			loadedAt: new Date().toISOString(),
+		};
 		setCats(uploadedCats);
+		setSourceMeta(nextSourceMeta);
 		setLoaded(true);
 		const newRooms = [...new Set(uploadedCats.map((c) => c.room))];
 		setActiveRoom(newRooms[0] || '');
@@ -154,7 +241,7 @@ export function useMewgenicsCatsLogic() {
 			try {
 				await window.storage.set(
 					'mewgenics-v14',
-					JSON.stringify({ cats: uploadedCats })
+					JSON.stringify({ cats: uploadedCats, sourceMeta: nextSourceMeta })
 				);
 				logIfEnabled('[json] saved uploadedCats:', uploadedCats);
 			} catch {}
@@ -175,6 +262,7 @@ export function useMewgenicsCatsLogic() {
 		rooms,
 		activeRoom,
 		setActiveRoom,
+		dataTimeLineText,
 		loaded,
 		savLoading,
 		savError,
