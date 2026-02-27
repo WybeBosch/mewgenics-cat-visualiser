@@ -16,7 +16,7 @@ export function TableHead({ columns, handleSort, sortCol, sortAsc }) {
 							onMouseEnter={() => setHoveredColumn(col.key)}
 							onMouseLeave={() => setHoveredColumn(null)}
 							onClick={
-								col.key !== 'actions' && col.key !== 'partnerRoom'
+								col.key !== 'partnerRoom'
 									? () => handleSort(col.key)
 									: undefined
 							}
@@ -24,7 +24,7 @@ export function TableHead({ columns, handleSort, sortCol, sortAsc }) {
 								padding: '12px 12px',
 								textAlign: col.key === 'name' ? 'left' : 'center',
 								cursor:
-									col.key !== 'actions' && col.key !== 'partnerRoom'
+									col.key !== 'partnerRoom'
 										? 'pointer'
 										: 'default',
 								userSelect: 'none',

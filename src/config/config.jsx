@@ -22,7 +22,6 @@ const OTHER_INFO_ICONS = {
 	aggression: '😾',
 	loves: '❤️',
 	hates: '⚔️', // Changed to two cross swords
-	mutations: '🧬',
 };
 
 const SEX_ICON = { male: '♂', female: '♀', herm: '⚥' };

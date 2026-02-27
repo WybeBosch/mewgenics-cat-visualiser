@@ -7,8 +7,6 @@ export function TableCatData({
 	aggroColor,
 	hoveredCatId,
 	setHoveredCatId,
-	handleEdit,
-	handleDelete,
 	handleSort,
 	sortCol,
 	sortAsc,
@@ -53,8 +51,6 @@ export function TableCatData({
 						sorted={sorted}
 						hoveredCatId={hoveredCatId}
 						setHoveredCatId={setHoveredCatId}
-						handleEdit={handleEdit}
-						handleDelete={handleDelete}
 						totalStat={totalStat}
 						getAge={getAge}
 						isPartnerInOtherRoom={isPartnerInOtherRoom}

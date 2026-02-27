@@ -41,7 +41,6 @@ or by visiting the web url:
 | Aggression  | 😾   | Aggression      |
 | Loves       | ❤️   | Cats they love  |
 | Hates       | ⚔️   | Cats they hate  |
-| Mutations   | 🧬   | Genetic mutations |
 
 **Sex Icons:**
 

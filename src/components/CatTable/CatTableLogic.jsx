@@ -3,61 +3,9 @@ import { STATS } from '../../config/config.jsx';
 
 export function CatTableLogic({ cats, activeRoom }) {
 	// Table-specific state
-	const defaultForm = {
-		name: '',
-		id: '',
-		sex: 'male',
-		STR: 5,
-		DEX: 5,
-		CON: 5,
-		INT: 5,
-		SPD: 5,
-		CHA: 5,
-		LCK: 5,
-		libido: 5,
-		aggression: 5,
-		loves: '',
-		hates: '',
-		mutations: '',
-		room: '',
-		stray: false,
-		parent1: '',
-		parent2: '',
-		grandparent1: '',
-		grandparent2: '',
-		grandparent3: '',
-		grandparent4: '',
-	};
-	const [showForm, setShowForm] = useState(false);
-	const [form, setForm] = useState({ ...defaultForm, room: activeRoom });
-	const [editIdx, setEditIdx] = useState(null);
 	const [sortCol, setSortCol] = useState(null);
 	const [sortAsc, setSortAsc] = useState(true);
 	const [hoveredCatId, setHoveredCatId] = useState(null);
-
-	// Handlers
-	const resetForm = useCallback(
-		() => setForm({ ...defaultForm, room: activeRoom }),
-		[activeRoom]
-	);
-
-	// Removed handleAdd and add cat functionality
-
-	const handleEdit = useCallback(
-		(gi) => {
-			setForm({ ...cats[gi] });
-			setEditIdx(gi);
-			setShowForm(true);
-		},
-		[cats]
-	);
-
-	const handleDelete = useCallback(
-		(gi) => {
-			// TODO: Add callback to update cats in App.jsx
-		},
-		[cats]
-	);
 
 	const handleSort = useCallback(
 		(col) => {
@@ -102,17 +50,8 @@ export function CatTableLogic({ cats, activeRoom }) {
 	const aggroColor = (v) => (v <= 3 ? '#86efac' : v <= 6 ? '#ccc' : '#f87171');
 
 	return {
-		showForm,
-		form,
-		editIdx,
 		hoveredCatId,
 		setHoveredCatId,
-		setForm,
-		setEditIdx,
-		setShowForm,
-		resetForm,
-		handleEdit,
-		handleDelete,
 		handleSort,
 		sorted,
 		aggroColor,

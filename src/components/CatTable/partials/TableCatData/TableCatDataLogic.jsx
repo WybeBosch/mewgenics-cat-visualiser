@@ -34,12 +34,6 @@ export function TableCatDataLogic({ cats }) {
 		},
 		{ key: 'loves', label: OTHER_INFO_ICONS.loves, tooltip: 'Cats they love' },
 		{ key: 'hates', label: OTHER_INFO_ICONS.hates, tooltip: 'Cats they hate' },
-		{
-			key: 'mutations',
-			label: OTHER_INFO_ICONS.mutations,
-			tooltip: 'Genetic mutations',
-		},
-		{ key: 'actions', label: '', tooltip: 'Actions' },
 	];
 
 	// Helper to get partnerInOtherRoom

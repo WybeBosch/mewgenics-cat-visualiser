@@ -7,8 +7,6 @@ export function TableBody({
 	sorted,
 	hoveredCatId,
 	setHoveredCatId,
-	handleEdit,
-	handleDelete,
 	totalStat,
 	getAge,
 	isPartnerInOtherRoom,
@@ -36,7 +34,6 @@ export function TableBody({
 		<tbody>
 			{noCatsFound ? <NoCatsFoundWarning /> : null}
 			{sorted.map((cat, i) => {
-				const gi = cats.indexOf(cat);
 				const total = totalStat(cat);
 				const age = getAge(cat);
 				const isHovered = hoveredCatId === cat.id;
@@ -118,40 +115,6 @@ export function TableBody({
 						</td>
 						<td style={getInfoStyle('#a7f3d0')}>{cat.loves || '—'}</td>
 						<td style={getInfoStyle('#fca5a5')}>{cat.hates || '—'}</td>
-						<td style={getInfoStyle('#93c5fd')}>{cat.mutations || '—'}</td>
-						<td
-							style={{
-								padding: '10px 8px',
-								textAlign: 'center',
-								whiteSpace: 'nowrap',
-							}}
-						>
-							<button
-								onClick={() => handleEdit(gi)}
-								style={{
-									background: 'none',
-									border: 'none',
-									color: '#6366f1',
-									cursor: 'pointer',
-									fontSize: 13,
-									marginRight: 8,
-								}}
-							>
-								✏️
-							</button>
-							<button
-								onClick={() => handleDelete(gi)}
-								style={{
-									background: 'none',
-									border: 'none',
-									color: '#ef4444',
-									cursor: 'pointer',
-									fontSize: 13,
-								}}
-							>
-								🗑️
-							</button>
-						</td>
 					</tr>
 				);
 			})}

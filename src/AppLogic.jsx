@@ -72,7 +72,7 @@ export function useMewgenicsCatsLogic() {
 		if (!rooms.includes(activeRoom)) setActiveRoom(rooms[0] || '');
 	}, [rooms]);
 
-	// Load cats from storage and JSON, merge mutations, use newer source
+	// Load cats from storage and JSON, using source precedence rules.
 	useEffect(() => {
 		let cancelled = false;
 		(async () => {
@@ -135,23 +135,7 @@ export function useMewgenicsCatsLogic() {
 				(isLocalDevelopment && hasPreloadJson) ||
 				(!storageFound && hasPreloadJson);
 
-			let mergedCats = [];
-			if (useJson) {
-				// Merge mutations from storage into jsonCats
-				const storageMap = {};
-				for (const cat of storageCats) {
-					if (cat.id) storageMap[cat.id] = cat;
-				}
-				mergedCats = jsonCats.map((cat) => {
-					const stored = storageMap[cat.id];
-					if (stored && stored.mutations) {
-						return { ...cat, mutations: stored.mutations };
-					}
-					return { ...cat };
-				});
-			} else {
-				mergedCats = storageCats;
-			}
+			const mergedCats = useJson ? jsonCats : storageCats;
 			if (!cancelled) {
 				logIfEnabled('[cats] mergedCats:', mergedCats);
 				setCats(mergedCats);
