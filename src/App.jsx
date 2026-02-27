@@ -4,7 +4,7 @@ import { Header } from './components/Header/Header.jsx';
 import { useMewgenicsCatsLogic } from './AppLogic.jsx';
 import { useEnvironmentFavicon } from './utils/faviconUtils.jsx';
 
-console.log('Mewgenics cat tracker v1.0.0');
+console.log(`Mewgenics cat tracker v${import.meta.env.VITE_APP_VERSION}`);
 
 export default function App() {
 	useEnvironmentFavicon();

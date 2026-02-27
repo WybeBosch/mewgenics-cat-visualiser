@@ -68,6 +68,38 @@ If a cat has a matching partner (they both love each other) but are not in the s
 
 https://wybebosch.github.io/mewgenics-cat-visualiser/
 
+-------
+
+## Releases (GitHub + Pages)
+
+This project uses the `version` in `package.json` as the app version shown in browser console.
+On startup, the app logs:
+
+`Mewgenics cat tracker vX.Y.Z`
+
+So you can quickly verify which deployed build is currently served by GitHub Pages.
+
+### Release flow
+
+1. Make sure you are on `main` with clean working tree.
+2. Bump `package.json` version (manual edit or optional command):
+	- Patch: `npm run patch`
+	- Minor: `npm run minor`
+	- Major: `npm run major`
+3. Commit and push (example commit message: `release: v1.0.1`).
+4. In GitHub UI, create/publish a Release for that version tag (for example `v1.0.1`).
+5. GitHub Actions workflow (`.github/workflows/release-pages.yml`) runs on release publish:
+	- builds the app
+	- deploys to GitHub Pages
+	- deploys exactly the release tag commit
+
+### Verifying a new release
+
+1. Open the deployed website.
+2. Open browser devtools console.
+3. Confirm logged version matches your tag/release (for example `v1.0.1`).
+4. If Pages/CDN cache is delayed, hard refresh and re-check the console version line.
+
 
 
 
