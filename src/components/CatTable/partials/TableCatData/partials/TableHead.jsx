@@ -23,10 +23,7 @@ export function TableHead({ columns, handleSort, sortCol, sortAsc }) {
 							style={{
 								padding: '12px 12px',
 								textAlign: col.key === 'name' ? 'left' : 'center',
-								cursor:
-									col.key !== 'partnerRoom'
-										? 'pointer'
-										: 'default',
+								cursor: col.key !== 'partnerRoom' ? 'pointer' : 'default',
 								userSelect: 'none',
 								fontWeight: 600,
 								color: sortCol === col.key ? '#6366f1' : '#aaa',
