@@ -1,9 +1,10 @@
 # Mewgenics Cat Visualiser
 
 This project can be run locally
-or by visiting the web url:
-
+or by visiting the web url: </br>
  https://wybebosch.github.io/mewgenics-cat-visualiser/
+
+ This project is only meant as a visualiser, you cannot edit your save file with it.
 <img width="1499" height="1256" alt="afbeelding" src="https://github.com/user-attachments/assets/973aa2a7-b75d-4046-9330-312fe0c222e8" />
 
 
