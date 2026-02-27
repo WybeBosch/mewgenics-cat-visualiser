@@ -9,11 +9,11 @@ export default defineConfig({
 		viteStaticCopy({
 			targets: [
 				{
-					src: 'data-grabber/python/public/*',
+					src: 'data-grabber/python/public/example_mewgenics_cats.json',
 					dest: '.',
 				},
 				{
-					src: 'data-grabber/javascript-with-wasm/public/*',
+					src: 'data-grabber/javascript-with-wasm/public/compiled-binaries/*',
 					dest: '.',
 				},
 			],
@@ -22,6 +22,7 @@ export default defineConfig({
 	root: 'src',
 	build: {
 		outDir: '../dist',
+		emptyOutDir: true,
 	},
 	publicDir: false, // Disable default publicDir, use static copy instead
 });
