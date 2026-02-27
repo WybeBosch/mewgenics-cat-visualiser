@@ -11,6 +11,7 @@
  */
 
 import { logIfEnabled } from '../../utils/utils.jsx';
+import { SECURITY_LIMITS } from '../../config/config.jsx';
 import {
 	parseRoomAssignments,
 	parsePedigree,
@@ -39,6 +40,20 @@ async function getSqlJs() {
 }
 
 export async function extractSaveFile(file) {
+	const maxSaveUploadBytes = SECURITY_LIMITS.maxSaveUploadKb * 1024;
+	const maxLz4DecompressedBytes = SECURITY_LIMITS.maxLz4DecompressedKb * 1024;
+	const maxSaveSizeMb = Math.round(SECURITY_LIMITS.maxSaveUploadKb / 1024);
+
+	if (
+		!file ||
+		typeof file.size !== 'number' ||
+		file.size > maxSaveUploadBytes
+	) {
+		throw new Error(
+			`Save file exceeds max size (${maxSaveSizeMb} MB).`
+		);
+	}
+
 	const SQL = await getSqlJs();
 
 	// Read the file entirely into memory as a Uint8Array
@@ -86,6 +101,11 @@ export async function extractSaveFile(file) {
 
 		const housedKeys = Array.from(roomMap.keys());
 		if (housedKeys.length === 0) return [];
+		if (housedKeys.length > SECURITY_LIMITS.maxCatsProcessed) {
+			throw new Error(
+				`Too many cats in save (${housedKeys.length}). Max supported is ${SECURITY_LIMITS.maxCatsProcessed}.`
+			);
+		}
 
 		// --- 2. Get max cat key (for pedigree validation) ---
 		const maxKeyResult = db.exec(
@@ -155,7 +175,11 @@ export async function extractSaveFile(file) {
 					);
 					// Test LZ4 decompression directly
 					try {
-						const dec = lz4DecompressBlock(b.subarray(4), Number(claimedSize));
+						const dec = lz4DecompressBlock(
+							b.subarray(4),
+							Number(claimedSize),
+							maxLz4DecompressedBytes
+						);
 						const dv = new DataView(dec.buffer, dec.byteOffset, dec.byteLength);
 						const nameLen = dec.length >= 16 ? dv.getInt32(12, true) : '?';
 						const pad16 = dec.length >= 20 ? dv.getInt32(16, true) : '?';

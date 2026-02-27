@@ -1,4 +1,5 @@
 import { logIfEnabled } from '../../utils/utils.jsx';
+import { SECURITY_LIMITS } from '../../config/config.jsx';
 // Cat extractor version v4
 logIfEnabled('Cat extractor version v4');
 /**
@@ -237,10 +238,10 @@ function findBirthdayInfo(dec, saveDay) {
 export function parseCatBlob(key, blob, saveDay) {
 	if (key === 0) {
 		// Only log once per extraction session
-		console.log('Cat extractor version v3');
+		logIfEnabled('Cat extractor version v3');
 	}
 	if (blob.length < 8) {
-		console.warn(
+		logIfEnabled(
 			`[parseCatBlob] key=${key} fail: blob too short (${blob.length})`
 		);
 		return null;
@@ -253,13 +254,17 @@ export function parseCatBlob(key, blob, saveDay) {
 
 	let dec;
 	try {
-		dec = lz4DecompressBlock(rawBlob.subarray(4), claimedSize);
+		dec = lz4DecompressBlock(
+			rawBlob.subarray(4),
+			claimedSize,
+			SECURITY_LIMITS.maxLz4DecompressedKb * 1024
+		);
 	} catch (e) {
-		console.warn(`[parseCatBlob] key=${key} fail: LZ4 decompress error`, e);
+		logIfEnabled(`[parseCatBlob] key=${key} fail: LZ4 decompress error`, e);
 		return null;
 	}
 	if (dec.length < 200) {
-		console.warn(
+		logIfEnabled(
 			`[parseCatBlob] key=${key} fail: decompressed too short (${dec.length})`
 		);
 		return null;
@@ -271,7 +276,7 @@ export function parseCatBlob(key, blob, saveDay) {
 	const nameLen = view.getInt32(12, true);
 	const pad16 = view.getInt32(16, true);
 	if (nameLen > 30 || pad16 !== 0) {
-		console.warn(
+		logIfEnabled(
 			`[parseCatBlob] key=${key} fail: nameLen=${nameLen} pad16=${pad16}`
 		);
 		return null;
@@ -282,12 +287,12 @@ export function parseCatBlob(key, blob, saveDay) {
 			dec.subarray(20, 20 + nameLen * 2)
 		);
 	} catch (e) {
-		console.warn(`[parseCatBlob] key=${key} fail: name decode error`, e);
+		logIfEnabled(`[parseCatBlob] key=${key} fail: name decode error`, e);
 		return null;
 	}
 	const nameEnd = 20 + nameLen * 2;
 	// Log name extraction
-	console.debug(
+	logIfEnabled(
 		`[parseCatBlob] key=${key} nameLen=${nameLen} pad16=${pad16} name='${name}'`
 	);
 
@@ -324,7 +329,7 @@ export function parseCatBlob(key, blob, saveDay) {
 						dec.subarray(i, i + headerLen)
 					);
 					genderOff = i;
-					console.debug(
+					logIfEnabled(
 						`[parseCatBlob] key=${key} genderStr(header)='${genderStr}' at ${i} headerLen=${headerLen} headerPad=${headerPad}`
 					);
 					break;
@@ -336,7 +341,7 @@ export function parseCatBlob(key, blob, saveDay) {
 			while (end < dec.length && dec[end] >= 48 && dec[end] <= 57) end++; // '0'-'9'
 			genderStr = new TextDecoder('ascii').decode(dec.subarray(i, end));
 			genderOff = i;
-			console.debug(
+			logIfEnabled(
 				`[parseCatBlob] key=${key} genderStr(fallback)='${genderStr}' at ${i}`
 			);
 			break;
@@ -344,7 +349,7 @@ export function parseCatBlob(key, blob, saveDay) {
 	}
 
 	if (!genderStr || genderOff < 16) {
-		console.warn(
+		logIfEnabled(
 			`[parseCatBlob] key=${key} fail: genderStr='${genderStr}' genderOff=${genderOff}`
 		);
 		return null;
@@ -353,7 +358,7 @@ export function parseCatBlob(key, blob, saveDay) {
 	// --- Stats: 7× int32, starting 8 bytes after the gender string ---
 	const gsEnd = genderOff + genderStr.length;
 	if (gsEnd + 36 > dec.length) {
-		console.warn(
+		logIfEnabled(
 			`[parseCatBlob] key=${key} fail: stats out of bounds gsEnd=${gsEnd} dec.length=${dec.length}`
 		);
 		return null;
@@ -363,7 +368,7 @@ export function parseCatBlob(key, blob, saveDay) {
 		stats.push(view.getInt32(gsEnd + 8 + j * 4, true));
 	}
 	if (stats.some((s) => s < -10 || s > 30)) {
-		console.warn(`[parseCatBlob] key=${key} fail: stats invalid`, stats);
+		logIfEnabled(`[parseCatBlob] key=${key} fail: stats invalid`, stats);
 		return null;
 	}
 
@@ -379,7 +384,7 @@ export function parseCatBlob(key, blob, saveDay) {
 		if (slotBase + 40 <= dec.length) {
 			libidoRaw = view.getFloat64(slotBase, true);
 			aggressionRaw = view.getFloat64(slotBase + 32, true);
-			console.debug(
+			logIfEnabled(
 				`[parseCatBlob] key=${key} libidoRaw=${libidoRaw} aggressionRaw=${aggressionRaw}`
 			);
 		}
@@ -403,7 +408,7 @@ export function parseCatBlob(key, blob, saveDay) {
 			const v = view.getUint32(hatesOff, true);
 			hatesKey = v === 0xffffffff ? -1 : v;
 		}
-		console.debug(
+		logIfEnabled(
 			`[parseCatBlob] key=${key} lovesKey=${lovesKey} hatesKey=${hatesKey}`
 		);
 	}
@@ -415,13 +420,13 @@ export function parseCatBlob(key, blob, saveDay) {
 	const sexByte = sexByteOff < dec.length ? dec[sexByteOff] : 0;
 	const SEX = { 0: 'male', 1: 'female', 2: 'herm' };
 	const sex = SEX[sexByte] ?? `unknown(${sexByte})`;
-	console.debug(
+	logIfEnabled(
 		`[parseCatBlob] key=${key} tagLen=${tagLen} sexByteOff=${sexByteOff} sexByte=${sexByte} sex=${sex}`
 	);
 
 	// --- Birthday ---
 	const { birthdayDay } = findBirthdayInfo(dec, saveDay);
-	console.debug(`[parseCatBlob] key=${key} birthdayDay=${birthdayDay}`);
+	logIfEnabled(`[parseCatBlob] key=${key} birthdayDay=${birthdayDay}`);
 
 	// --- Classify trait ---
 	function classifyTrait(val) {
@@ -430,7 +435,7 @@ export function parseCatBlob(key, blob, saveDay) {
 		return 'high';
 	}
 	// Final success log
-	console.info(
+	logIfEnabled(
 		`[parseCatBlob] key=${key} SUCCESS name='${name}' sex=${sex} stats=${JSON.stringify(stats)}`
 	);
 

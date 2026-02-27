@@ -7,9 +7,21 @@
  *
  * @param {Uint8Array} src - The compressed payload
  * @param {number} uncompressedSize - Declared output size (uint32 at blob offset 0)
+ * @param {number} [maxOutputSize=Infinity] - Hard cap for allocated output size
  * @returns {Uint8Array}
  */
-export function lz4DecompressBlock(src, uncompressedSize) {
+export function lz4DecompressBlock(
+  src,
+  uncompressedSize,
+  maxOutputSize = Number.POSITIVE_INFINITY
+) {
+  if (
+    !Number.isFinite(uncompressedSize) ||
+    uncompressedSize <= 0 ||
+    uncompressedSize > maxOutputSize
+  ) {
+    throw new Error('Invalid or oversized LZ4 output size');
+  }
   const dst = new Uint8Array(uncompressedSize);
   let dstPos = 0;
   let pos = 0;

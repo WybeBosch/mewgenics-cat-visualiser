@@ -1,7 +1,10 @@
 import { ButtonCopySavePath } from './ButtonCopySavePath.jsx';
+import { SECURITY_LIMITS } from '../../../config/config.jsx';
 
 export function ButtonUploadSave({ onUploadSav, savLoading, savError }) {
 	const buttonName = 'button-upload-save';
+	const maxSaveUploadBytes = SECURITY_LIMITS.maxSaveUploadKb * 1024;
+	const maxSaveSizeMb = Math.round(SECURITY_LIMITS.maxSaveUploadKb / 1024);
 	return (
 		<>
 			<div
@@ -46,6 +49,10 @@ export function ButtonUploadSave({ onUploadSav, savLoading, savError }) {
 							if (file) {
 								if (!file.name.endsWith('.sav')) {
 									alert('Please upload a .sav file for the database.');
+								} else if (file.size > maxSaveUploadBytes) {
+									alert(
+										`Save file is too large. Max allowed size is ${maxSaveSizeMb} MB.`
+									);
 								} else {
 									onUploadSav?.(file);
 								}

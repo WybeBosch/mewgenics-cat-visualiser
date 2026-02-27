@@ -1,4 +1,8 @@
+import { SECURITY_LIMITS } from '../../../config/config.jsx';
+
 export function ButtonUploadJson({ onUploadJson }) {
+	const maxJsonUploadBytes = SECURITY_LIMITS.maxJsonUploadKb * 1024;
+	const maxJsonSizeMb = Math.round(SECURITY_LIMITS.maxJsonUploadKb / 1024);
 	return (
 		<>
 			<label
@@ -33,6 +37,13 @@ export function ButtonUploadJson({ onUploadJson }) {
 							e.target.value = '';
 							return;
 						}
+							if (file.size > maxJsonUploadBytes) {
+								alert(
+									`JSON file is too large. Max allowed size is ${maxJsonSizeMb} MB.`
+								);
+								e.target.value = '';
+								return;
+							}
 						try {
 							const text = await file.text();
 							let data = JSON.parse(text);

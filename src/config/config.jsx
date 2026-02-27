@@ -37,6 +37,13 @@ const SEX_BG_HOVER = {
 	herm: '#3b2a5a',
 };
 
+const SECURITY_LIMITS = {
+	maxSaveUploadKb: 5000, // normal saves are around 300 - 400 kb
+	maxJsonUploadKb: 5000,
+	maxLz4DecompressedKb: 2000,
+	maxCatsProcessed: 5000,
+};
+
 export {
 	APP_EMOJIS,
 	STAT_ICONS,
@@ -46,4 +53,5 @@ export {
 	SEX_BG,
 	SEX_BG_HOVER,
 	OTHER_INFO_ICONS,
+	SECURITY_LIMITS,
 };

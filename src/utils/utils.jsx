@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 function logIfEnabled(...args) {
-	const enableLogging = false;
+	const enableLogging = import.meta.env.DEV;
 
 	if (enableLogging || window.enableLogging === true) {
 		// eslint-disable-next-line no-console
