@@ -11,73 +11,73 @@
  * @returns {Uint8Array}
  */
 export function lz4DecompressBlock(
-  src,
-  uncompressedSize,
-  maxOutputSize = Number.POSITIVE_INFINITY
+	src,
+	uncompressedSize,
+	maxOutputSize = Number.POSITIVE_INFINITY
 ) {
-  if (
-    !Number.isFinite(uncompressedSize) ||
-    uncompressedSize <= 0 ||
-    uncompressedSize > maxOutputSize
-  ) {
-    throw new Error('Invalid or oversized LZ4 output size');
-  }
-  const dst = new Uint8Array(uncompressedSize);
-  let dstPos = 0;
-  let pos = 0;
+	if (
+		!Number.isFinite(uncompressedSize) ||
+		uncompressedSize <= 0 ||
+		uncompressedSize > maxOutputSize
+	) {
+		throw new Error('Invalid or oversized LZ4 output size');
+	}
+	const dst = new Uint8Array(uncompressedSize);
+	let dstPos = 0;
+	let pos = 0;
 
-  while (pos < src.length && dstPos < uncompressedSize) {
-    const token = src[pos++];
-    let litLen = (token >> 4) & 0xf;
-    const matchLenBase = token & 0xf;
+	while (pos < src.length && dstPos < uncompressedSize) {
+		const token = src[pos++];
+		let litLen = (token >> 4) & 0xf;
+		const matchLenBase = token & 0xf;
 
-    // Extended literal length
-    if (litLen === 15) {
-      while (pos < src.length) {
-        const extra = src[pos++];
-        litLen += extra;
-        if (extra !== 255) break;
-      }
-    }
+		// Extended literal length
+		if (litLen === 15) {
+			while (pos < src.length) {
+				const extra = src[pos++];
+				litLen += extra;
+				if (extra !== 255) break;
+			}
+		}
 
-    // Copy literals
-    const litEnd = pos + litLen;
-    if (litEnd > src.length) {
-      // Truncated — copy whatever is left
-      const remaining = src.length - pos;
-      dst.set(src.subarray(pos, pos + remaining), dstPos);
-      dstPos += remaining;
-      break;
-    }
-    dst.set(src.subarray(pos, litEnd), dstPos);
-    dstPos += litLen;
-    pos = litEnd;
+		// Copy literals
+		const litEnd = pos + litLen;
+		if (litEnd > src.length) {
+			// Truncated — copy whatever is left
+			const remaining = src.length - pos;
+			dst.set(src.subarray(pos, pos + remaining), dstPos);
+			dstPos += remaining;
+			break;
+		}
+		dst.set(src.subarray(pos, litEnd), dstPos);
+		dstPos += litLen;
+		pos = litEnd;
 
-    if (dstPos >= uncompressedSize) break;
-    if (pos + 2 > src.length) break;
+		if (dstPos >= uncompressedSize) break;
+		if (pos + 2 > src.length) break;
 
-    // Match offset (little-endian 16-bit)
-    const offset = src[pos] | (src[pos + 1] << 8);
-    pos += 2;
-    if (offset === 0) break;
+		// Match offset (little-endian 16-bit)
+		const offset = src[pos] | (src[pos + 1] << 8);
+		pos += 2;
+		if (offset === 0) break;
 
-    // Extended match length
-    let matchLen = matchLenBase + 4;
-    if (matchLenBase === 15) {
-      while (pos < src.length) {
-        const extra = src[pos++];
-        matchLen += extra;
-        if (extra !== 255) break;
-      }
-    }
+		// Extended match length
+		let matchLen = matchLenBase + 4;
+		if (matchLenBase === 15) {
+			while (pos < src.length) {
+				const extra = src[pos++];
+				matchLen += extra;
+				if (extra !== 255) break;
+			}
+		}
 
-    // Copy match — matchPos is computed ONCE before the loop (handles overlapping copies)
-    const matchPos = dstPos - offset;
-    if (matchPos < 0) break;
-    for (let i = 0; i < matchLen && dstPos < uncompressedSize; i++) {
-      dst[dstPos++] = dst[matchPos + (i % offset)];
-    }
-  }
+		// Copy match — matchPos is computed ONCE before the loop (handles overlapping copies)
+		const matchPos = dstPos - offset;
+		if (matchPos < 0) break;
+		for (let i = 0; i < matchLen && dstPos < uncompressedSize; i++) {
+			dst[dstPos++] = dst[matchPos + (i % offset)];
+		}
+	}
 
-  return dst.subarray(0, dstPos);
+	return dst.subarray(0, dstPos);
 }

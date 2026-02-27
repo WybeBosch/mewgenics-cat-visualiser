@@ -49,9 +49,7 @@ export async function extractSaveFile(file) {
 		typeof file.size !== 'number' ||
 		file.size > maxSaveUploadBytes
 	) {
-		throw new Error(
-			`Save file exceeds max size (${maxSaveSizeMb} MB).`
-		);
+		throw new Error(`Save file exceeds max size (${maxSaveSizeMb} MB).`);
 	}
 
 	const SQL = await getSqlJs();
