@@ -1,8 +1,34 @@
 {
-	"devDependencies": {
-		"gh-pages": "^6.3.0",
-		"vite": "^7.3.1",
-		"vite-plugin-static-copy": "^3.2.0"
+	"name": "mewgenics-cat-visualiser",
+	"version": "1.0.0",
+	"private": true,
+	"description": "Visualize Mewgenics cat relationships and attributes from .sav or JSON data directly in the browser.",
+	"homepage": "https://wybebosch.github.io/mewgenics-cat-visualiser/",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/WybeBosch/mewgenics-cat-visualiser.git"
+	},
+	"bugs": {
+		"url": "https://github.com/WybeBosch/mewgenics-cat-visualiser/issues"
+	},
+	"keywords": [
+		"mewgenics",
+		"cats",
+		"visualizer",
+		"react",
+		"vite",
+		"sqljs"
+	],
+	"author": "WybeBosch",
+	"license": "UNLICENSED",
+	"engines": {
+		"node": ">=22 <23"
+	},
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview",
+		"deploy": "vite build && gh-pages -d dist"
 	},
 	"dependencies": {
 		"@vitejs/plugin-react": "^5.1.4",
@@ -10,10 +36,9 @@
 		"react-dom": "^19.2.4",
 		"sql.js": "^1.14.0"
 	},
-	"scripts": {
-		"dev": "vite",
-		"build": "vite build",
-		"preview": "vite preview",
-		"deploy": "vite build && gh-pages -d dist"
+	"devDependencies": {
+		"gh-pages": "^6.3.0",
+		"vite": "^7.3.1",
+		"vite-plugin-static-copy": "^3.2.0"
 	}
 }
