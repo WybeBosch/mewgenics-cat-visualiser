@@ -2,8 +2,7 @@ import { useState } from 'react';
 
 import Tooltip from './partials/Tooltip.jsx';
 import TooltipCloseArea from './partials/TooltipCloseArea.jsx';
-import SvgMarkers from './partials/SvgMarkers.jsx';
-import SvgHoveredNode from './partials/SvgHoveredNode.jsx';
+import SvgLoveHateLines from './partials/SvgLoveHateLines.jsx';
 import SvgMatchedRelationships from './partials/SvgMatchedRelationships.jsx';
 import SvgRelationLines from './partials/SvgRelationLines.jsx';
 import SvgCatNodes from './partials/SvgCatNodes.jsx';
@@ -134,13 +133,12 @@ export default function RelationshipSVG({
 			viewBox={`0 0 ${W} ${H}`}
 			style={{ maxWidth: '100%' }}
 		>
-			<SvgMarkers />
-			<TooltipCloseArea
-				selectedCatId={selectedCatId}
-				setSelectedCatId={setSelectedCatId}
+			<SvgLoveHateLines
+				zIndex="2"
+				hovIdx={hovIdx}
+				ordered={ordered}
+				positions={positions}
 			/>
-
-			<SvgHoveredNode hovIdx={hovIdx} ordered={ordered} positions={positions} />
 
 			<SvgMatchedRelationships
 				hovIdx={hovIdx}
@@ -152,6 +150,11 @@ export default function RelationshipSVG({
 				ordered={ordered}
 				positions={positions}
 			/>
+
+			<TooltipCloseArea
+				selectedCatId={selectedCatId}
+				setSelectedCatId={setSelectedCatId}
+			/>
 			<SvgCatNodes
 				hovIdx={hovIdx}
 				ordered={ordered}
@@ -160,6 +163,7 @@ export default function RelationshipSVG({
 				setSelectedCatId={setSelectedCatId}
 				selectedCatId={selectedCatId}
 			/>
+
 			<Tooltip
 				allCats={allCats}
 				selIdx={selIdx}

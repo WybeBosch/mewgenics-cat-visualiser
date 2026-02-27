@@ -14,7 +14,7 @@ function RelationshipGraph({
 
 	return (
 		<div style={{ marginTop: 32 }}>
-			<RelationshipHeader activeRoom={activeRoom} />
+			<RelationshipHeader activeRoom={activeRoom} cats={cats} />
 			<div
 				style={{
 					background: '#1a1a2e',

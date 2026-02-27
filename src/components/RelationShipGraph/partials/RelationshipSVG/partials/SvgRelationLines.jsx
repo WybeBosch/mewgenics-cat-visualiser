@@ -1,3 +1,10 @@
+import {
+	getAncestorNames,
+	isParentChild,
+	isSibling,
+	normalizeLineageName,
+} from './SvgRelationLogic.jsx';
+
 export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 	return (
 		<>
@@ -5,23 +12,17 @@ export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 			{hovIdx !== null &&
 				(() => {
 					const hovCat = ordered[hovIdx];
-					const hovAnc = [
-						hovCat.parent1,
-						hovCat.parent2,
-						hovCat.grandparent1,
-						hovCat.grandparent2,
-						hovCat.grandparent3,
-						hovCat.grandparent4,
-					].filter(Boolean);
+					const hovAnc = getAncestorNames(hovCat);
 					return ordered.map((other, oi) => {
 						if (oi === hovIdx) return null;
 						const from = positions[hovIdx],
 							to = positions[oi];
 						const hovIsParent =
-							other.parent1 === hovCat.name || other.parent2 === hovCat.name;
-						const otherIsParent =
-							hovCat.parent1 === other.name || hovCat.parent2 === other.name;
-						if (hovIsParent || otherIsParent) {
+							normalizeLineageName(other.parent1) ===
+								normalizeLineageName(hovCat.name) ||
+							normalizeLineageName(other.parent2) ===
+								normalizeLineageName(hovCat.name);
+						if (isParentChild(hovCat, other)) {
 							// Draw line from parent to child, and add emoji at each end
 							let parentPos, childPos;
 							if (hovIsParent) {
@@ -86,21 +87,10 @@ export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 								</g>
 							);
 						}
-						const otherAnc = [
-							other.parent1,
-							other.parent2,
-							other.grandparent1,
-							other.grandparent2,
-							other.grandparent3,
-							other.grandparent4,
-						].filter(Boolean);
+						const otherAnc = getAncestorNames(other);
 						const shared = hovAnc.filter((a) => otherAnc.includes(a));
 						if (shared.length === 0) return null;
-						const isSibling = shared.some(
-							(s) =>
-								[hovCat.parent1, hovCat.parent2].includes(s) &&
-								[other.parent1, other.parent2].includes(s)
-						);
+						const sibling = isSibling(hovCat, other);
 						return (
 							<g key={`kin-${oi}`}>
 								<line
@@ -108,9 +98,9 @@ export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 									y1={from.y}
 									x2={to.x}
 									y2={to.y}
-									stroke={isSibling ? '#fbbf24' : '#a78bfa'}
-									strokeWidth={isSibling ? 3 : 2}
-									strokeDasharray={isSibling ? 'none' : '8,4'}
+									stroke={sibling ? '#fbbf24' : '#a78bfa'}
+									strokeWidth={sibling ? 3 : 2}
+									strokeDasharray={sibling ? 'none' : '8,4'}
 									opacity={0.6}
 								/>
 								<text
@@ -118,10 +108,10 @@ export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 									y={(from.y + to.y) / 2 - 8}
 									textAnchor="middle"
 									fontSize={9}
-									fill={isSibling ? '#fbbf24' : '#a78bfa'}
+									fill={sibling ? '#fbbf24' : '#a78bfa'}
 									opacity={0.8}
 								>
-									{isSibling ? 'sibling' : 'related'}
+									{sibling ? 'sibling' : 'related'}
 								</text>
 							</g>
 						);

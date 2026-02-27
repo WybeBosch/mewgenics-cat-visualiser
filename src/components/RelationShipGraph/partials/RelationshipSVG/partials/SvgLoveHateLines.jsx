@@ -1,4 +1,6 @@
-export default function SvgHoveredNode({ hovIdx, ordered, positions }) {
+import SvgMarkers from './SvgMarkers.jsx';
+
+export default function SvgLoveHateLines({ hovIdx, ordered, positions }) {
 	const findPos = (name) => {
 		if (!name) return null;
 		const clean = name.replace(/\s*☠️/g, '').trim().toLowerCase();
@@ -62,6 +64,7 @@ export default function SvgHoveredNode({ hovIdx, ordered, positions }) {
 
 	return (
 		<>
+			<SvgMarkers />
 			{/*(edges, external relations, shared lineage, nodes) */}
 			{edges
 				.filter((e) => {
