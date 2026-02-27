@@ -4,7 +4,8 @@ This project can be run locally
 or by visiting the web url:
 
  https://wybebosch.github.io/mewgenics-cat-visualiser/
-<img width="1506" height="1234" alt="afbeelding" src="https://github.com/user-attachments/assets/1e8d7658-81af-4144-9aa8-e2697a834295" />
+<img width="1499" height="1256" alt="afbeelding" src="https://github.com/user-attachments/assets/973aa2a7-b75d-4046-9330-312fe0c222e8" />
+
 
 
 
@@ -66,6 +67,7 @@ If a cat has a matching partner (they both love each other) but are not in the s
 ## How to use on the web
 
 https://wybebosch.github.io/mewgenics-cat-visualiser/
+
 
 
 
