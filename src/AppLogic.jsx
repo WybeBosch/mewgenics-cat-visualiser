@@ -82,24 +82,27 @@ export function useMewgenicsCatsLogic() {
 			let storageSourceMeta = null;
 			let storageFound = false;
 			try {
-				// Optional preload JSON (safe when missing)
-				const preloadJsonUrl = `${import.meta.env.BASE_URL}mewgenics_cats.json`;
-				const response = await fetch(preloadJsonUrl, { cache: 'no-store' });
-				if (!response.ok) {
-					if (response.status !== 404) {
-						logIfEnabled(
-							`[cats] preload fetch failed: ${response.status} ${response.statusText}`
-						);
+				const isLocalDevelopment = import.meta.env.DEV;
+				if (isLocalDevelopment) {
+					// Optional preload JSON for local development only.
+					const preloadJsonUrl = `${import.meta.env.BASE_URL}mewgenics_cats.json`;
+					const response = await fetch(preloadJsonUrl, { cache: 'no-store' });
+					if (!response.ok) {
+						if (response.status !== 404) {
+							logIfEnabled(
+								`[cats] preload fetch failed: ${response.status} ${response.statusText}`
+							);
+						}
+						throw new Error('No preload JSON found');
 					}
-					throw new Error('No preload JSON found');
+					const data = await response.json();
+					jsonCats = Array.isArray(data) ? data : data.cats || [];
+					jsonSourceMeta = {
+						sourceType: 'preload-json',
+						scriptStartTime: jsonCats[0]?.script_start_time || '',
+						loadedAt: new Date().toISOString(),
+					};
 				}
-				const data = await response.json();
-				jsonCats = Array.isArray(data) ? data : data.cats || [];
-				jsonSourceMeta = {
-					sourceType: 'preload-json',
-					scriptStartTime: jsonCats[0]?.script_start_time || '',
-					loadedAt: new Date().toISOString(),
-				};
 			} catch (err) {
 				logIfEnabled(
 					'[cats] optional preload JSON not used:',
