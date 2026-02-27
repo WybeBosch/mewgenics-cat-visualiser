@@ -6,6 +6,7 @@ import { ButtonDownloadJson } from './partials/ButtonDownloadJson';
 export function Header({
 	cats,
 	rooms,
+	getAge,
 	onUploadJson,
 	onUploadSav,
 	savLoading,
@@ -22,7 +23,7 @@ export function Header({
 					marginBottom: 24,
 				}}
 			>
-				<Heading cats={cats} rooms={rooms} />
+				<Heading cats={cats} rooms={rooms} getAge={getAge} />
 				<div
 					className="button-bar"
 					style={{

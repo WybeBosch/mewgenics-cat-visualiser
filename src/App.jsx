@@ -37,6 +37,7 @@ export default function App() {
 			<Header
 				cats={cats}
 				rooms={rooms}
+				getAge={getAge}
 				onUploadJson={handleUploadJson}
 				onUploadSav={handleUploadSav}
 				savLoading={savLoading}
