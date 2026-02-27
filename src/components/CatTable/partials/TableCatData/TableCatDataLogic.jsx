@@ -7,18 +7,39 @@ import {
 export function TableCatDataLogic({ cats }) {
 	// Derived columns for table header
 	const columns = [
-		{ key: 'name', label: 'Name' },
-		{ key: 'partnerRoom', label: '💞' },
-		{ key: 'age', label: 'Age' },
-		{ key: 'sex', label: 'Sex' },
-		...STATS.map((s) => ({ key: s, label: `${STAT_ICONS[s]} ${s}` })),
-		{ key: 'total', label: 'Total' },
-		{ key: 'libido', label: OTHER_INFO_ICONS.libido },
-		{ key: 'aggression', label: OTHER_INFO_ICONS.aggression },
-		{ key: 'loves', label: OTHER_INFO_ICONS.loves },
-		{ key: 'hates', label: OTHER_INFO_ICONS.hates },
-		{ key: 'mutations', label: OTHER_INFO_ICONS.mutations },
-		{ key: 'actions', label: '' },
+		{ key: 'name', label: 'Name', tooltip: 'Cat name' },
+		{
+			key: 'partnerRoom',
+			label: '💞',
+			tooltip:
+				'Matching partner in another room. Shows when this cat and another cat love each other, but they are currently in different rooms. A detective icon appears in this column for those separated matching partners.',
+		},
+		{ key: 'age', label: 'Age', tooltip: 'Cat age in days' },
+		{ key: 'sex', label: 'Sex', tooltip: 'Sex (male, female, or herm)' },
+		...STATS.map((s) => ({
+			key: s,
+			label: `${STAT_ICONS[s]} ${s}`,
+			tooltip: `${s} stat`,
+		})),
+		{ key: 'total', label: 'Total', tooltip: 'Total of all core stats' },
+		{
+			key: 'libido',
+			label: OTHER_INFO_ICONS.libido,
+			tooltip: 'Libido',
+		},
+		{
+			key: 'aggression',
+			label: OTHER_INFO_ICONS.aggression,
+			tooltip: 'Aggression',
+		},
+		{ key: 'loves', label: OTHER_INFO_ICONS.loves, tooltip: 'Cats they love' },
+		{ key: 'hates', label: OTHER_INFO_ICONS.hates, tooltip: 'Cats they hate' },
+		{
+			key: 'mutations',
+			label: OTHER_INFO_ICONS.mutations,
+			tooltip: 'Genetic mutations',
+		},
+		{ key: 'actions', label: '', tooltip: 'Actions' },
 	];
 
 	// Helper to get partnerInOtherRoom
