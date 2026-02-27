@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
-// Reactivate this below import, if you know you  have a local .json file made by the python script.
-// This also cannot be hot reloaded so you have to press F5 in your browser
-// import catsJson from './data-grabber/python/public/mewgenics_cats.json';
+// Optional JSON preload file copied to web root by Vite static copy plugin.
+// This file may not exist in all environments (e.g. web deploy), so load it at runtime.
 import { logIfEnabled } from './utils/utils.jsx';
 
 export function useMewgenicsCatsLogic() {
@@ -30,13 +29,28 @@ export function useMewgenicsCatsLogic() {
 			let storageCats = [];
 			let storageTimestamp = '';
 			try {
-				// Load JSON from import
-				const data = catsJson;
+				// Optional preload JSON (safe when missing)
+				const preloadJsonUrl = `${import.meta.env.BASE_URL}mewgenics_cats.json`;
+				const response = await fetch(preloadJsonUrl, { cache: 'no-store' });
+				if (!response.ok) {
+					if (response.status !== 404) {
+						logIfEnabled(
+							`[cats] preload fetch failed: ${response.status} ${response.statusText}`
+						);
+					}
+					throw new Error('No preload JSON found');
+				}
+				const data = await response.json();
 				jsonCats = Array.isArray(data) ? data : data.cats || [];
 				if (jsonCats.length > 0 && jsonCats[0].script_start_time) {
 					jsonTimestamp = jsonCats[0].script_start_time;
 				}
-			} catch {}
+			} catch (err) {
+				logIfEnabled(
+					'[cats] optional preload JSON not used:',
+					err?.message || err
+				);
+			}
 			try {
 				// Load storage
 				const storageRaw = await window.storage.get('mewgenics-v14');
