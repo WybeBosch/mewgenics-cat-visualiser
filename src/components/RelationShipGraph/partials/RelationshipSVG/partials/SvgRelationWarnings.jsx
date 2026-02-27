@@ -246,7 +246,7 @@ function WarningPill({
 						<div
 							style={{
 								position: 'absolute',
-								bottom: 'calc(100% + 8px)',
+								top: 'calc(100% + 8px)',
 								left: 0,
 								zIndex: 30,
 								minWidth: 220,
