@@ -1,5 +1,10 @@
 // Icon and config constants for Mewgenics Cat Visual Organizer
 
+const APP_EMOJIS = {
+	default: '🐱',
+	local: '🐈',
+};
+
 const STAT_ICONS = {
 	STR: '💪',
 	DEX: '🏹',
@@ -34,6 +39,7 @@ const SEX_BG_HOVER = {
 };
 
 export {
+	APP_EMOJIS,
 	STAT_ICONS,
 	STATS,
 	SEX_ICON,
