@@ -29,9 +29,9 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"deploy": "vite build && gh-pages -d dist",
-		"patch": "npm version patch",
-		"minor": "npm version minor",
-		"major": "npm version major"
+		"patch": "npm version patch --no-git-tag-version",
+		"minor": "npm version minor --no-git-tag-version",
+		"major": "npm version major --no-git-tag-version"
 	},
 	"dependencies": {
 		"@vitejs/plugin-react": "^5.1.4",
