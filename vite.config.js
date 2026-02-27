@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import react from '@vitejs/plugin-react-swc';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { readFileSync } from 'node:fs';
 
@@ -31,6 +31,7 @@ export default defineConfig({
 	build: {
 		outDir: '../dist',
 		emptyOutDir: true,
+		reportCompressedSize: false,
 	},
 	publicDir: false, // Disable default publicDir, use static copy instead
 });
