@@ -1,4 +1,4 @@
-// Icon and config constants for Mewgenics Cat Visual Organizer
+// Icon and config constants for Mewgenics Cat Visualiser
 
 const APP_EMOJIS = {
 	default: '🐱',

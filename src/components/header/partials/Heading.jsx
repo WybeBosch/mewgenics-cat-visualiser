@@ -32,7 +32,7 @@ export function Heading({ cats, rooms, getAge, dataTimeLineText }) {
 					margin: 0,
 				}}
 			>
-				{headingEmoji} Mewgenics Cat Visual Organizer
+				{headingEmoji} Mewgenics Cat Visualiser
 			</h1>
 			<p style={{ color: '#888', margin: '4px 0 0', fontSize: 14 }}>
 				{dataTimeLineText}

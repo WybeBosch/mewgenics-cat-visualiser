@@ -1,4 +1,4 @@
-# Mewgenics Cat Visual Organizer
+# Mewgenics Cat Visualiser
 
 This project can be run locally
 or by visiting the web url:
