@@ -5,7 +5,7 @@ export default function SvgHoveredNode({ hovIdx, ordered, positions }) {
 		return positions.find((p) => p.name.toLowerCase() === clean);
 	};
 
-	// Add hate edges and one-way love edges (not mutual pairs)
+	// Add hate and love edges
 	const edges = [];
 	ordered.forEach((cat) => {
 		const from = findPos(cat.name);
@@ -22,22 +22,17 @@ export default function SvgHoveredNode({ hovIdx, ordered, positions }) {
 					toName: cat.hates,
 				});
 		}
-		// Love edges (one-way, not mutual)
+		// Love edges
 		if (cat.loves) {
 			const to = findPos(cat.loves);
 			if (to) {
-				const isMutual = ordered.some(
-					(other) => other.name === cat.loves && other.loves === cat.name
-				);
-				if (!isMutual) {
-					edges.push({
-						from,
-						to,
-						type: 'love',
-						fromId: cat.id,
-						toName: cat.loves,
-					});
-				}
+				edges.push({
+					from,
+					to,
+					type: 'love',
+					fromId: cat.id,
+					toName: cat.loves,
+				});
 			}
 		}
 	});
