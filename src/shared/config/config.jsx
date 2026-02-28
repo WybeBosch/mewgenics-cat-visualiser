@@ -8,7 +8,7 @@ const APP_EMOJIS = {
 const STAT_ICONS = {
 	STR: '💪',
 	DEX: '🏹',
-	CON: '➕',
+	CON: '🔰',
 	INT: '💡',
 	SPD: '🥾',
 	CHA: '💋',
@@ -26,6 +26,21 @@ const OTHER_INFO_ICONS = {
 
 const SEX_ICON = { male: '♂', female: '♀', herm: '⚥' };
 
+const CAT_ICON = {
+	triangle: '▲',
+	circle: '●',
+	star2: '⭐',
+	str: STAT_ICONS.STR,
+	dex: STAT_ICONS.DEX,
+	con: STAT_ICONS.CON,
+	int: STAT_ICONS.INT,
+	spd: STAT_ICONS.SPD,
+	cha: STAT_ICONS.CHA,
+	lck: STAT_ICONS.LCK,
+	health: '⚕️',
+	evolution: '🧬',
+};
+
 const SECURITY_LIMITS = {
 	maxSaveUploadKb: 5000, // normal saves are around 300 - 400 kb
 	maxJsonUploadKb: 5000,
@@ -33,4 +48,4 @@ const SECURITY_LIMITS = {
 	maxCatsProcessed: 5000,
 };
 
-export { APP_EMOJIS, STAT_ICONS, STATS, SEX_ICON, OTHER_INFO_ICONS, SECURITY_LIMITS };
+export { APP_EMOJIS, STAT_ICONS, STATS, SEX_ICON, OTHER_INFO_ICONS, CAT_ICON, SECURITY_LIMITS };

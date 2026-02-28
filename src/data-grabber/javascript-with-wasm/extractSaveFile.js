@@ -262,6 +262,7 @@ export async function extractSaveFile(file) {
 			return {
 				name: cat.name,
 				id: cat.name.toLowerCase().replace(/ /g, '_'),
+				icon: cat.icon || '',
 				sex: cat.sex,
 				STR: cat.STR,
 				DEX: cat.DEX,

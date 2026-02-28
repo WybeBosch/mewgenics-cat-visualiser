@@ -1,4 +1,4 @@
-import { STATS, SEX_ICON } from '../../../../../../shared/config/config.jsx';
+import { STATS, SEX_ICON, CAT_ICON } from '../../../../../../shared/config/config.jsx';
 import { TableTooltipPopup, joinClass } from '../../../../../../shared/utils/utils.jsx';
 import './TableBody.css';
 
@@ -69,6 +69,7 @@ export function TableBody({
 						<td className={joinClass('cell sex', cat.sex)}>
 							{SEX_ICON[cat.sex] || cat.sex}
 						</td>
+						<td className="cell icon">{CAT_ICON[cat.icon] || cat.icon || ''}</td>
 						{STATS.map((s) => (
 							<td key={s} className={joinClass('cell stat', getStatClass(cat[s]))}>
 								{cat[s]}

@@ -40,6 +40,12 @@
 			width: 56px;
 			min-width: 56px;
 			max-width: 56px;
+		}
+
+		&.col-icon {
+			width: 56px;
+			min-width: 56px;
+			max-width: 56px;
 			border-right: 1px solid var(--color-border-soft);
 		}
 

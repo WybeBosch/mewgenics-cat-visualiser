@@ -6,7 +6,7 @@ Extracts cat data from steamcampaign01.sav (SQLite database with LZ4-compressed 
 Room-first approach: only extracts cats that have a room assignment, then fetches
 parent/grandparent data as needed for lineage info.
 
-Outputs: mewgenics_cats.json with name, sex, stats, libido, aggression, room, parents, grandparents.
+Outputs: mewgenics_cats.json with name, icon, sex, stats, libido, aggression, room, parents, grandparents.
 
 Usage:
     python get-the-data/mewgenics_extract.py                          # looks for steamcampaign01.sav in current dir
@@ -195,10 +195,10 @@ def parse_cat_blob(key: int, blob: bytes, save_day: Optional[int] = None) -> dic
         [20..]   name (utf-16-le, name_length * 2 bytes)
 
     After name:
-        [+0..+3] tag_length (int32)
+        [+0..+3] icon_length (int32)
         [+4..+7] padding (0)
-        [+8..]   tag string (ascii, e.g. "str", "lck", "star2")
-        [+8+tag_length] sex byte: 0=male, 1=female, 2=herm
+        [+8..]   icon string (ascii, e.g. "triangle", "circle", "star2", "str", "con")
+        [+8+icon_length] sex byte: 0=male, 1=female, 2=herm
 
     Then variable-length fields until the sprite string ("male..." or "female..." + digits).
 
@@ -299,6 +299,7 @@ def parse_cat_blob(key: int, blob: bytes, save_day: Optional[int] = None) -> dic
     # Layout after name: [int32 tag_len] [int32 pad=0] [tag_bytes] [sex_byte]
     # sex_byte: 0=male, 1=female, 2=herm
     tag_len = struct.unpack_from('<I', dec, name_end)[0]
+    icon = dec[name_end + 8 : name_end + 8 + tag_len].decode('ascii', errors='replace') if tag_len < 100 else ""
     sex_byte_off = name_end + 8 + tag_len
     sex_byte = dec[sex_byte_off] if sex_byte_off < len(dec) else 0
     sex = {0: "male", 1: "female", 2: "herm"}.get(sex_byte, f"unknown({sex_byte})")
@@ -339,6 +340,7 @@ def parse_cat_blob(key: int, blob: bytes, save_day: Optional[int] = None) -> dic
     return {
         "key": key,
         "name": name,
+        "icon": icon,
         "sex": sex,
         "STR": stats[0],
         "DEX": stats[1],
@@ -603,6 +605,7 @@ def extract(save_path: str) -> list[dict]:
         entry = {
             "name": c["name"],
             "id": c["name"].lower().replace(" ", "_"),
+            "icon": c.get("icon", ""),
             "sex": c["sex"],
             "STR": c["STR"],
             "DEX": c["DEX"],
@@ -759,7 +762,7 @@ def main():
             old = old_map[cid]
             new = new_map[cid]
             # Ignore fields that are not relevant for diff
-            fields = ["name", "sex", "STR", "DEX", "CON", "INT", "SPD", "CHA", "LCK", "libido", "aggression", "room", "parent1", "parent2", "grandparent1", "grandparent2", "grandparent3", "grandparent4", "loves", "hates", "stray"]
+            fields = ["name", "icon", "sex", "STR", "DEX", "CON", "INT", "SPD", "CHA", "LCK", "libido", "aggression", "room", "parent1", "parent2", "grandparent1", "grandparent2", "grandparent3", "grandparent4", "loves", "hates", "stray"]
             if any(old.get(f) != new.get(f) for f in fields):
                 modified.append(new)
 

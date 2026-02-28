@@ -13,6 +13,7 @@ export function TableCatDataLogic({ cats }) {
 		},
 		{ key: 'age', label: 'Age', tooltip: 'Cat age in days' },
 		{ key: 'sex', label: 'Sex', tooltip: 'Sex (male, female, or herm)' },
+		{ key: 'icon', label: '🔷', tooltip: 'Cat icon badge' },
 		...STATS.map((s) => ({
 			key: s,
 			label: `${STAT_ICONS[s]} ${s}`,

@@ -387,15 +387,19 @@ export function parseCatBlob(key, blob, saveDay) {
 		logIfEnabled(`[parseCatBlob] key=${key} lovesKey=${lovesKey} hatesKey=${hatesKey}`);
 	}
 
-	// --- Sex byte: right after the tag string that follows the name ---
-	// Layout after name: int32(tag_len) + int32(pad=0) + tag_bytes + sex_byte
-	const tagLen = view.getUint32(nameEnd, true);
-	const sexByteOff = nameEnd + 8 + tagLen;
+	// --- Icon & sex byte: right after the icon string that follows the name ---
+	// Layout after name: int32(icon_len) + int32(pad=0) + icon_bytes + sex_byte
+	const iconLen = view.getUint32(nameEnd, true);
+	const icon =
+		iconLen > 0 && iconLen < 100
+			? new TextDecoder('ascii').decode(dec.subarray(nameEnd + 8, nameEnd + 8 + iconLen))
+			: '';
+	const sexByteOff = nameEnd + 8 + iconLen;
 	const sexByte = sexByteOff < dec.length ? dec[sexByteOff] : 0;
 	const SEX = { 0: 'male', 1: 'female', 2: 'herm' };
 	const sex = SEX[sexByte] ?? `unknown(${sexByte})`;
 	logIfEnabled(
-		`[parseCatBlob] key=${key} tagLen=${tagLen} sexByteOff=${sexByteOff} sexByte=${sexByte} sex=${sex}`
+		`[parseCatBlob] key=${key} iconLen=${iconLen} icon='${icon}' sexByteOff=${sexByteOff} sexByte=${sexByte} sex=${sex}`
 	);
 
 	// --- Birthday ---
@@ -416,6 +420,7 @@ export function parseCatBlob(key, blob, saveDay) {
 	return {
 		key,
 		name,
+		icon,
 		sex,
 		STR: stats[0],
 		DEX: stats[1],
