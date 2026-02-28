@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { joinClass } from '../../../../../../shared/utils/utils.jsx';
 import './TableHead.css';
 
-export function TableHead({ columns, handleSort, sortCol, sortAsc }) {
+export function TableHead({ columns, handleSort, sortCol, sortAsc, searchQuery, onSearchChange, onSearchSubmit }) {
 	const [hoveredColumn, setHoveredColumn] = useState(null);
 
 	return (
@@ -40,11 +40,25 @@ export function TableHead({ columns, handleSort, sortCol, sortAsc }) {
 							onMouseLeave={() => setHoveredColumn(null)}
 							onClick={isSortable ? () => handleSort(col.key) : undefined}
 						>
-							{col.label}
+							{col.key === 'name' ? (
+								<input
+									type="text"
+									className="search-input"
+									placeholder="Search name..."
+									value={searchQuery}
+									onChange={(e) => onSearchChange(e.target.value)}
+									onKeyDown={(e) => {
+										if (e.key === 'Enter') onSearchSubmit(searchQuery);
+									}}
+									onClick={(e) => e.stopPropagation()}
+								/>
+							) : (
+								col.label
+							)}
 							{isSorted && (
 								<span className="sort-indicator">{sortAsc ? '▲' : '▼'}</span>
 							)}
-							{hoveredColumn === col.key && col.tooltip && (
+							{hoveredColumn === col.key && col.key !== 'name' && col.tooltip && (
 								<div
 									className={joinClass(
 										'tooltip',
