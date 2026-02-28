@@ -13,7 +13,7 @@ export function ButtonCopySavePath() {
 			setFadeOut(false);
 			setTimeout(() => setFadeOut(true), 900); // Start fade out after 900ms
 			setTimeout(() => setShowPopup(false), 1300); // Hide after fade
-		} catch (e) {
+		} catch {
 			alert('Failed to copy');
 		}
 	};

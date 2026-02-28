@@ -4,6 +4,7 @@ import { Header } from './components/Header/Header.jsx';
 import { useMewgenicsCatsLogic } from './AppLogic.jsx';
 import { useEnvironmentFavicon } from './utils/faviconUtils.jsx';
 
+//eslint-disable-next-line no-console
 console.log(`Mewgenics cat tracker v${import.meta.env.VITE_APP_VERSION}`);
 
 export default function App() {
@@ -25,7 +26,7 @@ export default function App() {
 	} = useMewgenicsCatsLogic();
 
 	return (
-		<div id="App">
+		<div id="app">
 			<Header
 				cats={cats}
 				rooms={rooms}

@@ -5,7 +5,7 @@
 	--color-bg-muted: #2a2a4a;
 	--color-bg-muted-alt: #1f1f3a;
 	--color-bg-strong: #2a2a5a;
-	--color-bg-legend: rgba(30, 30, 58, 0.95);
+	--color-bg-legend: rgb(30 30 58 / 95%);
 	--color-bg-tooltip: #0b1220;
 	--color-bg-button: #374151;
 	--color-bg-button-disabled: #1f2937;
@@ -21,7 +21,7 @@
 	--color-border-dash: #666;
 
 	/* Text */
-	--color-text-primary: #ffffff;
+	--color-text-primary: #fff;
 	--color-text-secondary: #e0e0e0;
 	--color-text-muted: #aaa;
 	--color-text-subtle: #888;
@@ -64,9 +64,9 @@
 	--radius-lg: 12px;
 
 	/* Shadows */
-	--shadow-popup-sm: 0 2px 8px rgba(0, 0, 0, 0.18);
-	--shadow-popup-md: 0 4px 16px rgba(0, 0, 0, 0.5);
-	--shadow-popup-lg: 0 10px 30px rgba(0, 0, 0, 0.35);
-	--shadow-popup-lg-soft: 0 10px 24px rgba(0, 0, 0, 0.35);
-	--shadow-tooltip: 0 10px 15px -3px rgba(0, 0, 0, 0.35);
+	--shadow-popup-sm: 0 2px 8px rgb(0 0 0 / 18%);
+	--shadow-popup-md: 0 4px 16px rgb(0 0 0 / 50%);
+	--shadow-popup-lg: 0 10px 30px rgb(0 0 0 / 35%);
+	--shadow-popup-lg-soft: 0 10px 24px rgb(0 0 0 / 35%);
+	--shadow-tooltip: 0 10px 15px -3px rgb(0 0 0 / 35%);
 }

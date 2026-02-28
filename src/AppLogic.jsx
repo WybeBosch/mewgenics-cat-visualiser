@@ -70,7 +70,7 @@ export function useMewgenicsCatsLogic() {
 	// Keep activeRoom valid
 	useEffect(() => {
 		if (!rooms.includes(activeRoom)) setActiveRoom(rooms[0] || '');
-	}, [rooms]);
+	}, [activeRoom, rooms]);
 
 	// Load cats from storage and JSON, using source precedence rules.
 	useEffect(() => {
@@ -80,7 +80,7 @@ export function useMewgenicsCatsLogic() {
 			let jsonSourceMeta = null;
 			let storageCats = [];
 			let storageSourceMeta = null;
-			let storageFound = false;
+			let storageFound;
 			try {
 				const isLocalDevelopment = import.meta.env.DEV;
 				if (isLocalDevelopment) {
@@ -153,7 +153,9 @@ export function useMewgenicsCatsLogic() {
 		try {
 			window.localStorage.setItem('mewgenics-v14', JSON.stringify({ cats, sourceMeta }));
 			logIfEnabled('[cats] saved to localStorage:', cats);
-		} catch {}
+		} catch (err) {
+			logIfEnabled('[cats] failed to save localStorage:', err);
+		}
 	}, [cats, loaded, sourceMeta]);
 
 	// Handler for uploaded .sav file
@@ -184,7 +186,9 @@ export function useMewgenicsCatsLogic() {
 					JSON.stringify({ cats: extractedCats, sourceMeta: nextSourceMeta })
 				);
 				logIfEnabled('[sav] saved extractedCats:', extractedCats);
-			} catch {}
+			} catch (err) {
+				logIfEnabled('[sav] failed to save extractedCats:', err);
+			}
 		} catch (err) {
 			logIfEnabled('[extractSaveFile] Error:', err);
 			setSavError(`Error reading save file: ${err.message}`);
@@ -212,7 +216,9 @@ export function useMewgenicsCatsLogic() {
 				JSON.stringify({ cats: uploadedCats, sourceMeta: nextSourceMeta })
 			);
 			logIfEnabled('[json] saved uploadedCats:', uploadedCats);
-		} catch {}
+		} catch (err) {
+			logIfEnabled('[json] failed to save uploadedCats:', err);
+		}
 	}, []);
 
 	// Utility: get cat age

@@ -35,7 +35,7 @@ export function ButtonUploadJson({ onUploadJson }) {
 							let data = JSON.parse(text);
 							if (!Array.isArray(data)) data = data.cats || [];
 							onUploadJson && onUploadJson(data, file);
-						} catch (err) {
+						} catch {
 							alert('Invalid JSON file.');
 						}
 						e.target.value = '';

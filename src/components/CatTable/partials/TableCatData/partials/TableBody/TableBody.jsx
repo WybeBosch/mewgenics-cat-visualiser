@@ -2,6 +2,16 @@ import { STATS, SEX_ICON } from '../../../../../../config/config.jsx';
 import { TableTooltipPopup } from '../../../../../../utils/utils.jsx';
 import './TableBody.css';
 
+function NoCatsFoundWarning({ columnsLength }) {
+	return (
+		<tr>
+			<td colSpan={columnsLength} className="no-cats-warning">
+				No cats in this room.
+			</td>
+		</tr>
+	);
+}
+
 export function TableBody({
 	cats,
 	columns,
@@ -30,19 +40,9 @@ export function TableBody({
 		return statValue >= 7 ? 'high' : '';
 	}
 
-	function NoCatsFoundWarning() {
-		return (
-			<tr>
-				<td colSpan={columns.length} className="no-cats-warning">
-					No cats in this room.
-				</td>
-			</tr>
-		);
-	}
-
 	return (
 		<tbody className="table-body">
-			{noCatsFound ? <NoCatsFoundWarning /> : null}
+			{noCatsFound ? <NoCatsFoundWarning columnsLength={columns.length} /> : null}
 			{sorted.map((cat, i) => {
 				const total = totalStat(cat);
 				const age = getAge(cat);
