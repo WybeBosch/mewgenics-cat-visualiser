@@ -1,10 +1,10 @@
 .button-download-json {
-	background: var(--color-bg-button);
-	color: var(--color-text-primary);
+	padding: 10px 20px;
 	border: none;
 	border-radius: var(--radius-md);
-	padding: 10px 20px;
+	background: var(--color-bg-button);
+	color: var(--color-text-primary);
 	cursor: pointer;
-	font-weight: 600;
 	font-size: 14px;
+	font-weight: 600;
 }

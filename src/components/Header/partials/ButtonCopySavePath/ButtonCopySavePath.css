@@ -4,15 +4,15 @@
 	width: fit-content;
 
 	.button {
+		padding: 4px 10px;
+		border: none;
+		border-radius: var(--radius-sm);
+		margin-top: 5px;
 		background: var(--color-bg-button);
 		color: var(--color-text-primary);
-		border: none;
-		font-style: italic;
-		border-radius: var(--radius-sm);
-		padding: 4px 10px;
-		font-size: 13px;
 		cursor: pointer;
-		margin-top: 5px;
+		font-size: 13px;
+		font-style: italic;
 		font-weight: 500;
 		opacity: 0.85;
 		transition: background 0.2s;
@@ -20,19 +20,19 @@
 
 	.popup {
 		position: absolute;
-		left: 50%;
-		top: 110%;
-		transform: translateX(-50%);
-		background: var(--color-bg-button);
-		color: var(--color-text-primary);
-		border-radius: var(--radius-sm);
-		padding: 4px 12px;
-		font-size: 13px;
-		pointer-events: none;
-		box-shadow: var(--shadow-popup-sm);
-		transition: opacity 0.4s;
 		z-index: 10;
+		top: 110%;
+		left: 50%;
+		padding: 4px 12px;
+		border-radius: var(--radius-sm);
+		background: var(--color-bg-button);
+		box-shadow: var(--shadow-popup-sm);
+		color: var(--color-text-primary);
+		font-size: 13px;
 		opacity: 1;
+		pointer-events: none;
+		transform: translateX(-50%);
+		transition: opacity 0.4s;
 
 		&[aria-hidden='true'] {
 			opacity: 0;

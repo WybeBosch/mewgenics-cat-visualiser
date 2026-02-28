@@ -2,15 +2,15 @@
 	margin-bottom: 16px;
 
 	.title {
+		margin: 0 0 8px;
+		color: var(--color-text-primary);
 		font-size: 20px;
 		font-weight: 700;
-		color: var(--color-text-primary);
-		margin: 0 0 8px;
 	}
 
 	.empty-state {
-		font-size: 13px;
-		color: var(--color-text-cool);
 		display: block;
+		color: var(--color-text-cool);
+		font-size: 13px;
 	}
 }

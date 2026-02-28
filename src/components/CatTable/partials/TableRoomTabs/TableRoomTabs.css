@@ -1,8 +1,8 @@
 .table-room-tabs {
 	display: flex;
 	align-items: end;
-	gap: 4px;
 	border-bottom: 2px solid var(--color-border-soft);
+	gap: 4px;
 
 	.item {
 		position: relative;
@@ -12,12 +12,12 @@
 		padding: 10px 20px;
 		border: none;
 		border-radius: 8px 8px 0 0;
-		cursor: pointer;
-		font-size: 14px;
-		transition: background 0.15s;
 		background: var(--color-bg-card);
 		color: var(--color-text-muted);
+		cursor: pointer;
+		font-size: 14px;
 		font-weight: 500;
+		transition: background 0.15s;
 
 		&.active {
 			background: var(--color-accent);
