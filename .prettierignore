@@ -5,3 +5,6 @@ build/
 src/data-grabber/javascript-with-wasm/public/compiled-binaries/
 src/data-grabber/python/public/*.json
 !src/data-grabber/python/public/example_mewgenics_cats.json
+
+pnpm-lock.yaml
+pnpm-workspace.yaml
