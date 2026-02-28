@@ -35,11 +35,13 @@ export function TableCatDataLogic({ cats }) {
 		{ key: 'spacer', label: '', isStatic: true },
 	];
 
-	// Helper to get partnerInOtherRoom
+	// Helper to get partnerInOtherRoom (must be mutual love)
 	function isPartnerInOtherRoom(cat) {
 		if (!cat.loves) return false;
 		const partner = cats.find((c) => c.name === cat.loves || c.id === cat.loves);
-		return partner && partner.room && cat.room && partner.room !== cat.room;
+		if (!partner || !partner.room || !cat.room || partner.room === cat.room) return false;
+		// Only flag if love is mutual
+		return partner.loves === cat.name || partner.loves === cat.id;
 	}
 
 	// Helper to get row background
