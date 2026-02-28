@@ -23,7 +23,7 @@
 
 	&.loading {
 		background: var(--color-bg-button-disabled);
-		color: var(--color-text-disabled);
+		color: var(--color-text-muted);
 		cursor: not-allowed;
 	}
 

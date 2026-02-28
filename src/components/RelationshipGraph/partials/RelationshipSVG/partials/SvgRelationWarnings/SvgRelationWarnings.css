@@ -26,19 +26,18 @@
 			outline-offset: 2px;
 		}
 
-		&.siblings {
-			background: var(--color-warning-siblings-bg);
-			color: var(--color-warning-siblings-text);
-		}
-
-		&.parent-child {
-			background: var(--color-warning-parent-bg);
-			color: var(--color-warning-parent-text);
-		}
-
+		&.siblings,
+		&.parent-child,
 		&.distantly-related {
-			background: var(--color-warning-related-bg);
-			color: var(--color-warning-related-text);
+			background: transparent;
+			border: 1px solid var(--color-border-soft);
+			cursor: pointer;
+		}
+
+		&.siblings:hover,
+		&.parent-child:hover,
+		&.distantly-related:hover {
+			background: var(--color-bg-card);
 		}
 	}
 
@@ -123,7 +122,7 @@
 		min-width: 24px;
 		padding-right: 8px;
 		border-right: 1px solid var(--color-border-strong);
-		color: var(--color-text-disabled);
+		color: var(--color-text-muted);
 		text-align: right;
 	}
 
