@@ -1,6 +1,6 @@
 import { TableCatDataLogic } from './TableCatDataLogic.jsx';
-import { TableHead } from './partials/TableHead.jsx';
-import { TableBody } from './partials/TableBody.jsx';
+import { TableHead } from './partials/TableHead/TableHead.jsx';
+import { TableBody } from './partials/TableBody/TableBody.jsx';
 import './TableCatData.css';
 
 export function TableCatData({

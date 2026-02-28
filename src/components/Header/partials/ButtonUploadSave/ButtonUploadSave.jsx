@@ -1,5 +1,5 @@
-import { ButtonCopySavePath } from './ButtonCopySavePath.jsx';
-import { SECURITY_LIMITS } from '../../../config/config.jsx';
+import { ButtonCopySavePath } from '../ButtonCopySavePath/ButtonCopySavePath.jsx';
+import { SECURITY_LIMITS } from '../../../../config/config.jsx';
 import './ButtonUploadSave.css';
 
 export function ButtonUploadSave({ onUploadSav, savLoading, savError }) {

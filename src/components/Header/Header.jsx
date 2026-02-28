@@ -1,7 +1,7 @@
-import { Heading } from './partials/Heading';
-import { ButtonUploadSave } from './partials/ButtonUploadSave';
-import { ButtonUploadJson } from './partials/ButtonUploadJson';
-import { ButtonDownloadJson } from './partials/ButtonDownloadJson';
+import { Heading } from './partials/Heading/Heading';
+import { ButtonUploadSave } from './partials/ButtonUploadSave/ButtonUploadSave';
+import { ButtonUploadJson } from './partials/ButtonUploadJson/ButtonUploadJson';
+import { ButtonDownloadJson } from './partials/ButtonDownloadJson/ButtonDownloadJson';
 import './Header.css';
 
 export function Header({

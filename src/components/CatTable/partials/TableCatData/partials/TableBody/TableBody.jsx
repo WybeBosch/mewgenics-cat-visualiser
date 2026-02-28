@@ -1,5 +1,5 @@
-import { STATS, SEX_ICON } from '../../../../../config/config.jsx';
-import { TableTooltipPopup } from '../../../../../utils/utils.jsx';
+import { STATS, SEX_ICON } from '../../../../../../config/config.jsx';
+import { TableTooltipPopup } from '../../../../../../utils/utils.jsx';
 import './TableBody.css';
 
 export function TableBody({
