@@ -11,6 +11,8 @@
 
 	.panel {
 		position: fixed;
+		top: var(--tooltip-top, 0px);
+		left: var(--tooltip-left, 0px);
 		z-index: 99999;
 		transform: translateY(-100%);
 		background: var(--color-bg-tooltip-panel);

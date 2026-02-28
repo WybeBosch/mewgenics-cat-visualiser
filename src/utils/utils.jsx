@@ -76,8 +76,8 @@ function TableTooltipPopup({ cat, allCats }) {
 				<div
 					className="panel"
 					style={{
-						top: pos.y - 10,
-						left: pos.x + 16,
+						'--tooltip-top': `${pos.y - 10}px`,
+						'--tooltip-left': `${pos.x + 16}px`,
 					}}
 				>
 					<div className="title">{cat.name}</div>
