@@ -1,0 +1,21 @@
+.button-upload-json {
+	display: flex;
+	align-items: center;
+	background: var(--color-bg-button);
+	color: var(--color-text-primary);
+	border: none;
+	border-radius: var(--radius-md);
+	padding: 10px 16px;
+	cursor: pointer;
+	font-weight: 600;
+	font-size: 14px;
+	margin-right: 0;
+
+	.icon {
+		margin-right: 6px;
+	}
+
+	.input {
+		display: none;
+	}
+}

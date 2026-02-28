@@ -2,6 +2,7 @@ import { Heading } from './partials/Heading';
 import { ButtonUploadSave } from './partials/ButtonUploadSave';
 import { ButtonUploadJson } from './partials/ButtonUploadJson';
 import { ButtonDownloadJson } from './partials/ButtonDownloadJson';
+import './Header.css';
 
 export function Header({
 	cats,
@@ -15,30 +16,14 @@ export function Header({
 }) {
 	return (
 		<>
-			<header
-				className="header"
-				style={{
-					display: 'flex',
-					alignItems: 'center',
-					justifyContent: 'space-between',
-					marginBottom: 24,
-				}}
-			>
+			<header className="header">
 				<Heading
 					cats={cats}
 					rooms={rooms}
 					getAge={getAge}
 					dataTimeLineText={dataTimeLineText}
 				/>
-				<div
-					className="button-bar"
-					style={{
-						display: 'flex',
-						flexDirection: 'row',
-						justifyContent: 'space-between',
-						gap: '1.5rem',
-					}}
-				>
+				<div className="button-bar">
 					<ButtonUploadSave
 						onUploadSav={onUploadSav}
 						savLoading={savLoading}

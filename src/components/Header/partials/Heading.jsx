@@ -1,4 +1,5 @@
 import { APP_EMOJIS } from '../../../config/config.jsx';
+import './Heading.css';
 
 export function Heading({ cats, rooms, getAge, dataTimeLineText }) {
 	const headingEmoji = import.meta.env.DEV
@@ -24,20 +25,9 @@ export function Heading({ cats, rooms, getAge, dataTimeLineText }) {
 
 	return (
 		<div className="heading">
-			<h1
-				style={{
-					fontSize: 28,
-					fontWeight: 700,
-					color: '#fff',
-					margin: 0,
-				}}
-			>
-				{headingEmoji} Mewgenics Cat Visualiser
-			</h1>
-			<p style={{ color: '#888', margin: '4px 0 0', fontSize: 14 }}>
-				{dataTimeLineText}
-			</p>
-			<p style={{ color: '#888', margin: '4px 0 0', fontSize: 14 }}>
+			<h1 className="title">{headingEmoji} Mewgenics Cat Visualiser</h1>
+			<p className="meta-text">{dataTimeLineText}</p>
+			<p className="meta-text">
 				{cats.length} total cats across {rooms.length} rooms
 				<br />
 				{maleCount} male, {femaleCount} female, {kittenCount} {kittenLabel}

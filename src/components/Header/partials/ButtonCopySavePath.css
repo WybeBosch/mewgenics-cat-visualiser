@@ -1,0 +1,44 @@
+.button-copy-save-path {
+	position: absolute;
+	top: 100%;
+	width: fit-content;
+
+	.button {
+		background: var(--color-bg-button);
+		color: var(--color-text-primary);
+		border: none;
+		font-style: italic;
+		border-radius: var(--radius-sm);
+		padding: 4px 10px;
+		font-size: 13px;
+		cursor: pointer;
+		margin-top: 5px;
+		font-weight: 500;
+		opacity: 0.85;
+		transition: background 0.2s;
+	}
+
+	.popup {
+		position: absolute;
+		left: 50%;
+		top: 110%;
+		transform: translateX(-50%);
+		background: var(--color-bg-button);
+		color: var(--color-text-primary);
+		border-radius: var(--radius-sm);
+		padding: 4px 12px;
+		font-size: 13px;
+		pointer-events: none;
+		box-shadow: var(--shadow-popup-sm);
+		transition: opacity 0.4s;
+		z-index: 10;
+
+		&.visible {
+			opacity: 1;
+		}
+
+		&.hidden {
+			opacity: 0;
+		}
+	}
+}
