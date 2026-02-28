@@ -1,11 +1,11 @@
-import { STAT_ICONS, STATS, OTHER_INFO_ICONS } from '../../../../config/config.jsx';
+import { STAT_ICONS, STATS, OTHER_INFO_ICONS } from '../../../../shared/config/config.jsx';
 
 export function TableCatDataLogic({ cats }) {
 	// Derived columns for table header
 	const columns = [
 		{ key: 'name', label: 'Name', tooltip: 'Cat name' },
 		{
-			key: 'partnerRoom',
+			key: 'partner-room',
 			label: '💞',
 			isStatic: true,
 			tooltip:
@@ -57,7 +57,8 @@ export function TableCatDataLogic({ cats }) {
 
 	// Helper to get stat style
 	function getStatStyle(val) {
-		if (val >= 7) return { fontWeight: 800, color: 'var(--color-positive)', fontSize: '1.05em' };
+		if (val >= 7)
+			return { fontWeight: 800, color: 'var(--color-positive)', fontSize: '1.05em' };
 		return { fontWeight: 400, color: 'var(--color-text-neutral)', fontSize: '1em' };
 	}
 

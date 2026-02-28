@@ -3,16 +3,16 @@
 
 	.cell {
 		position: sticky;
-		top: 0;
 		z-index: 5;
+		top: 0;
 		padding: var(--table-header-cell-y-padding) 12px;
-		box-shadow: inset 0 -2px 0 var(--color-border-soft);
 		background: var(--color-bg-card);
+		box-shadow: inset 0 -2px 0 var(--color-border-soft);
 		color: var(--color-text-muted);
 		cursor: pointer;
 		font-size: var(--table-header-font-size);
-		line-height: var(--table-header-line-height);
 		font-weight: 600;
+		line-height: var(--table-header-line-height);
 		text-align: center;
 		user-select: none;
 		white-space: nowrap;
@@ -23,7 +23,7 @@
 			max-width: 180px;
 		}
 
-		&.col-partnerRoom {
+		&.col-partner-room {
 			width: 52px;
 			min-width: 52px;
 			max-width: 52px;
@@ -53,8 +53,8 @@
 			width: 72px;
 			min-width: 72px;
 			max-width: 72px;
-			border-left: 1px solid var(--color-border-soft);
 			border-right: 1px solid var(--color-border-soft);
+			border-left: 1px solid var(--color-border-soft);
 		}
 
 		&.col-libido {
@@ -115,7 +115,7 @@
 		padding: 8px 10px;
 		border: 1px solid var(--color-bg-button);
 		border-radius: var(--radius-sm);
-		background: var(--color-bg-tooltip-strong);
+		background: var(--color-bg-tooltip-panel);
 		box-shadow: var(--shadow-tooltip);
 		color: var(--color-text-tooltip);
 		font-size: 12px;

@@ -1,5 +1,5 @@
-import { SEX_ICON } from '../../../../../../config/config.jsx';
-import { joinClass } from '../../../../../../utils/utils.jsx';
+import { SEX_ICON } from '../../../../../../shared/config/config.jsx';
+import { joinClass } from '../../../../../../shared/utils/utils.jsx';
 import './SvgCatNodes.css';
 
 export default function SvgCatNodes({

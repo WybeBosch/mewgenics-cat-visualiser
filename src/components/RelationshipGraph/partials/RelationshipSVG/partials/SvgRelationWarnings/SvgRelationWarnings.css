@@ -29,8 +29,8 @@
 		&.siblings,
 		&.parent-child,
 		&.distantly-related {
-			background: transparent;
 			border: 1px solid var(--color-border-soft);
+			background: transparent;
 			cursor: pointer;
 		}
 

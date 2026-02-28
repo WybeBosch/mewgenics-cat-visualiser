@@ -94,8 +94,8 @@
 		width: 72px;
 		min-width: 72px;
 		max-width: 72px;
-		border-left: 1px solid var(--color-border-soft);
 		border-right: 1px solid var(--color-border-soft);
+		border-left: 1px solid var(--color-border-soft);
 		color: var(--color-total-stat);
 		font-weight: 600;
 	}

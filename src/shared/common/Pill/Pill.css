@@ -1,0 +1,31 @@
+.warning-pill {
+	position: relative;
+	display: inline-flex;
+
+	.badge {
+		padding: 4px 10px;
+		border: 1px solid var(--color-border-soft);
+		border-radius: 999px;
+		background: transparent;
+		cursor: default;
+		outline: none;
+		transition: background 0.15s;
+
+		&:focus-visible {
+			outline: 2px solid var(--color-accent);
+			outline-offset: 2px;
+		}
+
+		&.siblings,
+		&.parent-child,
+		&.distantly-related {
+			cursor: pointer;
+		}
+
+		&.siblings:hover,
+		&.parent-child:hover,
+		&.distantly-related:hover {
+			background: var(--color-bg-card);
+		}
+	}
+}

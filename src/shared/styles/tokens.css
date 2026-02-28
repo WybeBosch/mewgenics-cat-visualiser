@@ -9,12 +9,15 @@
 	--color-bg-tooltip: #0b1220;
 	--color-bg-button: #374151;
 	--color-bg-button-disabled: #1f2937;
+	--color-bg-tooltip-strong: #111827;
+	--color-bg-tooltip-panel: #1e1e3a;
 	--color-bg-warning-related: #090f1a;
 
 	/* Borders */
 	--color-border-soft: #333;
 	--color-border-mid: #555;
 	--color-border-strong: #2f3b55;
+	--color-border-deep: #334155;
 	--color-border-dash: #666;
 
 	/* Text */
@@ -25,6 +28,7 @@
 	--color-text-neutral: #ccc;
 	--color-text-tooltip: #f3f4f6;
 	--color-text-cool: #b7bdd0;
+	--color-text-cool-strong: #cbd5e1;
 
 	/* Brand & Semantic */
 	--color-accent: #6366f1;

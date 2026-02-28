@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { joinClass } from '../../../../../../utils/utils.jsx';
+import { Pill } from '../../../../../../shared/common/Pill/Pill.jsx';
 import './SvgRelationWarnings.css';
 
 import {
@@ -185,8 +185,9 @@ function WarningPill({
 	const hoveredRelated = hoveredRowKey ? relatedLookup.get(hoveredRowKey) || [] : [];
 
 	return (
-		<div
-			className="warning-pill"
+		<Pill
+			className={categoryKey}
+			tabIndex={0}
 			onMouseEnter={() => onOpen(categoryKey)}
 			onMouseLeave={() => {
 				setHoveredRowKey('');
@@ -198,9 +199,7 @@ function WarningPill({
 				onClose();
 			}}
 		>
-			<span tabIndex={0} className={joinClass('badge', categoryKey)}>
-				{count} cats are {label}
-			</span>
+			{count} cats are {label}
 			{isOpen ? (
 				<div className="popup">
 					{hoveredRow ? (
@@ -234,7 +233,7 @@ function WarningPill({
 					</div>
 				</div>
 			) : null}
-		</div>
+		</Pill>
 	);
 }
 

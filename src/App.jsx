@@ -2,7 +2,7 @@ import { RelationshipGraph } from './components/RelationshipGraph/RelationshipGr
 import { CatTable } from './components/CatTable/CatTable.jsx';
 import { Header } from './components/Header/Header.jsx';
 import { useMewgenicsCatsLogic } from './AppLogic.jsx';
-import { useEnvironmentFavicon } from './utils/faviconUtils.jsx';
+import { useEnvironmentFavicon } from './shared/utils/faviconUtils.jsx';
 
 //eslint-disable-next-line no-console
 console.log(`Mewgenics cat tracker v${import.meta.env.VITE_APP_VERSION}`);
