@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 
 // Optional JSON preload file copied to web root by Vite static copy plugin.
 // This file may not exist in all environments (e.g. web deploy), so load it at runtime.
@@ -64,8 +64,8 @@ export function useMewgenicsCatsLogic() {
 			? 'No data loaded yet'
 			: `${getSourceLabel(sourceMeta?.sourceType)} - Data Time: ${getSourceMetaDateText(sourceMeta)}`;
 
-	// Compute rooms from cats
-	const rooms = Array.from(new Set(cats.map((c) => c.room)));
+	// Compute rooms from cats (memoized to avoid unnecessary re-renders)
+	const rooms = useMemo(() => Array.from(new Set(cats.map((c) => c.room))), [cats]);
 
 	// Keep activeRoom valid
 	useEffect(() => {
