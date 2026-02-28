@@ -23,7 +23,7 @@ export function ButtonCopySavePath() {
 			<button onClick={handleCopy} className="button">
 				📁 Copy Save Path
 			</button>
-			<div className={`popup ${showPopup && !fadeOut ? 'visible' : 'hidden'}`}>
+			<div className="popup" aria-hidden={!(showPopup && !fadeOut)}>
 				Copied to clipboard!
 			</div>
 		</div>

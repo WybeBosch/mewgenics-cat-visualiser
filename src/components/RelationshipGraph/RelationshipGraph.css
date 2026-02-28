@@ -11,4 +11,13 @@
 		align-items: center;
 		position: relative;
 	}
+
+	.relationship-graph-svg {
+		max-width: 100%;
+		height: auto;
+	}
+
+	.tooltip-close-area {
+		cursor: pointer;
+	}
 }

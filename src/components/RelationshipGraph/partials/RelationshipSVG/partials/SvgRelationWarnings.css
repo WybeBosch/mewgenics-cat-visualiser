@@ -21,6 +21,11 @@
 		cursor: default;
 		outline: none;
 
+		&:focus-visible {
+			outline: 2px solid var(--color-accent);
+			outline-offset: 2px;
+		}
+
 		&.siblings {
 			background: var(--color-warning-siblings-bg);
 			color: var(--color-warning-siblings-text);

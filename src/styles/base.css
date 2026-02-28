@@ -14,3 +14,11 @@ body {
 	background: none;
 	color: var(--color-text-primary);
 }
+
+#App {
+	font-family: 'Inter', system-ui, sans-serif;
+	background: var(--color-bg-page);
+	min-height: 100vh;
+	color: var(--color-text-secondary);
+	padding: var(--space-6);
+}

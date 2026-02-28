@@ -131,7 +131,6 @@ export default function RelationshipSVG({
 			width={W}
 			height={H}
 			viewBox={`0 0 ${W} ${H}`}
-			style={{ maxWidth: '100%' }}
 		>
 			<SvgLoveHateLines
 				zIndex="2"

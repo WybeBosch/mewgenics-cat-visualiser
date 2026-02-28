@@ -1,3 +1,5 @@
+import './ButtonDownloadJson.css';
+
 export function ButtonDownloadJson({ cats }) {
 	return (
 		<>
@@ -14,16 +16,6 @@ export function ButtonDownloadJson({ cats }) {
 					a.click();
 					document.body.removeChild(a);
 					URL.revokeObjectURL(url);
-				}}
-				style={{
-					background: '#374151',
-					color: '#fff',
-					border: 'none',
-					borderRadius: 8,
-					padding: '10px 20px',
-					cursor: 'pointer',
-					fontWeight: 600,
-					fontSize: 14,
 				}}
 			>
 				{'⬇️ Download JSON'}

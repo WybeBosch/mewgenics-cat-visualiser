@@ -25,16 +25,7 @@ export default function App() {
 	} = useMewgenicsCatsLogic();
 
 	return (
-		<div
-			id="App"
-			style={{
-				fontFamily: "'Inter', system-ui, sans-serif",
-				background: '#1a1a2e',
-				minHeight: '100vh',
-				color: '#e0e0e0',
-				padding: '24px',
-			}}
-		>
+		<div id="App">
 			<Header
 				cats={cats}
 				rooms={rooms}
