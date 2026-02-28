@@ -257,7 +257,7 @@ function SvgRelationWarnings({ cats = [] }) {
 
 	return (
 		<div className="svg-relation-warnings">
-			<span className="title">🚨 Inbreeding alert!</span>
+			<span>🚨 Inbreeding alert!</span>
 
 			<WarningPill
 				categoryKey="siblings"
