@@ -58,6 +58,10 @@ There is the 💞 column
 
 If a cat has a matching partner (they both love each other) but are not in the same room, an icon is shown: 🕵️‍♂️.
 
+## How to use on the web
+
+https://wybebosch.github.io/mewgenics-cat-visualiser/
+
 
 ## How to Use locally
 
@@ -65,12 +69,34 @@ If a cat has a matching partner (they both love each other) but are not in the s
 2. Start the local server with `pnpm run dev`.
 3. Upload or load your cat data JSON file.
 
-**Note:** This project uses **pnpm** as its package manager. The `pnpm-lock.yaml` file is the only supported lockfile. Do not use npm or yarn.
 
+## Developer workflow
 
-## How to use on the web
+### Build and preview
 
-https://wybebosch.github.io/mewgenics-cat-visualiser/
+- Dev server: `pnpm run dev`
+- Production build: `pnpm run build`
+- Preview production build: `pnpm run preview`
+
+### Linting
+
+- Lint everything: `pnpm run lint`
+- Lint + auto-fix everything: `pnpm run lint:fix`
+- JS/JSX only: `pnpm run lint:js`
+- CSS only: `pnpm run lint:styles`
+- Other text/config files (`json/md/yaml/yml/mjs/cjs`): `pnpm run lint:other`
+
+### Formatting
+
+- Check formatting: `pnpm run format:check`
+- Write formatting: `pnpm run format:write`
+
+### Editor setup
+
+- Shared settings are committed in `.vscode/settings.json` and `.vscode/extensions.json`.
+- On save, VS Code runs Prettier formatting plus ESLint/Stylelint fix actions.
+- `.editorconfig` provides cross-editor basics (tabs, line endings, final newline).
+
 
 -------
 
