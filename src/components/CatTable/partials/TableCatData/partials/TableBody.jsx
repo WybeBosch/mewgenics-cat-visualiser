@@ -12,7 +12,7 @@ export function TableBody({
 	getAge,
 	isPartnerInOtherRoom,
 }) {
-	const noCatsFound = !sorted.length > 0;
+	const noCatsFound = sorted.length === 0;
 
 	function getAggressionClass(aggression) {
 		if (aggression <= 3) return 'low';
