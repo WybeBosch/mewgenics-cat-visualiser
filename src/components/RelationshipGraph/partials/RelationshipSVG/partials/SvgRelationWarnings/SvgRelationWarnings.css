@@ -1,9 +1,9 @@
 .svg-relation-warnings {
 	display: flex;
-	align-items: center;
-	gap: 8px;
 	flex-wrap: wrap;
+	align-items: center;
 	font-size: 13px;
+	gap: 8px;
 
 	.title {
 		color: var(--color-warning);
@@ -16,8 +16,8 @@
 	display: inline-flex;
 
 	.badge {
-		border-radius: 999px;
 		padding: 4px 10px;
+		border-radius: 999px;
 		cursor: default;
 		outline: none;
 
@@ -44,15 +44,15 @@
 
 	.popup {
 		position: absolute;
+		z-index: 20;
 		top: 100%;
 		left: 0;
-		z-index: 20;
 		min-width: 260px;
 		max-width: 320px;
 		padding: 10px 12px;
+		border: 1px solid var(--color-border-strong);
 		border-radius: 10px;
 		background: var(--color-bg-tooltip);
-		border: 1px solid var(--color-border-strong);
 		box-shadow: var(--shadow-popup-lg);
 		color: var(--color-text-secondary);
 		font-size: 12px;
@@ -61,34 +61,34 @@
 
 	.related-popup {
 		position: absolute;
+		z-index: 30;
 		top: calc(100% + 8px);
 		left: 0;
-		z-index: 30;
 		min-width: 220px;
 		max-width: 280px;
 		padding: 8px 10px;
+		border: 1px solid var(--color-border-deep);
 		border-radius: 8px;
 		background: var(--color-bg-warning-related);
-		border: 1px solid var(--color-border-deep);
 		box-shadow: var(--shadow-popup-lg-soft);
 		color: var(--color-text-secondary);
 	}
 
 	.related-title {
-		font-size: 11px;
-		font-weight: 700;
-		color: var(--color-text-cool-strong);
-		margin-bottom: 6px;
 		padding-bottom: 6px;
 		border-bottom: 1px solid var(--color-border-deep);
+		margin-bottom: 6px;
+		color: var(--color-text-cool-strong);
+		font-size: 11px;
+		font-weight: 700;
 	}
 
 	.related-list {
 		display: grid;
-		gap: 4px;
 		max-height: 180px;
-		overflow-y: auto;
 		font-size: 12px;
+		gap: 4px;
+		overflow-y: auto;
 	}
 
 	.related-item {
@@ -96,35 +96,35 @@
 	}
 
 	.popup-title {
-		font-weight: 700;
 		margin-bottom: 8px;
+		font-weight: 700;
 	}
 
 	.rows {
-		margin: 0;
-		padding: 0;
 		display: grid;
-		gap: 0;
 		max-height: 220px;
+		padding: 0;
+		margin: 0;
+		gap: 0;
 		overflow-y: auto;
 	}
 
 	.row {
-		padding: 6px 8px;
+		position: relative;
 		display: flex;
 		align-items: center;
-		gap: 8px;
-		position: relative;
+		padding: 6px 8px;
 		border-top: 1px solid var(--color-border-strong);
 		border-bottom: 1px solid var(--color-border-strong);
+		gap: 8px;
 	}
 
 	.row-index {
+		min-width: 24px;
 		padding-right: 8px;
 		border-right: 1px solid var(--color-border-strong);
-		min-width: 24px;
-		text-align: right;
 		color: var(--color-text-disabled);
+		text-align: right;
 	}
 
 	.row-label {

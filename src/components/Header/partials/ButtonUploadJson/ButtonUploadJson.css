@@ -1,15 +1,15 @@
 .button-upload-json {
 	display: flex;
 	align-items: center;
-	background: var(--color-bg-button);
-	color: var(--color-text-primary);
+	padding: 10px 16px;
 	border: none;
 	border-radius: var(--radius-md);
-	padding: 10px 16px;
-	cursor: pointer;
-	font-weight: 600;
-	font-size: 14px;
 	margin-right: 0;
+	background: var(--color-bg-button);
+	color: var(--color-text-primary);
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 600;
 
 	.icon {
 		margin-right: 6px;

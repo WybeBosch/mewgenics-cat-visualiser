@@ -5,9 +5,9 @@
 html,
 body,
 #root {
-	margin: 0;
-	padding: 0;
 	min-height: 100%;
+	padding: 0;
+	margin: 0;
 }
 
 body {
@@ -16,9 +16,9 @@ body {
 }
 
 #app {
-	font-family: Inter, system-ui, sans-serif;
-	background: var(--color-bg-page);
 	min-height: 100vh;
-	color: var(--color-text-secondary);
 	padding: var(--space-6);
+	background: var(--color-bg-page);
+	color: var(--color-text-secondary);
+	font-family: Inter, system-ui, sans-serif;
 }

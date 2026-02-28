@@ -8,18 +8,18 @@
 
 .upload-save {
 	display: flex;
+	min-width: 155px;
 	align-items: center;
 	justify-content: center;
-	background: var(--color-bg-button);
-	color: var(--color-text-primary);
+	padding: 10px 16px;
 	border: none;
 	border-radius: var(--radius-md);
-	padding: 10px 16px;
-	cursor: pointer;
-	font-weight: 600;
-	font-size: 14px;
 	margin-right: 0;
-	min-width: 155px;
+	background: var(--color-bg-button);
+	color: var(--color-text-primary);
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 600;
 
 	&.loading {
 		background: var(--color-bg-button-disabled);
@@ -37,7 +37,7 @@
 }
 
 .upload-save-error {
+	max-width: 220px;
 	color: var(--color-negative);
 	font-size: 12px;
-	max-width: 220px;
 }
