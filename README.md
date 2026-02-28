@@ -65,6 +65,8 @@ If a cat has a matching partner (they both love each other) but are not in the s
 2. Start the local server with `pnpm run dev`.
 3. Upload or load your cat data JSON file.
 
+**Note:** This project uses **pnpm** as its package manager. The `pnpm-lock.yaml` file is the only supported lockfile. Do not use npm or yarn.
+
 
 ## How to use on the web
 
