@@ -19,7 +19,7 @@ export function TableCatData({
 	return (
 		<>
 			{/* Table */}
-			<div className="table-cat-data">
+			<section className="table-cat-data" aria-label="Cats table">
 				<table className="table">
 					<TableHead
 						columns={columns}
@@ -38,7 +38,7 @@ export function TableCatData({
 						isPartnerInOtherRoom={isPartnerInOtherRoom}
 					/>
 				</table>
-			</div>
+			</section>
 		</>
 	);
 }

@@ -10,14 +10,14 @@ function RelationshipHeader({ activeRoom, cats = [] }) {
 	const { hasFamily = false } = familySummary || {};
 
 	return (
-		<div className="relationship-header">
+		<header className="graph-header">
 			<h2 className="title">💞 {activeRoom} — Relationships</h2>
 			{hasFamily ? (
 				<SvgRelationWarnings cats={cats} />
 			) : (
 				<span className="empty-state">There is no family in this room.</span>
 			)}
-		</div>
+		</header>
 	);
 }
 

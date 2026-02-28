@@ -1,4 +1,4 @@
-.relationship-graph {
+.section-relationships {
 	margin-top: 32px;
 
 	.panel {
@@ -12,12 +12,90 @@
 		background: var(--color-bg-page);
 	}
 
-	.relationship-graph-svg {
+	.graph-svg {
 		max-width: 100%;
 		height: auto;
 	}
 
-	.tooltip-close-area {
+	.close-area {
 		cursor: pointer;
+	}
+
+	.edge-love {
+		stroke: var(--color-relation-love);
+	}
+
+	.edge-hate {
+		stroke: var(--color-relation-hate);
+	}
+
+	.kin-parent .kin-line,
+	.kin-parent .kin-label {
+		fill: var(--color-relation-parent);
+		stroke: var(--color-relation-parent);
+	}
+
+	.kin-sibling .kin-line,
+	.kin-sibling .kin-label {
+		fill: var(--color-relation-sibling);
+		stroke: var(--color-relation-sibling);
+	}
+
+	.kin-related .kin-line,
+	.kin-related .kin-label {
+		fill: var(--color-relation-related);
+		stroke: var(--color-relation-related);
+	}
+
+	.tooltip-panel {
+		fill: var(--color-bg-tooltip-panel);
+		stroke: var(--color-border-mid);
+	}
+
+	.tooltip-title {
+		fill: var(--color-text-primary);
+	}
+
+	.tooltip-label {
+		fill: var(--color-text-subtle);
+	}
+
+	.tooltip-value {
+		fill: var(--color-text-tertiary);
+	}
+
+	.legend-line-love {
+		stroke: var(--color-relation-love);
+	}
+
+	.legend-line-hate {
+		stroke: var(--color-relation-hate);
+	}
+
+	.legend-line-parent {
+		stroke: var(--color-relation-parent);
+	}
+
+	.legend-line-sibling {
+		stroke: var(--color-relation-sibling);
+	}
+
+	.legend-line-related {
+		stroke: var(--color-relation-related);
+	}
+
+	.legend-node-female {
+		fill: var(--color-sex-female-bg);
+		stroke: var(--color-sex-female);
+	}
+
+	.legend-node-male {
+		fill: var(--color-sex-male-bg);
+		stroke: var(--color-sex-male);
+	}
+
+	.legend-node-herm {
+		fill: var(--color-sex-herm-bg);
+		stroke: var(--color-sex-herm);
 	}
 }
