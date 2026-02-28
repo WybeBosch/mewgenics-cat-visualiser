@@ -16,7 +16,7 @@ export default [
 	{
 		files: ['**/*.{js,jsx}'],
 		linterOptions: {
-			reportUnusedDisableDirectives: 'off',
+			reportUnusedDisableDirectives: 'warn',
 		},
 		languageOptions: {
 			ecmaVersion: 'latest',
@@ -37,9 +37,9 @@ export default [
 		},
 		rules: {
 			...reactHooks.configs.recommended.rules,
-			'no-console': 'off',
-			'no-empty': 'warn',
-			'no-useless-assignment': 'warn',
+			'no-console': 'warn',
+			'no-empty': 'error',
+			'no-useless-assignment': 'error',
 			'no-unused-vars': [
 				'warn',
 				{
@@ -47,8 +47,9 @@ export default [
 					varsIgnorePattern: '^_',
 				},
 			],
-			'react-hooks/rules-of-hooks': 'warn',
-			'react-hooks/static-components': 'warn',
+			'react-hooks/rules-of-hooks': 'error',
+			'react-hooks/static-components': 'error',
+			'react-hooks/exhaustive-deps': 'error',
 		},
 	},
 ];
