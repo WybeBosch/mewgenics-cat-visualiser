@@ -6,6 +6,7 @@ export function Heading({ cats, rooms, getAge, dataTimeLineText }) {
 
 	const maleCount = cats.filter((cat) => cat.sex === 'male').length;
 	const femaleCount = cats.filter((cat) => cat.sex === 'female').length;
+	const hermCount = cats.filter((cat) => cat.sex === 'herm').length;
 	const kittenCount = cats.filter((cat) => {
 		if (typeof getAge === 'function') {
 			const age = getAge(cat);
@@ -19,16 +20,13 @@ export function Heading({ cats, rooms, getAge, dataTimeLineText }) {
 		return false;
 	}).length;
 
-	const kittenLabel = kittenCount === 1 ? 'kitten' : 'kittens';
-
 	return (
 		<div className="heading">
 			<h1 className="title">{headingEmoji} Mewgenics Cat Visualiser</h1>
 			<p className="meta-text">{dataTimeLineText}</p>
 			<p className="meta-text">
-				{cats.length} total cats across {rooms.length} rooms
-				<br />
-				{maleCount} male, {femaleCount} female, {kittenCount} {kittenLabel}
+				{rooms.length} rooms, {cats.length} total cats, {maleCount} male, {femaleCount}{' '}
+				female, {hermCount} herm, {kittenCount} kitten
 			</p>
 		</div>
 	);

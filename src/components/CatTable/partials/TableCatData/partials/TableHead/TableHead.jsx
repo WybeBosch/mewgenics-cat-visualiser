@@ -11,7 +11,7 @@ export function TableHead({ columns, handleSort, sortCol, sortAsc }) {
 				{columns.map((col, index) => {
 					const isLeftAlignedTooltip = index < 2;
 					const isRightAlignedTooltip = index === columns.length - 1;
-					const isSortable = col.key !== 'partnerRoom';
+					const isSortable = !col.isStatic;
 					const isSorted = sortCol === col.key;
 					const textAlignClass = col.key === 'name' ? 'left' : '';
 					const staticClass = isSortable ? '' : 'static';
@@ -22,11 +22,20 @@ export function TableHead({ columns, handleSort, sortCol, sortAsc }) {
 							? 'right'
 							: '';
 					const tooltipWidthClass = col.key === 'partnerRoom' ? 'wide' : '';
+					const columnClass = `col-${col.key}`;
+					const statClass = col.isStat ? 'col-stat' : '';
 
 					return (
 						<th
 							key={col.key}
-							className={joinClass('cell', textAlignClass, staticClass, sortedClass)}
+							className={joinClass(
+								'cell',
+								columnClass,
+								statClass,
+								textAlignClass,
+								staticClass,
+								sortedClass
+							)}
 							onMouseEnter={() => setHoveredColumn(col.key)}
 							onMouseLeave={() => setHoveredColumn(null)}
 							onClick={isSortable ? () => handleSort(col.key) : undefined}

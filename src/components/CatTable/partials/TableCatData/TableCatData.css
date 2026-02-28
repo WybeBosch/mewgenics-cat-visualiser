@@ -1,6 +1,35 @@
 .table-cat-data {
+	--table-visible-rows: 11;
+	--table-row-font-size: 14px;
+	--table-row-line-height: 1.2;
+	--table-row-cell-y-padding: 10px;
+	--table-row-border-bottom: 1px;
+	--table-row-height: calc(
+		(var(--table-row-font-size) * var(--table-row-line-height)) +
+			(var(--table-row-cell-y-padding) * 2) + var(--table-row-border-bottom)
+	);
+
+	--table-header-font-size: 13px;
+	--table-header-line-height: 1.2;
+	--table-header-cell-y-padding: 12px;
+	--table-header-border-bottom: 2px;
+	--table-header-height: calc(
+		(var(--table-header-font-size) * var(--table-header-line-height)) +
+			(var(--table-header-cell-y-padding) * 2) + var(--table-header-border-bottom)
+	);
+	--table-default-height: calc(
+		var(--table-header-height) + (var(--table-row-height) * var(--table-visible-rows)) - 6px
+	);
+	--table-min-visible-rows: 4;
+	--table-min-height: calc(
+		var(--table-header-height) + (var(--table-row-height) * var(--table-min-visible-rows)) - 6px
+	);
+
 	overflow: auto;
-	max-height: 510px;
+	height: var(--table-default-height);
+	min-height: var(--table-min-height);
+	max-height: calc(100vh - 120px);
+	resize: vertical;
 	border: 1px solid var(--color-border-soft);
 	border-top: none;
 
@@ -8,5 +37,34 @@
 		width: 100%;
 		border-collapse: collapse;
 		font-size: 14px;
+
+		th,
+		td {
+			/* border: 1px solid red; */
+		}
+	}
+}
+
+@media (max-height: 1200px) {
+	.table-cat-data {
+		--table-visible-rows: 8;
+	}
+}
+
+@media (max-height: 1080px) {
+	.table-cat-data {
+		--table-visible-rows: 6;
+	}
+}
+
+@media (max-height: 1000px) {
+	.table-cat-data {
+		--table-visible-rows: 5;
+	}
+}
+
+@media (max-height: 900px) {
+	.table-cat-data {
+		--table-visible-rows: 4;
 	}
 }

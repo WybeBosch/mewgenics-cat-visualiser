@@ -86,6 +86,7 @@ export function TableBody({
 						</td>
 						<td className="cell info loves">{cat.loves || '—'}</td>
 						<td className="cell info hates">{cat.hates || '—'}</td>
+						<td className="cell spacer" aria-hidden="true"></td>
 					</tr>
 				);
 			})}
