@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import './SvgRelationWarnings.css';
 
 import {
 	getParentNames,
@@ -182,8 +183,6 @@ function WarningPill({
 	isOpen,
 	onOpen,
 	onClose,
-	background,
-	color,
 	popupTitle,
 }) {
 	if (count < 1) {
@@ -196,9 +195,11 @@ function WarningPill({
 		? relatedLookup.get(hoveredRowKey) || []
 		: [];
 
+	const categoryClass = categoryKey;
+
 	return (
 		<div
-			style={{ position: 'relative', display: 'inline-flex' }}
+			className="warning-pill"
 			onMouseEnter={() => onOpen(categoryKey)}
 			onMouseLeave={() => {
 				setHoveredRowKey('');
@@ -210,78 +211,20 @@ function WarningPill({
 				onClose();
 			}}
 		>
-			<span
-				tabIndex={0}
-				style={{
-					background,
-					color,
-					borderRadius: 999,
-					padding: '4px 10px',
-					cursor: 'default',
-					outline: 'none',
-				}}
-			>
+			<span tabIndex={0} className={`badge ${categoryClass}`}>
 				{count} cats are {label}
 			</span>
 			{isOpen ? (
-				<div
-					style={{
-						position: 'absolute',
-						top: '100%',
-						left: 0,
-						zIndex: 20,
-						minWidth: 260,
-						maxWidth: 320,
-						padding: '10px 12px',
-						borderRadius: 10,
-						background: '#0b1220',
-						border: '1px solid #2f3b55',
-						boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
-						color: '#e5e7eb',
-						fontSize: 12,
-						lineHeight: 1.4,
-					}}
-				>
+				<div className="popup">
 					{hoveredRow ? (
-						<div
-							style={{
-								position: 'absolute',
-								top: 'calc(100% + 8px)',
-								left: 0,
-								zIndex: 30,
-								minWidth: 220,
-								maxWidth: 280,
-								padding: '8px 10px',
-								borderRadius: 8,
-								background: '#090f1a',
-								border: '1px solid #334155',
-								boxShadow: '0 10px 24px rgba(0,0,0,0.35)',
-								color: '#e5e7eb',
-							}}
-						>
-							<div
-								style={{
-									fontSize: 11,
-									fontWeight: 700,
-									color: '#cbd5e1',
-									marginBottom: 6,
-									paddingBottom: 6,
-									borderBottom: '1px solid #334155',
-								}}
-							>
-								{hoveredRow.label} related to
-							</div>
-							<div
-								style={{
-									display: 'grid',
-									gap: 4,
-									maxHeight: 180,
-									overflowY: 'auto',
-									fontSize: 12,
-								}}
-							>
+						<div className="related-popup">
+							<div className="related-title">{hoveredRow.label} related to</div>
+							<div className="related-list">
 								{hoveredRelated.map((relatedName) => (
-									<div key={`${hoveredRow.key}-${relatedName}`}>
+									<div
+										className="related-item"
+										key={`${hoveredRow.key}-${relatedName}`}
+									>
 										{relatedName}
 									</div>
 								))}
@@ -289,43 +232,16 @@ function WarningPill({
 						</div>
 					) : null}
 
-					<div style={{ fontWeight: 700, marginBottom: 8 }}>{popupTitle}</div>
-					<div
-						style={{
-							margin: 0,
-							padding: 0,
-							display: 'grid',
-							gap: 0,
-							maxHeight: 220,
-							overflowY: 'auto',
-						}}
-					>
+					<div className="popup-title">{popupTitle}</div>
+					<div className="rows">
 						{rows.map((row, index) => (
 							<div
 								key={`${categoryKey}-${row.key}`}
-								style={{
-									padding: '6px 8px',
-									display: 'flex',
-									alignItems: 'center',
-									gap: 8,
-									position: 'relative',
-									borderTop: '1px solid #2f3b55',
-									borderBottom: '1px solid #2f3b55',
-								}}
+								className="row"
 								onMouseEnter={() => setHoveredRowKey(row.key)}
 							>
-								<span
-									style={{
-										paddingRight: 8,
-										borderRight: '1px solid #2f3b55',
-										minWidth: 24,
-										textAlign: 'right',
-										color: '#9ca3af',
-									}}
-								>
-									{index + 1}
-								</span>
-								<span>{row.label}</span>
+								<span className="row-index">{index + 1}</span>
+								<span className="row-label">{row.label}</span>
 							</div>
 						))}
 					</div>
@@ -340,18 +256,8 @@ function SvgRelationWarnings({ cats = [] }) {
 	const warningBuckets = useMemo(() => getWarningBuckets(cats), [cats]);
 
 	return (
-		<div
-			style={{
-				display: 'flex',
-				alignItems: 'center',
-				gap: 8,
-				flexWrap: 'wrap',
-				fontSize: 13,
-			}}
-		>
-			<span style={{ color: '#fca5a5', fontWeight: 600 }}>
-				🚨 Inbreeding alert!
-			</span>
+		<div className="svg-relation-warnings">
+			<span className="title">🚨 Inbreeding alert!</span>
 
 			<WarningPill
 				categoryKey="siblings"
@@ -362,8 +268,6 @@ function SvgRelationWarnings({ cats = [] }) {
 				isOpen={hoveredCategory === 'siblings'}
 				onOpen={setHoveredCategory}
 				onClose={() => setHoveredCategory('')}
-				background="#7c2d12"
-				color="#fdba74"
 				popupTitle={`Which ${warningBuckets.siblings.rows.length} cats are siblings`}
 			/>
 
@@ -376,8 +280,6 @@ function SvgRelationWarnings({ cats = [] }) {
 				isOpen={hoveredCategory === 'parent-child'}
 				onOpen={setHoveredCategory}
 				onClose={() => setHoveredCategory('')}
-				background="#78350f"
-				color="#fde68a"
 				popupTitle={`Which ${warningBuckets.parentChild.rows.length} cats are child/parent`}
 			/>
 
@@ -390,8 +292,6 @@ function SvgRelationWarnings({ cats = [] }) {
 				isOpen={hoveredCategory === 'distantly-related'}
 				onOpen={setHoveredCategory}
 				onClose={() => setHoveredCategory('')}
-				background="#312e81"
-				color="#c4b5fd"
 				popupTitle={`Which ${warningBuckets.distantlyRelated.rows.length} cats are distantly related`}
 			/>
 		</div>

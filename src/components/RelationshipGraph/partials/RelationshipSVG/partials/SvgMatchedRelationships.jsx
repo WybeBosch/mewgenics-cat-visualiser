@@ -1,3 +1,5 @@
+import './SvgMatchedRelationships.css';
+
 export default function SvgMatchedRelationships({
 	hovIdx,
 	ordered,
@@ -30,6 +32,7 @@ export default function SvgMatchedRelationships({
 						boxes.push(
 							<rect
 								key={`lovebox-${a.name}-${b.name}`}
+								className="love-box"
 								x={minX}
 								y={minY}
 								width={maxX - minX}
@@ -39,9 +42,6 @@ export default function SvgMatchedRelationships({
 								stroke="#4ade80"
 								strokeWidth={4}
 								opacity={boxOpacity}
-								style={{
-									transition: 'opacity 0.45s cubic-bezier(0.4,0,0.2,1)',
-								}}
 							/>
 						);
 						drawn.add(a.name);
