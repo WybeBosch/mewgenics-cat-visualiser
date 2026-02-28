@@ -48,7 +48,7 @@ export function TableBody({
 				const age = getAge(cat);
 				const isHovered = hoveredCatId === cat.id;
 				const partnerInOtherRoom = isPartnerInOtherRoom(cat);
-				const rowClass = `${i % 2 === 0 ? 'even' : ''} ${isHovered ? 'hovered' : ''}`;
+				const rowClass = isHovered ? 'hovered' : '';
 				const sexClass = cat.sex || '';
 
 				return (
