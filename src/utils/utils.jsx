@@ -1,6 +1,36 @@
 import { useState } from 'react';
 import './utils.css';
 
+function joinClass(...parts) {
+	const classNames = [];
+
+	const appendPart = (part) => {
+		if (!part) return;
+
+		if (typeof part === 'string' || typeof part === 'number') {
+			classNames.push(String(part));
+			return;
+		}
+
+		if (Array.isArray(part)) {
+			part.forEach(appendPart);
+			return;
+		}
+
+		if (typeof part === 'object') {
+			Object.entries(part).forEach(([className, shouldInclude]) => {
+				if (shouldInclude) {
+					classNames.push(className);
+				}
+			});
+		}
+	};
+
+	parts.forEach(appendPart);
+
+	return classNames.join(' ');
+}
+
 function logIfEnabled(...args) {
 	const enableLogging = import.meta.env.DEV;
 
@@ -86,4 +116,4 @@ function TableTooltipPopup({ cat, allCats }) {
 	);
 }
 
-export { sharedTooltipContents, TableTooltipPopup, logIfEnabled };
+export { sharedTooltipContents, TableTooltipPopup, logIfEnabled, joinClass };

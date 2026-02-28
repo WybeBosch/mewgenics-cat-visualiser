@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { joinClass } from '../../../../../../utils/utils.jsx';
 import './TableHead.css';
 
 export function TableHead({ columns, handleSort, sortCol, sortAsc }) {
@@ -25,7 +26,7 @@ export function TableHead({ columns, handleSort, sortCol, sortAsc }) {
 					return (
 						<th
 							key={col.key}
-							className={`cell ${textAlignClass} ${staticClass} ${sortedClass}`}
+							className={joinClass('cell', textAlignClass, staticClass, sortedClass)}
 							onMouseEnter={() => setHoveredColumn(col.key)}
 							onMouseLeave={() => setHoveredColumn(null)}
 							onClick={isSortable ? () => handleSort(col.key) : undefined}
@@ -36,7 +37,11 @@ export function TableHead({ columns, handleSort, sortCol, sortAsc }) {
 							)}
 							{hoveredColumn === col.key && col.tooltip && (
 								<div
-									className={`tooltip ${tooltipAlignClass} ${tooltipWidthClass}`}
+									className={joinClass(
+										'tooltip',
+										tooltipAlignClass,
+										tooltipWidthClass
+									)}
 								>
 									{col.tooltip}
 								</div>

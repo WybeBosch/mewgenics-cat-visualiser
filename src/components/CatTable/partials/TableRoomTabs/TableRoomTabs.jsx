@@ -1,3 +1,4 @@
+import { joinClass } from '../../../../utils/utils.jsx';
 import './TableRoomTabs.css';
 
 export function TableRoomTabs({ cats, rooms, activeRoom, setActiveRoom, sortedRooms }) {
@@ -11,7 +12,7 @@ export function TableRoomTabs({ cats, rooms, activeRoom, setActiveRoom, sortedRo
 					{sortedRooms.map((room) => (
 						<div key={room} className="item">
 							<button
-								className={`button ${activeRoom === room ? 'active' : ''}`}
+								className={joinClass('button', { active: activeRoom === room })}
 								onClick={() => setActiveRoom(room)}
 							>
 								{room}{' '}
