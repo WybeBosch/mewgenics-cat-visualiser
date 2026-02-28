@@ -1,4 +1,4 @@
-import { SEX_ICON, SEX_COLOR, SEX_BG, SEX_BG_HOVER } from '../../../../../../config/config.jsx';
+import { SEX_ICON } from '../../../../../../config/config.jsx';
 import './SvgCatNodes.css';
 
 export default function SvgCatNodes({
@@ -9,16 +9,15 @@ export default function SvgCatNodes({
 	setSelectedCatId,
 	selectedCatId,
 }) {
-	function getCircleFill(i, hovIdx, ordered) {
-		return hovIdx === i ? SEX_BG_HOVER[ordered[i].sex] : SEX_BG[ordered[i].sex];
-	}
-
-	function getCircleStroke(i, ordered) {
-		return SEX_COLOR[ordered[i].sex];
-	}
-
 	function getCircleStrokeWidth(i, hovIdx) {
 		return hovIdx === i ? 3.5 : 2.5;
+	}
+
+	function getNodeSexClass(sex) {
+		if (sex === 'male' || sex === 'female' || sex === 'herm') {
+			return `sex-${sex}`;
+		}
+		return 'sex-unknown';
 	}
 
 	function getNameFontSize(name) {
@@ -50,46 +49,39 @@ export default function SvgCatNodes({
 		};
 	}
 	return (
-		<>
+		<g className="nodes">
 			{/* Drawing the circles on the map for each cat*/}
 			{positions.map((p, i) => (
 				<g
 					key={p.name}
-					className="node"
+					className={`node ${getNodeSexClass(ordered[i].sex)} ${hovIdx === i ? 'is-hovered' : ''}`}
 					onMouseEnter={handleMouseEnter(setHoveredCatId, ordered[i].id)}
 					onMouseLeave={handleMouseLeave(setHoveredCatId)}
 					onClick={handleClick(setSelectedCatId, selectedCatId, ordered[i].id)}
 				>
 					<circle
+						className="circle"
 						cx={p.x}
 						cy={p.y}
 						r={p.nodeR || 28}
-						fill={getCircleFill(i, hovIdx, ordered)}
-						stroke={getCircleStroke(i, ordered)}
 						strokeWidth={getCircleStrokeWidth(i, hovIdx)}
 					/>
 					<text
+						className="name"
 						x={p.x}
 						y={p.y - 2}
 						textAnchor="middle"
 						dominantBaseline="middle"
-						fill="#fff"
 						fontSize={getNameFontSize(ordered[i].name)}
 						fontWeight={600}
 					>
 						{getDisplayName(ordered[i].name)}
 					</text>
-					<text
-						x={p.x}
-						y={p.y + 12}
-						textAnchor="middle"
-						fill={getCircleStroke(i, ordered)}
-						fontSize={10}
-					>
+					<text className="sex" x={p.x} y={p.y + 12} textAnchor="middle" fontSize={10}>
 						{getSexIcon(ordered[i].sex)}
 					</text>
 				</g>
 			))}
-		</>
+		</g>
 	);
 }

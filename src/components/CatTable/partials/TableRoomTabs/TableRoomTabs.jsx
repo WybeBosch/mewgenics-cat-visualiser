@@ -7,7 +7,7 @@ export function TableRoomTabs({ cats, rooms, activeRoom, setActiveRoom, sortedRo
 	return (
 		<>
 			{sortedRooms.length > 0 && (
-				<div className="table-room-tabs">
+				<nav className="table-room-tabs" aria-label="Room tabs">
 					{sortedRooms.map((room) => (
 						<div key={room} className="item">
 							<button
@@ -21,7 +21,7 @@ export function TableRoomTabs({ cats, rooms, activeRoom, setActiveRoom, sortedRo
 							</button>
 						</div>
 					))}
-				</div>
+				</nav>
 			)}
 		</>
 	);

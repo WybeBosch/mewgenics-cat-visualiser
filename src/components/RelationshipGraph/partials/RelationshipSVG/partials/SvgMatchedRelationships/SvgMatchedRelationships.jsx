@@ -2,7 +2,7 @@ import './SvgMatchedRelationships.css';
 
 export default function SvgMatchedRelationships({ hovIdx, ordered, positions }) {
 	return (
-		<>
+		<g className="love-boxes">
 			{/* Draw shared box for mutual love pairs */}
 			{(() => {
 				const boxes = [];
@@ -46,6 +46,6 @@ export default function SvgMatchedRelationships({ hovIdx, ordered, positions }) 
 				}
 				return boxes;
 			})()}
-		</>
+		</g>
 	);
 }

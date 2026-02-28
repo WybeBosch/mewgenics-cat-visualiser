@@ -7,7 +7,7 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId, getAg
 	if (cats.length === 0) return '';
 
 	return (
-		<div className="relationship-graph">
+		<section className="section-relationships">
 			<RelationshipHeader activeRoom={activeRoom} cats={cats} />
 			<div className="panel">
 				<RelationshipSVG
@@ -19,7 +19,7 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId, getAg
 				/>
 				<RelationshipLegendBar />
 			</div>
-		</div>
+		</section>
 	);
 }
 

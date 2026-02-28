@@ -26,21 +26,20 @@ export default function Tooltip({ allCats, selIdx, ordered, positions, W }) {
 	return (
 		<g>
 			<rect
+				className="tooltip-panel"
 				x={tx}
 				y={ty}
 				width={tipW}
 				height={tipH}
 				rx={8}
-				fill="#1e1e3a"
-				stroke="#555"
 				strokeWidth={1}
 				opacity={0.95}
 			/>
 			<text
+				className="tooltip-title"
 				x={tx + tipW / 2}
 				y={ty + 16}
 				textAnchor="middle"
-				fill="#fff"
 				fontSize={12}
 				fontWeight={700}
 			>
@@ -48,14 +47,14 @@ export default function Tooltip({ allCats, selIdx, ordered, positions, W }) {
 			</text>
 			{lines.map((line, li) => (
 				<g key={li}>
-					<text x={tx + 10} y={ty + 36 + li * 22} fill="#888" fontSize={10}>
+					<text className="tooltip-label" x={tx + 10} y={ty + 36 + li * 22} fontSize={10}>
 						{line.label}:
 					</text>
 					<text
+						className="tooltip-value"
 						x={tx + tipW - 10}
 						y={ty + 36 + li * 22}
 						textAnchor="end"
-						fill="#ddd"
 						fontSize={10}
 					>
 						{line.value}

@@ -1,3 +1,56 @@
 .node {
 	cursor: pointer;
+
+	.circle {
+		transition: fill 0.2s ease-in-out;
+	}
+
+	.name {
+		fill: var(--color-text-primary);
+	}
+
+	&.sex-male {
+		.circle {
+			fill: var(--color-sex-male-bg);
+			stroke: var(--color-sex-male);
+		}
+
+		.sex {
+			fill: var(--color-sex-male);
+		}
+	}
+
+	&.sex-female {
+		.circle {
+			fill: var(--color-sex-female-bg);
+			stroke: var(--color-sex-female);
+		}
+
+		.sex {
+			fill: var(--color-sex-female);
+		}
+	}
+
+	&.sex-herm {
+		.circle {
+			fill: var(--color-sex-herm-bg);
+			stroke: var(--color-sex-herm);
+		}
+
+		.sex {
+			fill: var(--color-sex-herm);
+		}
+	}
+
+	&.is-hovered.sex-male .circle {
+		fill: var(--color-sex-male-bg-hover);
+	}
+
+	&.is-hovered.sex-female .circle {
+		fill: var(--color-sex-female-bg-hover);
+	}
+
+	&.is-hovered.sex-herm .circle {
+		fill: var(--color-sex-herm-bg-hover);
+	}
 }

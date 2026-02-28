@@ -1,5 +1,3 @@
-import SvgMarkers from './SvgMarkers.jsx';
-
 export default function SvgLoveHateLines({ hovIdx, ordered, positions }) {
 	const findPos = (name) => {
 		if (!name) return null;
@@ -62,42 +60,57 @@ export default function SvgLoveHateLines({ hovIdx, ordered, positions }) {
 		};
 	};
 
+	const visibleEdges = edges.filter((e) => {
+		if (hovIdx === null) return true;
+		const hoveredCat = ordered[hovIdx];
+		return (
+			e.fromId === hoveredCat.id ||
+			(hoveredCat.hates && e.toName === hoveredCat.hates && e.fromId === hoveredCat.id) ||
+			hoveredCat.name === e.to.name ||
+			(hoveredCat.loves && e.toName === hoveredCat.loves && e.fromId === hoveredCat.id)
+		);
+	});
+
+	const loveEdges = visibleEdges.filter((e) => e.type === 'love');
+	const hateEdges = visibleEdges.filter((e) => e.type === 'hate');
+
 	return (
 		<>
-			<SvgMarkers />
-			{/*(edges, external relations, shared lineage, nodes) */}
-			{edges
-				.filter((e) => {
-					if (hovIdx === null) return true;
-					// Only show edges where hovered cat is involved
-					const hoveredCat = ordered[hovIdx];
-					return (
-						e.fromId === hoveredCat.id ||
-						(hoveredCat.hates &&
-							e.toName === hoveredCat.hates &&
-							e.fromId === hoveredCat.id) ||
-						hoveredCat.name === e.to.name ||
-						(hoveredCat.loves &&
-							e.toName === hoveredCat.loves &&
-							e.fromId === hoveredCat.id)
-					);
-				})
-				.map((e, i) => {
+			<g className="edge-love-group">
+				{loveEdges.map((e, i) => {
 					const p = getPath(e.from, e.to, e.type);
-					const isLove = e.type === 'love';
 					return (
 						<path
-							key={i}
+							key={`love-${i}`}
+							className="edge-love"
 							d={`M ${p.x1} ${p.y1} Q ${p.cx} ${p.cy} ${p.x2} ${p.y2}`}
 							fill="none"
-							stroke={isLove ? '#4ade80' : '#ef4444'}
 							strokeWidth={2}
-							strokeDasharray={isLove ? '0' : '6,4'}
-							markerEnd={isLove ? 'url(#arrow-love)' : 'url(#arrow-hate)'}
+							strokeDasharray="0"
+							markerEnd="url(#arrow-love)"
 							opacity={0.7}
 						/>
 					);
 				})}
+			</g>
+
+			<g className="edge-hate-group">
+				{hateEdges.map((e, i) => {
+					const p = getPath(e.from, e.to, e.type);
+					return (
+						<path
+							key={`hate-${i}`}
+							className="edge-hate"
+							d={`M ${p.x1} ${p.y1} Q ${p.cx} ${p.cy} ${p.x2} ${p.y2}`}
+							fill="none"
+							strokeWidth={2}
+							strokeDasharray="6,4"
+							markerEnd="url(#arrow-hate)"
+							opacity={0.7}
+						/>
+					);
+				})}
+			</g>
 		</>
 	);
 }

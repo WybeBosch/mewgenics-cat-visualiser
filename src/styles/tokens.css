@@ -46,6 +46,17 @@
 	--color-sex-male: #60a5fa;
 	--color-sex-female: #f472b6;
 	--color-sex-herm: #c084fc;
+	--color-sex-male-bg: #1a2a4a;
+	--color-sex-female-bg: #3b1a3b;
+	--color-sex-herm-bg: #2a1a4a;
+	--color-sex-male-bg-hover: #2a3a6a;
+	--color-sex-female-bg-hover: #5a2a5a;
+	--color-sex-herm-bg-hover: #3b2a5a;
+	--color-relation-love: #4ade80;
+	--color-relation-hate: #ef4444;
+	--color-relation-parent: #f97316;
+	--color-relation-sibling: #fbbf24;
+	--color-relation-related: #a78bfa;
 	--color-total-stat: #a78bfa;
 	--color-love-soft: #a7f3d0;
 	--color-warning-siblings-bg: #7c2d12;

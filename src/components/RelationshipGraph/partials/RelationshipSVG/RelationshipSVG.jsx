@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Tooltip from './partials/Tooltip.jsx';
 import TooltipCloseArea from './partials/TooltipCloseArea.jsx';
 import SvgLoveHateLines from './partials/SvgLoveHateLines.jsx';
+import SvgMarkers from './partials/SvgMarkers.jsx';
 import SvgMatchedRelationships from './partials/SvgMatchedRelationships/SvgMatchedRelationships.jsx';
 import SvgRelationLines from './partials/SvgRelationLines.jsx';
 import SvgCatNodes from './partials/SvgCatNodes/SvgCatNodes.jsx';
@@ -115,9 +116,10 @@ export default function RelationshipSVG({ cats, allCats, hoveredCatId, setHovere
 	}
 
 	return (
-		<svg className="relationship-graph-svg" width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
-			<SvgLoveHateLines zIndex="2" hovIdx={hovIdx} ordered={ordered} positions={positions} />
+		<svg className="graph-svg" width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+			<SvgMarkers />
 
+			<SvgLoveHateLines hovIdx={hovIdx} ordered={ordered} positions={positions} />
 			<SvgMatchedRelationships hovIdx={hovIdx} ordered={ordered} positions={positions} />
 			<SvgRelationLines hovIdx={hovIdx} ordered={ordered} positions={positions} />
 

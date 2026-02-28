@@ -7,7 +7,7 @@ import {
 
 export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 	return (
-		<>
+		<g className="relation-lines">
 			{/* (shared lineage, nodes) */}
 			{hovIdx !== null &&
 				(() => {
@@ -42,13 +42,13 @@ export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 							const x2 = childPos.x - dx * (nodeR / dist);
 							const y2 = childPos.y - dy * (nodeR / dist);
 							return (
-								<g key={`kin-${oi}`}>
+								<g key={`kin-${oi}`} className="kin-parent">
 									<line
+										className="kin-line"
 										x1={x1}
 										y1={y1}
 										x2={x2}
 										y2={y2}
-										stroke="#f97316"
 										strokeWidth={3}
 										opacity={0.6}
 									/>
@@ -75,11 +75,11 @@ export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 										👶
 									</text>
 									<text
+										className="kin-label"
 										x={(x1 + x2) / 2}
 										y={(y1 + y2) / 2 - 8}
 										textAnchor="middle"
 										fontSize={9}
-										fill="#f97316"
 										opacity={0.8}
 									>
 										parent
@@ -92,23 +92,26 @@ export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 						if (shared.length === 0) return null;
 						const sibling = isSibling(hovCat, other);
 						return (
-							<g key={`kin-${oi}`}>
+							<g
+								key={`kin-${oi}`}
+								className={sibling ? 'kin-sibling' : 'kin-related'}
+							>
 								<line
+									className="kin-line"
 									x1={from.x}
 									y1={from.y}
 									x2={to.x}
 									y2={to.y}
-									stroke={sibling ? '#fbbf24' : '#a78bfa'}
 									strokeWidth={sibling ? 3 : 2}
 									strokeDasharray={sibling ? 'none' : '8,4'}
 									opacity={0.6}
 								/>
 								<text
+									className="kin-label"
 									x={(from.x + to.x) / 2}
 									y={(from.y + to.y) / 2 - 8}
 									textAnchor="middle"
 									fontSize={9}
-									fill={sibling ? '#fbbf24' : '#a78bfa'}
 									opacity={0.8}
 								>
 									{sibling ? 'sibling' : 'related'}
@@ -117,6 +120,6 @@ export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 						);
 					});
 				})()}
-		</>
+		</g>
 	);
 }
