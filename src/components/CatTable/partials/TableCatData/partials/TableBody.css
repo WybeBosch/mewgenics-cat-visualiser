@@ -1,0 +1,108 @@
+.table-body {
+	.row {
+		border-bottom: 1px solid var(--color-bg-muted);
+		transition: background 0.1s;
+		background: var(--color-bg-muted-alt);
+
+		&.even {
+			background: var(--color-bg-page);
+		}
+
+		&.hovered {
+			background: var(--color-bg-strong);
+		}
+	}
+
+	.cell {
+		padding: 10px 12px;
+		text-align: center;
+	}
+
+	.partner-indicator {
+		font-size: 18px;
+	}
+
+	.age {
+		font-weight: 600;
+		color: var(--color-age-adult);
+		font-size: 1em;
+
+		&.unknown {
+			color: var(--color-text-subtle);
+		}
+
+		&.kitten {
+			color: var(--color-age-kitten);
+			font-size: 0.95em;
+		}
+	}
+
+	.sex {
+		color: var(--color-text-muted);
+
+		&.male {
+			color: var(--color-sex-male);
+		}
+
+		&.female {
+			color: var(--color-sex-female);
+		}
+
+		&.herm {
+			color: var(--color-sex-herm);
+		}
+	}
+
+	.stat {
+		font-variant-numeric: tabular-nums;
+		font-weight: 400;
+		color: var(--color-text-neutral);
+		font-size: 1em;
+
+		&.high {
+			font-weight: 800;
+			color: var(--color-positive);
+			font-size: 1.05em;
+		}
+	}
+
+	.total {
+		font-weight: 600;
+		color: var(--color-total-stat);
+	}
+
+	.info {
+		font-size: 12px;
+		white-space: nowrap;
+	}
+
+	.libido {
+		color: var(--color-text-neutral);
+	}
+
+	.aggression {
+		color: var(--color-text-neutral);
+
+		&.low {
+			color: var(--color-positive-soft);
+		}
+
+		&.high {
+			color: var(--color-negative);
+		}
+	}
+
+	.loves {
+		color: var(--color-love-soft);
+	}
+
+	.hates {
+		color: var(--color-negative-soft);
+	}
+
+	.no-cats-warning {
+		padding: 40px;
+		text-align: center;
+		color: var(--color-border-dash);
+	}
+}

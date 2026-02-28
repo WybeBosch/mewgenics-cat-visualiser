@@ -1,10 +1,10 @@
 import { TableCatDataLogic } from './TableCatDataLogic.jsx';
 import { TableHead } from './partials/TableHead.jsx';
 import { TableBody } from './partials/TableBody.jsx';
+import './TableCatData.css';
 
 export function TableCatData({
 	cats,
-	aggroColor,
 	hoveredCatId,
 	setHoveredCatId,
 	handleSort,
@@ -14,31 +14,13 @@ export function TableCatData({
 	totalStat,
 	getAge,
 }) {
-	const {
-		columns,
-		isPartnerInOtherRoom,
-		getRowBg,
-		getAgeStyle,
-		getStatStyle,
-		getInfoStyle,
-	} = TableCatDataLogic({ cats });
+	const { columns, isPartnerInOtherRoom } = TableCatDataLogic({ cats });
 
 	return (
 		<>
 			{/* Table */}
-			<div
-				className="table-cat-data"
-				style={{
-					overflowX: 'auto',
-					overflowY: 'auto',
-					maxHeight: '510px',
-					border: '1px solid #333',
-					borderTop: 'none',
-				}}
-			>
-				<table
-					style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}
-				>
+			<div className="table-cat-data">
+				<table className="table">
 					<TableHead
 						columns={columns}
 						handleSort={handleSort}
@@ -54,11 +36,6 @@ export function TableCatData({
 						totalStat={totalStat}
 						getAge={getAge}
 						isPartnerInOtherRoom={isPartnerInOtherRoom}
-						getRowBg={getRowBg}
-						getAgeStyle={getAgeStyle}
-						getStatStyle={getStatStyle}
-						getInfoStyle={getInfoStyle}
-						aggroColor={aggroColor}
 					/>
 				</table>
 			</div>

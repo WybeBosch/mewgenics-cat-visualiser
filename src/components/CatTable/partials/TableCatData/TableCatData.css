@@ -1,0 +1,13 @@
+.table-cat-data {
+	overflow-x: auto;
+	overflow-y: auto;
+	max-height: 510px;
+	border: 1px solid var(--color-border-soft);
+	border-top: none;
+
+	.table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 14px;
+	}
+}

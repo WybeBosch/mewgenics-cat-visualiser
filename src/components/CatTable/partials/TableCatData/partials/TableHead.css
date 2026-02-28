@@ -1,0 +1,71 @@
+.table-head {
+	background: var(--color-bg-card);
+
+	.cell {
+		padding: 12px;
+		user-select: none;
+		font-weight: 600;
+		font-size: 13px;
+		border-bottom: 2px solid var(--color-border-soft);
+		white-space: nowrap;
+		position: relative;
+		text-align: center;
+		cursor: pointer;
+		color: var(--color-text-muted);
+
+		&.left {
+			text-align: left;
+		}
+
+		&.static {
+			cursor: default;
+		}
+
+		&.sorted {
+			color: var(--color-accent);
+		}
+	}
+
+	.sort-indicator {
+		margin-left: 4px;
+		position: absolute;
+		right: 0;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	.tooltip {
+		position: absolute;
+		top: calc(100% + 6px);
+		background: var(--color-bg-tooltip-strong);
+		color: var(--color-text-tooltip);
+		padding: 8px 10px;
+		border: 1px solid var(--color-bg-button);
+		border-radius: var(--radius-sm);
+		font-size: 12px;
+		font-weight: 400;
+		line-height: 1.35;
+		white-space: normal;
+		z-index: 30;
+		box-shadow: var(--shadow-tooltip);
+		pointer-events: none;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 180px;
+
+		&.left {
+			left: 0;
+			transform: none;
+		}
+
+		&.right {
+			right: 0;
+			left: auto;
+			transform: none;
+		}
+
+		&.wide {
+			width: 320px;
+		}
+	}
+}

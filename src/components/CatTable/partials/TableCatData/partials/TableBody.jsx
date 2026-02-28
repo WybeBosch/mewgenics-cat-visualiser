@@ -1,5 +1,6 @@
-import { STATS, SEX_ICON, SEX_COLOR } from '../../../../../config/config.jsx';
+import { STATS, SEX_ICON } from '../../../../../config/config.jsx';
 import { TableTooltipPopup } from '../../../../../utils/utils.jsx';
+import './TableBody.css';
 
 export function TableBody({
 	cats,
@@ -10,20 +11,29 @@ export function TableBody({
 	totalStat,
 	getAge,
 	isPartnerInOtherRoom,
-	getRowBg,
-	getAgeStyle,
-	getStatStyle,
-	getInfoStyle,
-	aggroColor,
 }) {
 	const noCatsFound = !sorted.length > 0;
+
+	function getAggressionClass(aggression) {
+		if (aggression <= 3) return 'low';
+		if (aggression <= 6) return '';
+		return 'high';
+	}
+
+	function getAgeClass(age) {
+		if (age === null) return 'unknown';
+		if (age <= 1) return 'kitten';
+		return '';
+	}
+
+	function getStatClass(statValue) {
+		return statValue >= 7 ? 'high' : '';
+	}
+
 	function NoCatsFoundWarning() {
 		return (
 			<tr>
-				<td
-					colSpan={columns.length}
-					style={{ padding: 40, textAlign: 'center', color: '#666' }}
-				>
+				<td colSpan={columns.length} className="no-cats-warning">
 					No cats in this room.
 				</td>
 			</tr>
@@ -31,44 +41,29 @@ export function TableBody({
 	}
 
 	return (
-		<tbody>
+		<tbody className="table-body">
 			{noCatsFound ? <NoCatsFoundWarning /> : null}
 			{sorted.map((cat, i) => {
 				const total = totalStat(cat);
 				const age = getAge(cat);
 				const isHovered = hoveredCatId === cat.id;
-				const rowBg = getRowBg(isHovered, i);
 				const partnerInOtherRoom = isPartnerInOtherRoom(cat);
-				const ageStyle = getAgeStyle(age);
+				const rowClass = `${i % 2 === 0 ? 'even' : ''} ${isHovered ? 'hovered' : ''}`;
+				const sexClass = cat.sex || '';
 
 				return (
 					<tr
 						key={cat.id + i}
-						style={{
-							background: rowBg,
-							borderBottom: '1px solid #2a2a4a',
-							transition: 'background 0.1s',
-						}}
+						className={`row ${rowClass}`}
 						onMouseEnter={() => setHoveredCatId(cat.id)}
 						onMouseLeave={() => setHoveredCatId(null)}
 					>
 						<TableTooltipPopup cat={cat} allCats={cats} />
-						<td
-							style={{
-								padding: '10px 12px',
-								textAlign: 'center',
-								fontSize: 18,
-							}}
-						>
+						<td className="cell partner-indicator">
 							{partnerInOtherRoom ? '🕵️‍♂️' : ''}
 						</td>
 						<td
-							style={{
-								padding: '10px 12px',
-								textAlign: 'center',
-								fontWeight: 600,
-								...ageStyle,
-							}}
+							className={`cell age ${getAgeClass(age)}`}
 							title={
 								age !== null
 									? `${age} day${age === 1 ? '' : 's'} old`
@@ -77,44 +72,23 @@ export function TableBody({
 						>
 							{age !== null ? age : '—'}
 						</td>
-						<td
-							style={{
-								padding: '10px 12px',
-								textAlign: 'center',
-								color: SEX_COLOR[cat.sex],
-							}}
-						>
+						<td className={`cell sex ${sexClass}`}>
 							{SEX_ICON[cat.sex] || cat.sex}
 						</td>
 						{STATS.map((s) => (
-							<td
-								key={s}
-								style={{
-									padding: '10px 12px',
-									textAlign: 'center',
-									fontVariantNumeric: 'tabular-nums',
-									...getStatStyle(cat[s]),
-								}}
-							>
+							<td key={s} className={`cell stat ${getStatClass(cat[s])}`}>
 								{cat[s]}
 							</td>
 						))}
+						<td className="cell total">{total}</td>
+						<td className="cell info libido">{cat.libido}</td>
 						<td
-							style={{
-								padding: '10px 12px',
-								textAlign: 'center',
-								fontWeight: 600,
-								color: '#a78bfa',
-							}}
+							className={`cell info aggression ${getAggressionClass(cat.aggression)}`}
 						>
-							{total}
-						</td>
-						<td style={getInfoStyle('#ccc')}>{cat.libido}</td>
-						<td style={getInfoStyle(aggroColor(cat.aggression))}>
 							{cat.aggression}
 						</td>
-						<td style={getInfoStyle('#a7f3d0')}>{cat.loves || '—'}</td>
-						<td style={getInfoStyle('#fca5a5')}>{cat.hates || '—'}</td>
+						<td className="cell info loves">{cat.loves || '—'}</td>
+						<td className="cell info hates">{cat.hates || '—'}</td>
 					</tr>
 				);
 			})}
