@@ -1,0 +1,72 @@
+:root {
+	/* Surfaces & Backgrounds */
+	--color-bg-page: #1a1a2e;
+	--color-bg-card: #252547;
+	--color-bg-muted: #2a2a4a;
+	--color-bg-muted-alt: #1f1f3a;
+	--color-bg-strong: #2a2a5a;
+	--color-bg-legend: rgba(30, 30, 58, 0.95);
+	--color-bg-tooltip: #0b1220;
+	--color-bg-button: #374151;
+	--color-bg-button-disabled: #1f2937;
+	--color-bg-tooltip-strong: #111827;
+	--color-bg-tooltip-panel: #1e1e3a;
+	--color-bg-warning-related: #090f1a;
+
+	/* Borders */
+	--color-border-soft: #333;
+	--color-border-mid: #555;
+	--color-border-strong: #2f3b55;
+	--color-border-deep: #334155;
+	--color-border-dash: #666;
+
+	/* Text */
+	--color-text-primary: #ffffff;
+	--color-text-secondary: #e0e0e0;
+	--color-text-muted: #aaa;
+	--color-text-subtle: #888;
+	--color-text-disabled: #9ca3af;
+	--color-text-neutral: #ccc;
+	--color-text-tertiary: #ddd;
+	--color-text-tooltip: #f3f4f6;
+	--color-text-cool: #b7bdd0;
+	--color-text-cool-strong: #cbd5e1;
+
+	/* Brand & Semantic */
+	--color-accent: #6366f1;
+	--color-positive: #4ade80;
+	--color-positive-soft: #86efac;
+	--color-negative: #f87171;
+	--color-negative-soft: #fca5a5;
+	--color-warning: #fca5a5;
+
+	/* Domain-specific UI Colors */
+	--color-age-kitten: #fbbf24;
+	--color-age-adult: #38bdf8;
+	--color-sex-male: #60a5fa;
+	--color-sex-female: #f472b6;
+	--color-sex-herm: #c084fc;
+	--color-total-stat: #a78bfa;
+	--color-love-soft: #a7f3d0;
+	--color-warning-siblings-bg: #7c2d12;
+	--color-warning-siblings-text: #fdba74;
+	--color-warning-parent-bg: #78350f;
+	--color-warning-parent-text: #fde68a;
+	--color-warning-related-bg: #312e81;
+	--color-warning-related-text: #c4b5fd;
+
+	/* Spacing */
+	--space-6: 24px;
+
+	/* Radius */
+	--radius-sm: 6px;
+	--radius-md: 8px;
+	--radius-lg: 12px;
+
+	/* Shadows */
+	--shadow-popup-sm: 0 2px 8px rgba(0, 0, 0, 0.18);
+	--shadow-popup-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+	--shadow-popup-lg: 0 10px 30px rgba(0, 0, 0, 0.35);
+	--shadow-popup-lg-soft: 0 10px 24px rgba(0, 0, 0, 0.35);
+	--shadow-tooltip: 0 10px 15px -3px rgba(0, 0, 0, 0.35);
+}
