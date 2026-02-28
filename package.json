@@ -21,6 +21,7 @@
 	],
 	"author": "WybeBosch",
 	"license": "UNLICENSED",
+	"packageManager": "pnpm@10.30.3",
 	"engines": {
 		"node": ">=22 <23"
 	},
@@ -29,9 +30,9 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"deploy": "vite build && gh-pages -d dist",
-		"patch": "npm version patch --no-git-tag-version",
-		"minor": "npm version minor --no-git-tag-version",
-		"major": "npm version major --no-git-tag-version"
+		"patch": "pnpm version patch --no-git-tag-version",
+		"minor": "pnpm version minor --no-git-tag-version",
+		"major": "pnpm version major --no-git-tag-version"
 	},
 	"dependencies": {
 		"@vitejs/plugin-react-swc": "^4.2.3",

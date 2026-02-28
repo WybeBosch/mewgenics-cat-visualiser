@@ -61,8 +61,8 @@ If a cat has a matching partner (they both love each other) but are not in the s
 
 ## How to Use locally
 
-1. Run `npm install` to install dependencies.
-2. Start the local server with `npm run dev`.
+1. Run `pnpm install` to install dependencies.
+2. Start the local server with `pnpm run dev`.
 3. Upload or load your cat data JSON file.
 
 
@@ -85,9 +85,9 @@ So you can quickly verify which deployed build is currently served by GitHub Pag
 
 1. Make sure you are on `main` with clean working tree.
 2. Bump `package.json` version (manual edit or optional command):
-	- Patch: `npm run patch`
-	- Minor: `npm run minor`
-	- Major: `npm run major`
+	- Patch: `pnpm run patch`
+	- Minor: `pnpm run minor`
+	- Major: `pnpm run major`
 3. Commit and push (example commit message: `release: v1.0.1`).
 4. In GitHub UI, create/publish a Release for that version tag (for example `v1.0.1`).
 5. GitHub Actions workflow (`.github/workflows/release-pages.yml`) runs on release publish:
