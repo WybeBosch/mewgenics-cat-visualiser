@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
-import { getFamilySummary } from './RelationshipSVG/partials/SvgRelationLogic.jsx';
-import SvgRelationWarnings from './RelationshipSVG/partials/SvgRelationWarnings.jsx';
+import { getFamilySummary } from '../RelationshipSVG/partials/SvgRelationLogic.jsx';
+import SvgRelationWarnings from '../RelationshipSVG/partials/SvgRelationWarnings/SvgRelationWarnings.jsx';
 import './RelationshipHeader.css';
 
 function RelationshipHeader({ activeRoom, cats = [] }) {

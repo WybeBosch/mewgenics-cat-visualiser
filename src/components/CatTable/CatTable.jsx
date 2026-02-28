@@ -1,4 +1,4 @@
-import { TableRoomTabs } from './partials/TableRoomTabs';
+import { TableRoomTabs } from './partials/TableRoomTabs/TableRoomTabs';
 import { TableCatData } from './partials/TableCatData/TableCatData';
 
 import { CatTableLogic } from './CatTableLogic';

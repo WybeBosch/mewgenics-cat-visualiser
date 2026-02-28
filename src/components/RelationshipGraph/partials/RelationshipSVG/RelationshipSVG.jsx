@@ -3,9 +3,9 @@ import { useState } from 'react';
 import Tooltip from './partials/Tooltip.jsx';
 import TooltipCloseArea from './partials/TooltipCloseArea.jsx';
 import SvgLoveHateLines from './partials/SvgLoveHateLines.jsx';
-import SvgMatchedRelationships from './partials/SvgMatchedRelationships.jsx';
+import SvgMatchedRelationships from './partials/SvgMatchedRelationships/SvgMatchedRelationships.jsx';
 import SvgRelationLines from './partials/SvgRelationLines.jsx';
-import SvgCatNodes from './partials/SvgCatNodes.jsx';
+import SvgCatNodes from './partials/SvgCatNodes/SvgCatNodes.jsx';
 
 export default function RelationshipSVG({
 	cats,

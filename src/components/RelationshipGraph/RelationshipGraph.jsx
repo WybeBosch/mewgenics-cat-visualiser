@@ -1,5 +1,5 @@
-import RelationshipHeader from './partials/RelationshipHeader.jsx';
-import RelationshipLegendBar from './partials/RelationshipLegendBar.jsx';
+import RelationshipHeader from './partials/RelationshipHeader/RelationshipHeader.jsx';
+import RelationshipLegendBar from './partials/RelationshipLegendBar/RelationshipLegendBar.jsx';
 import RelationshipSVG from './partials/RelationshipSVG/RelationshipSVG.jsx';
 import './RelationshipGraph.css';
 

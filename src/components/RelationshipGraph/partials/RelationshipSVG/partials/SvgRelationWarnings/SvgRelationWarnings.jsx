@@ -7,7 +7,7 @@ import {
 	isRelated,
 	isSibling,
 	normalizeLineageName,
-} from './SvgRelationLogic.jsx';
+} from '../SvgRelationLogic.jsx';
 
 function getCatKey(cat, index) {
 	return cat.id ?? `${cat.name || 'Unknown'}-${index}`;

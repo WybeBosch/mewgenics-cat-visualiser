@@ -1,4 +1,4 @@
-import { APP_EMOJIS } from '../../../config/config.jsx';
+import { APP_EMOJIS } from '../../../../config/config.jsx';
 import './Heading.css';
 
 export function Heading({ cats, rooms, getAge, dataTimeLineText }) {
