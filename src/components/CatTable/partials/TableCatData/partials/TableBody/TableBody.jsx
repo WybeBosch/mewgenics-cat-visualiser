@@ -1,5 +1,5 @@
 import { STATS, SEX_ICON } from '../../../../../../config/config.jsx';
-import { TableTooltipPopup } from '../../../../../../utils/utils.jsx';
+import { TableTooltipPopup, joinClass } from '../../../../../../utils/utils.jsx';
 import './TableBody.css';
 
 function NoCatsFoundWarning({ columnsLength }) {
@@ -48,36 +48,39 @@ export function TableBody({
 				const age = getAge(cat);
 				const isHovered = hoveredCatId === cat.id;
 				const partnerInOtherRoom = isPartnerInOtherRoom(cat);
-				const rowClass = isHovered ? 'hovered' : '';
-				const sexClass = cat.sex || '';
 
 				return (
 					<tr
 						key={cat.id + i}
-						className={`row ${rowClass}`}
+						className={joinClass('row', { hovered: isHovered })}
 						onMouseEnter={() => setHoveredCatId(cat.id)}
 						onMouseLeave={() => setHoveredCatId(null)}
 					>
 						<TableTooltipPopup cat={cat} allCats={cats} />
 						<td className="cell partner-indicator">{partnerInOtherRoom ? '🕵️‍♂️' : ''}</td>
 						<td
-							className={`cell age ${getAgeClass(age)}`}
+							className={joinClass('cell age', getAgeClass(age))}
 							title={
 								age !== null ? `${age} day${age === 1 ? '' : 's'} old` : 'Unknown'
 							}
 						>
 							{age !== null ? age : '—'}
 						</td>
-						<td className={`cell sex ${sexClass}`}>{SEX_ICON[cat.sex] || cat.sex}</td>
+						<td className={joinClass('cell sex', cat.sex)}>
+							{SEX_ICON[cat.sex] || cat.sex}
+						</td>
 						{STATS.map((s) => (
-							<td key={s} className={`cell stat ${getStatClass(cat[s])}`}>
+							<td key={s} className={joinClass('cell stat', getStatClass(cat[s]))}>
 								{cat[s]}
 							</td>
 						))}
 						<td className="cell total">{total}</td>
 						<td className="cell info libido">{cat.libido}</td>
 						<td
-							className={`cell info aggression ${getAggressionClass(cat.aggression)}`}
+							className={joinClass(
+								'cell info aggression',
+								getAggressionClass(cat.aggression)
+							)}
 						>
 							{cat.aggression}
 						</td>

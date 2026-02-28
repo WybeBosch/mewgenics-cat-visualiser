@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { joinClass } from '../../../../../../utils/utils.jsx';
 import './SvgRelationWarnings.css';
 
 import {
@@ -183,8 +184,6 @@ function WarningPill({
 	const hoveredRow = rows.find((row) => row.key === hoveredRowKey);
 	const hoveredRelated = hoveredRowKey ? relatedLookup.get(hoveredRowKey) || [] : [];
 
-	const categoryClass = categoryKey;
-
 	return (
 		<div
 			className="warning-pill"
@@ -199,7 +198,7 @@ function WarningPill({
 				onClose();
 			}}
 		>
-			<span tabIndex={0} className={`badge ${categoryClass}`}>
+			<span tabIndex={0} className={joinClass('badge', categoryKey)}>
 				{count} cats are {label}
 			</span>
 			{isOpen ? (

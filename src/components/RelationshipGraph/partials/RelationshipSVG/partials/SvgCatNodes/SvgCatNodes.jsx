@@ -1,4 +1,5 @@
 import { SEX_ICON } from '../../../../../../config/config.jsx';
+import { joinClass } from '../../../../../../utils/utils.jsx';
 import './SvgCatNodes.css';
 
 export default function SvgCatNodes({
@@ -54,7 +55,9 @@ export default function SvgCatNodes({
 			{positions.map((p, i) => (
 				<g
 					key={p.name}
-					className={`node ${getNodeSexClass(ordered[i].sex)} ${hovIdx === i ? 'is-hovered' : ''}`}
+					className={joinClass('node', getNodeSexClass(ordered[i].sex), {
+						'is-hovered': hovIdx === i,
+					})}
 					onMouseEnter={handleMouseEnter(setHoveredCatId, ordered[i].id)}
 					onMouseLeave={handleMouseLeave(setHoveredCatId)}
 					onClick={handleClick(setSelectedCatId, selectedCatId, ordered[i].id)}

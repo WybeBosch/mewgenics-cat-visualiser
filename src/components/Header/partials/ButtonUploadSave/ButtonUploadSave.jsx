@@ -1,5 +1,6 @@
 import { ButtonCopySavePath } from '../ButtonCopySavePath/ButtonCopySavePath.jsx';
 import { SECURITY_LIMITS } from '../../../../config/config.jsx';
+import { joinClass } from '../../../../utils/utils.jsx';
 import './ButtonUploadSave.css';
 
 export function ButtonUploadSave({ onUploadSav, savLoading, savError }) {
@@ -8,7 +9,7 @@ export function ButtonUploadSave({ onUploadSav, savLoading, savError }) {
 	return (
 		<>
 			<div className="upload-save-wrap">
-				<label className={`upload-save ${savLoading ? 'loading' : ''}`}>
+				<label className={joinClass('upload-save', { loading: savLoading })}>
 					<span role="img" aria-label="Save File" className="icon">
 						{savLoading ? '⏳' : '💾'}
 					</span>
