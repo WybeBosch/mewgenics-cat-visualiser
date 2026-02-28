@@ -7,6 +7,7 @@ export function TableCatDataLogic({ cats }) {
 		{
 			key: 'partnerRoom',
 			label: '💞',
+			isStatic: true,
 			tooltip:
 				'Matching partner in another room. Shows when this cat and another cat love each other, but they are currently in different rooms. A detective icon appears in this column for those separated matching partners.',
 		},
@@ -15,6 +16,7 @@ export function TableCatDataLogic({ cats }) {
 		...STATS.map((s) => ({
 			key: s,
 			label: `${STAT_ICONS[s]} ${s}`,
+			isStat: true,
 			tooltip: `${s} stat`,
 		})),
 		{ key: 'total', label: 'Total', tooltip: 'Total of all core stats' },
@@ -30,6 +32,7 @@ export function TableCatDataLogic({ cats }) {
 		},
 		{ key: 'loves', label: OTHER_INFO_ICONS.loves, tooltip: 'Cats they love' },
 		{ key: 'hates', label: OTHER_INFO_ICONS.hates, tooltip: 'Cats they hate' },
+		{ key: 'spacer', label: '', isStatic: true },
 	];
 
 	// Helper to get partnerInOtherRoom
