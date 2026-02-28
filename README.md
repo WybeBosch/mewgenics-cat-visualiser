@@ -7,6 +7,8 @@ https://wybebosch.github.io/mewgenics-cat-visualiser/
 This project is only meant as a visualiser, you cannot edit your save file with it.
 <img width="1499" height="1256" alt="afbeelding" src="https://github.com/user-attachments/assets/973aa2a7-b75d-4046-9330-312fe0c222e8" />
 
+---
+
 ## Features
 
 - Upload your .sav file and we parse it to get the cats out of it
@@ -51,6 +53,8 @@ This project is only meant as a visualiser, you cannot edit your save file with 
 There is the 💞 column
 
 If a cat has a matching partner (they both love each other) but are not in the same room, an icon is shown: 🕵️‍♂️.
+
+---
 
 ## How to use on the web
 
@@ -120,6 +124,8 @@ So you can quickly verify which deployed build is currently served by GitHub Pag
 2. Open browser devtools console.
 3. Confirm logged version matches your tag/release (for example `v1.0.1`).
 4. If Pages/CDN cache is delayed, hard refresh and re-check the console version line.
+
+---
 
 ## Styling conventions (Native CSS + nesting)
 
