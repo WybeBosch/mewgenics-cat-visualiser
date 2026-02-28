@@ -10,5 +10,9 @@
 		margin: 4px 0 0;
 		color: var(--color-text-subtle);
 		font-size: 14px;
+
+		& > span {
+			margin-right: 5px;
+		}
 	}
 }

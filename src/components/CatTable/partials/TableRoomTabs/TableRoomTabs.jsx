@@ -1,4 +1,4 @@
-import { joinClass } from '../../../../utils/utils.jsx';
+import { joinClass } from '../../../../shared/utils/utils.jsx';
 import './TableRoomTabs.css';
 
 export function TableRoomTabs({ cats, rooms, activeRoom, setActiveRoom, sortedRooms }) {

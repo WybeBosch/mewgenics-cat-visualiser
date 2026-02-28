@@ -10,8 +10,8 @@
  * @returns {Promise<Array<object>>}  Cat objects matching the mewgenics_cats.json schema
  */
 
-import { logIfEnabled } from '../../utils/utils.jsx';
-import { SECURITY_LIMITS } from '../../config/config.jsx';
+import { logIfEnabled } from '../../shared/utils/utils.jsx';
+import { SECURITY_LIMITS } from '../../shared/config/config.jsx';
 import { parseRoomAssignments, parsePedigree, parseCatBlob } from './parsers.js';
 import { lz4DecompressBlock } from './lz4.js';
 // Static import lets Vite/esbuild handle CJS→ESM conversion reliably.

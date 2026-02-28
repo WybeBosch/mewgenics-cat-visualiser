@@ -7,9 +7,9 @@
 
 	.name {
 		display: inline-block;
+		overflow: hidden;
 		max-width: 100%;
 		border-bottom: 1px dashed var(--color-border-dash);
-		overflow: hidden;
 		text-overflow: ellipsis;
 		vertical-align: bottom;
 	}

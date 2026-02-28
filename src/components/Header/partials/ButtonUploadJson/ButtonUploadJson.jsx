@@ -1,4 +1,4 @@
-import { SECURITY_LIMITS } from '../../../../config/config.jsx';
+import { SECURITY_LIMITS } from '../../../../shared/config/config.jsx';
 import './ButtonUploadJson.css';
 
 export function ButtonUploadJson({ onUploadJson }) {

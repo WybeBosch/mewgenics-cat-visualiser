@@ -1,4 +1,4 @@
-import { APP_EMOJIS } from '../../../../config/config.jsx';
+import { APP_EMOJIS } from '../../../../shared/config/config.jsx';
 import './Heading.css';
 
 export function Heading({ cats, rooms, getAge, dataTimeLineText }) {
@@ -24,23 +24,17 @@ export function Heading({ cats, rooms, getAge, dataTimeLineText }) {
 		<div className="heading">
 			<h1 className="title">{headingEmoji} Mewgenics Cat Visualiser</h1>
 			<p className="meta-text">{dataTimeLineText}</p>
-			<div className="svg-relation-warnings" style={{ marginTop: '8px' }}>
-				{/* (x rooms, x cats) */}
-				<div className="warning-pill">
-					<div className="badge">
-						{rooms.length} rooms, {cats.length} cats
-					</div>
-				</div>
-				{/* (x male, x female, x herm) */}
-				<div className="warning-pill">
-					<div className="badge siblings">
-						{maleCount} male, {femaleCount} female, {hermCount} herm
-					</div>
-				</div>
-				{/* (x kittens) */}
-				<div className="warning-pill">
-					<div className="badge">{kittenCount} kittens</div>
-				</div>
+			<div className="meta-text">
+				{/* [x rooms, x cats] */}
+				<span>
+					[{rooms.length} rooms, {cats.length} cats],
+				</span>
+				{/* [x male, x female, x herm] */}
+				<span>
+					[{maleCount} male, {femaleCount} female, {hermCount} herm],
+				</span>
+				{/* [x kittens] */}
+				<span>[{kittenCount} kittens]</span>
 			</div>
 		</div>
 	);

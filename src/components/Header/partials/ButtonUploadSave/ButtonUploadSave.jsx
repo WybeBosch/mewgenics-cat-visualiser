@@ -1,6 +1,6 @@
 import { ButtonCopySavePath } from '../ButtonCopySavePath/ButtonCopySavePath.jsx';
-import { SECURITY_LIMITS } from '../../../../config/config.jsx';
-import { joinClass } from '../../../../utils/utils.jsx';
+import { SECURITY_LIMITS } from '../../../../shared/config/config.jsx';
+import { joinClass } from '../../../../shared/utils/utils.jsx';
 import './ButtonUploadSave.css';
 
 export function ButtonUploadSave({ onUploadSav, savLoading, savError }) {

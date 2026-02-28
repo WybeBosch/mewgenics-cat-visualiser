@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { STATS } from '../../config/config.jsx';
+import { STATS } from '../../shared/config/config.jsx';
 
 export function CatTableLogic({ cats, activeRoom }) {
 	// Table-specific state
@@ -44,7 +44,12 @@ export function CatTableLogic({ cats, activeRoom }) {
 		return sortAsc ? av - bv : bv - av;
 	});
 
-	const aggroColor = (v) => (v <= 3 ? 'var(--color-positive-soft)' : v <= 6 ? 'var(--color-text-neutral)' : 'var(--color-negative)');
+	const aggroColor = (v) =>
+		v <= 3
+			? 'var(--color-positive-soft)'
+			: v <= 6
+				? 'var(--color-text-neutral)'
+				: 'var(--color-negative)';
 
 	return {
 		hoveredCatId,

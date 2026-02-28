@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 
 // Optional JSON preload file copied to web root by Vite static copy plugin.
 // This file may not exist in all environments (e.g. web deploy), so load it at runtime.
-import { logIfEnabled } from './utils/utils.jsx';
+import { logIfEnabled } from './shared/utils/utils.jsx';
 
 export function useMewgenicsCatsLogic() {
 	const [cats, setCats] = useState([]);

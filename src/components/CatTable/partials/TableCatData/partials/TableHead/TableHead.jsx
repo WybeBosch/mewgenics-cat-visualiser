@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { joinClass } from '../../../../../../utils/utils.jsx';
+import { joinClass } from '../../../../../../shared/utils/utils.jsx';
 import './TableHead.css';
 
 export function TableHead({ columns, handleSort, sortCol, sortAsc }) {
@@ -21,7 +21,7 @@ export function TableHead({ columns, handleSort, sortCol, sortAsc }) {
 						: isRightAlignedTooltip
 							? 'right'
 							: '';
-					const tooltipWidthClass = col.key === 'partnerRoom' ? 'wide' : '';
+					const tooltipWidthClass = col.key === 'partner-room' ? 'wide' : '';
 					const columnClass = `col-${col.key}`;
 					const statClass = col.isStat ? 'col-stat' : '';
 

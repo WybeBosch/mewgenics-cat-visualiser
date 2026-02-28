@@ -1,5 +1,5 @@
-import { STATS, SEX_ICON } from '../../../../../../config/config.jsx';
-import { TableTooltipPopup, joinClass } from '../../../../../../utils/utils.jsx';
+import { STATS, SEX_ICON } from '../../../../../../shared/config/config.jsx';
+import { TableTooltipPopup, joinClass } from '../../../../../../shared/utils/utils.jsx';
 import './TableBody.css';
 
 function NoCatsFoundWarning({ columnsLength }) {

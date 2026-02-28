@@ -32,18 +32,27 @@
 	.kin-parent .kin-line,
 	.kin-parent .kin-label {
 		fill: var(--color-relation-parent);
-		stroke: var(--color-relation-parent);
 	}
 
 	.kin-sibling .kin-line,
 	.kin-sibling .kin-label {
 		fill: var(--color-relation-sibling);
-		stroke: var(--color-relation-sibling);
 	}
 
 	.kin-related .kin-line,
 	.kin-related .kin-label {
 		fill: var(--color-relation-related);
+	}
+
+	.kin-parent .kin-line {
+		stroke: var(--color-relation-parent);
+	}
+
+	.kin-sibling .kin-line {
+		stroke: var(--color-relation-sibling);
+	}
+
+	.kin-related .kin-line {
 		stroke: var(--color-relation-related);
 	}
 

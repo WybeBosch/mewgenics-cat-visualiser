@@ -4,7 +4,7 @@ import {
 	isSibling,
 	normalizeLineageName,
 } from './SvgRelationLogic.jsx';
-import { joinClass } from '../../../../../utils/utils.jsx';
+import { joinClass } from '../../../../../shared/utils/utils.jsx';
 
 export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 	return (

@@ -1,4 +1,4 @@
-import { sharedTooltipContents } from '../../../../../utils/utils.jsx';
+import { sharedTooltipContents } from '../../../../../shared/utils/utils.jsx';
 
 export default function Tooltip({ allCats, selIdx, ordered, positions, W }) {
 	if (selIdx === null || !ordered || !positions || !ordered[selIdx] || !positions[selIdx]) {
