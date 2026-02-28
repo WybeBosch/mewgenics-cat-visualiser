@@ -25,6 +25,13 @@
 	"engines": {
 		"node": ">=22.12 <23"
 	},
+	"pnpm": {
+		"peerDependencyRules": {
+			"allowedVersions": {
+				"eslint-plugin-import>eslint": "10"
+			}
+		}
+	},
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
