@@ -44,21 +44,21 @@ export function TableCatDataLogic({ cats }) {
 
 	// Helper to get row background
 	function getRowBg(isHovered, index) {
-		if (isHovered) return '#2a2a5a';
-		return index % 2 === 0 ? '#1a1a2e' : '#1f1f3a';
+		if (isHovered) return 'var(--color-bg-strong)';
+		return index % 2 === 0 ? 'var(--color-bg-page)' : 'var(--color-bg-muted-alt)';
 	}
 
 	// Helper to get age color and font size
 	function getAgeStyle(age) {
-		if (age === null) return { color: '#888', fontSize: '1em' };
-		if (age <= 1) return { color: '#fbbf24', fontSize: '0.95em' };
-		return { color: '#38bdf8', fontSize: '1em' };
+		if (age === null) return { color: 'var(--color-text-subtle)', fontSize: '1em' };
+		if (age <= 1) return { color: 'var(--color-age-kitten)', fontSize: '0.95em' };
+		return { color: 'var(--color-age-adult)', fontSize: '1em' };
 	}
 
 	// Helper to get stat style
 	function getStatStyle(val) {
-		if (val >= 7) return { fontWeight: 800, color: '#4ade80', fontSize: '1.05em' };
-		return { fontWeight: 400, color: '#ccc', fontSize: '1em' };
+		if (val >= 7) return { fontWeight: 800, color: 'var(--color-positive)', fontSize: '1.05em' };
+		return { fontWeight: 400, color: 'var(--color-text-neutral)', fontSize: '1em' };
 	}
 
 	// Helper to get cell style for info columns

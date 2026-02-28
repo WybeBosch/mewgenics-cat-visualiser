@@ -44,7 +44,7 @@ export function CatTableLogic({ cats, activeRoom }) {
 		return sortAsc ? av - bv : bv - av;
 	});
 
-	const aggroColor = (v) => (v <= 3 ? '#86efac' : v <= 6 ? '#ccc' : '#f87171');
+	const aggroColor = (v) => (v <= 3 ? 'var(--color-positive-soft)' : v <= 6 ? 'var(--color-text-neutral)' : 'var(--color-negative)');
 
 	return {
 		hoveredCatId,

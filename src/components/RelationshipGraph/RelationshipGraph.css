@@ -61,7 +61,7 @@
 	}
 
 	.tooltip-value {
-		fill: var(--color-text-tertiary);
+		fill: var(--color-text-secondary);
 	}
 
 	.legend-line-love {

@@ -24,10 +24,24 @@ export function Heading({ cats, rooms, getAge, dataTimeLineText }) {
 		<div className="heading">
 			<h1 className="title">{headingEmoji} Mewgenics Cat Visualiser</h1>
 			<p className="meta-text">{dataTimeLineText}</p>
-			<p className="meta-text">
-				{rooms.length} rooms, {cats.length} total cats, {maleCount} male, {femaleCount}{' '}
-				female, {hermCount} herm, {kittenCount} kitten
-			</p>
+			<div className="svg-relation-warnings" style={{ marginTop: '8px' }}>
+				{/* (x rooms, x cats) */}
+				<div className="warning-pill">
+					<div className="badge">
+						{rooms.length} rooms, {cats.length} cats
+					</div>
+				</div>
+				{/* (x male, x female, x herm) */}
+				<div className="warning-pill">
+					<div className="badge siblings">
+						{maleCount} male, {femaleCount} female, {hermCount} herm
+					</div>
+				</div>
+				{/* (x kittens) */}
+				<div className="warning-pill">
+					<div className="badge">{kittenCount} kittens</div>
+				</div>
+			</div>
 		</div>
 	);
 }
