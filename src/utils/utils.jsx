@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './utils.css';
 
 function logIfEnabled(...args) {
 	const enableLogging = import.meta.env.DEV;
@@ -65,59 +66,25 @@ function TableTooltipPopup({ cat, allCats }) {
 	const lines = sharedTooltipContents(cat, allCats);
 	return (
 		<td
-			style={{
-				padding: '10px 12px',
-				fontWeight: 600,
-				color: '#fff',
-				cursor: 'default',
-			}}
+			className="tooltip-popup"
 			onMouseEnter={() => setShow(true)}
 			onMouseLeave={() => setShow(false)}
 			onMouseMove={(e) => setPos({ x: e.clientX, y: e.clientY })}
 		>
-			<span style={{ borderBottom: '1px dashed #666' }}>{cat.name}</span>
+			<span className="name">{cat.name}</span>
 			{show && (
 				<div
+					className="panel"
 					style={{
-						position: 'fixed',
 						top: pos.y - 10,
 						left: pos.x + 16,
-						zIndex: 99999,
-						transform: 'translateY(-100%)',
-						background: '#1e1e3a',
-						border: '1px solid #555',
-						borderRadius: 8,
-						padding: '10px 14px',
-						minWidth: 220,
-						pointerEvents: 'none',
-						boxShadow: '0 4px 16px rgba(0,0,0,0.5)',
 					}}
 				>
-					<div
-						style={{
-							fontWeight: 700,
-							fontSize: 13,
-							color: '#fff',
-							marginBottom: 6,
-						}}
-					>
-						{cat.name}
-					</div>
+					<div className="title">{cat.name}</div>
 					{lines.map((line, i) => (
-						<div
-							key={i}
-							style={{
-								display: 'flex',
-								justifyContent: 'space-between',
-								gap: 12,
-								fontSize: 11,
-								marginBottom: 3,
-							}}
-						>
-							<span style={{ color: '#888' }}>{line.label}:</span>
-							<span style={{ color: '#ddd', textAlign: 'right' }}>
-								{line.value}
-							</span>
+						<div key={i} className="line">
+							<span className="label">{line.label}:</span>
+							<span className="value">{line.value}</span>
 						</div>
 					))}
 				</div>
