@@ -19,6 +19,22 @@ or by visiting the web url: </br>
 - No persistent storage or editing
 (Yall can just use some other mod to edit your game)
 
+## Styling conventions (Native CSS + nesting)
+
+- Use native CSS files (no Tailwind, no CSS modules).
+- Use one CSS file per React component, co-located next to the component file.
+- Use short, component-scoped class names (avoid long BEM chains).
+- Prefer native CSS nesting to keep selectors close to their component root.
+- Keep defaults as base styles, and only add classes for exceptions/states.
+   	- Base: `.cell`
+   	- Optional state: `.stat-high`
+   	- Avoid adding a class for the common/default case if it can be the base rule.
+- Scope short state classes under a local component root to avoid collisions.
+- Keep global styles minimal:
+   	- `src/styles/tokens.css` for shared CSS custom properties.
+   	- `src/styles/base.css` for reset/base rules.
+- Import global CSS once in `src/index.jsx`, and each component CSS inside its own component file.
+
 ## Smaller things explained
 
 ### What does each icon mean?
