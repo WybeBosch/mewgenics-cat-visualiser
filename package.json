@@ -28,7 +28,8 @@
 	"pnpm": {
 		"peerDependencyRules": {
 			"allowedVersions": {
-				"eslint-plugin-import>eslint": "10"
+				"eslint-plugin-import>eslint": "10",
+				"stylelint-order>stylelint": "17"
 			}
 		}
 	},
