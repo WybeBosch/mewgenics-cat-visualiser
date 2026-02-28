@@ -1,0 +1,128 @@
+.svg-relation-warnings {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+	font-size: 13px;
+
+	.title {
+		color: var(--color-warning);
+		font-weight: 600;
+	}
+}
+
+.warning-pill {
+	position: relative;
+	display: inline-flex;
+
+	.badge {
+		border-radius: 999px;
+		padding: 4px 10px;
+		cursor: default;
+		outline: none;
+
+		&.siblings {
+			background: var(--color-warning-siblings-bg);
+			color: var(--color-warning-siblings-text);
+		}
+
+		&.parent-child {
+			background: var(--color-warning-parent-bg);
+			color: var(--color-warning-parent-text);
+		}
+
+		&.distantly-related {
+			background: var(--color-warning-related-bg);
+			color: var(--color-warning-related-text);
+		}
+	}
+
+	.popup {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		z-index: 20;
+		min-width: 260px;
+		max-width: 320px;
+		padding: 10px 12px;
+		border-radius: 10px;
+		background: var(--color-bg-tooltip);
+		border: 1px solid var(--color-border-strong);
+		box-shadow: var(--shadow-popup-lg);
+		color: var(--color-text-secondary);
+		font-size: 12px;
+		line-height: 1.4;
+	}
+
+	.related-popup {
+		position: absolute;
+		top: calc(100% + 8px);
+		left: 0;
+		z-index: 30;
+		min-width: 220px;
+		max-width: 280px;
+		padding: 8px 10px;
+		border-radius: 8px;
+		background: var(--color-bg-warning-related);
+		border: 1px solid var(--color-border-deep);
+		box-shadow: var(--shadow-popup-lg-soft);
+		color: var(--color-text-secondary);
+	}
+
+	.related-title {
+		font-size: 11px;
+		font-weight: 700;
+		color: var(--color-text-cool-strong);
+		margin-bottom: 6px;
+		padding-bottom: 6px;
+		border-bottom: 1px solid var(--color-border-deep);
+	}
+
+	.related-list {
+		display: grid;
+		gap: 4px;
+		max-height: 180px;
+		overflow-y: auto;
+		font-size: 12px;
+	}
+
+	.related-item {
+		display: block;
+	}
+
+	.popup-title {
+		font-weight: 700;
+		margin-bottom: 8px;
+	}
+
+	.rows {
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0;
+		max-height: 220px;
+		overflow-y: auto;
+	}
+
+	.row {
+		padding: 6px 8px;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		position: relative;
+		border-top: 1px solid var(--color-border-strong);
+		border-bottom: 1px solid var(--color-border-strong);
+	}
+
+	.row-index {
+		padding-right: 8px;
+		border-right: 1px solid var(--color-border-strong);
+		min-width: 24px;
+		text-align: right;
+		color: var(--color-text-disabled);
+	}
+
+	.row-label {
+		display: inline-block;
+	}
+}

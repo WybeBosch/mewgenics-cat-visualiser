@@ -4,6 +4,7 @@ import {
 	SEX_BG,
 	SEX_BG_HOVER,
 } from '../../../../../config/config.jsx';
+import './SvgCatNodes.css';
 
 export default function SvgCatNodes({
 	hovIdx,
@@ -59,10 +60,10 @@ export default function SvgCatNodes({
 			{positions.map((p, i) => (
 				<g
 					key={p.name}
+					className="node"
 					onMouseEnter={handleMouseEnter(setHoveredCatId, ordered[i].id)}
 					onMouseLeave={handleMouseLeave(setHoveredCatId)}
 					onClick={handleClick(setSelectedCatId, selectedCatId, ordered[i].id)}
-					style={{ cursor: 'pointer', zIndex: 3 }}
 				>
 					<circle
 						cx={p.x}

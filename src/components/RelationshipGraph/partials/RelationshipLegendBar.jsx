@@ -1,24 +1,15 @@
+import './RelationshipLegendBar.css';
+
 function RelationshipLegendBar() {
 	return (
-		<div
-			style={{
-				display: 'flex',
-				flexWrap: 'wrap',
-				gap: 18,
-				alignItems: 'center',
-				marginTop: 18,
-				background: 'rgba(30,30,58,0.95)',
-				borderRadius: 8,
-				padding: '8px 18px',
-			}}
-		>
-			<span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+		<div className="relationship-legend-bar">
+			<span className="item">
 				<svg width="32" height="8">
 					<line x1="0" y1="4" x2="30" y2="4" stroke="#4ade80" strokeWidth="2" />
 				</svg>
-				<span style={{ color: '#aaa', fontSize: 12 }}>Loves</span>
+				<span className="label">Loves</span>
 			</span>
-			<span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+			<span className="item">
 				<svg width="32" height="8">
 					<line
 						x1="0"
@@ -30,9 +21,9 @@ function RelationshipLegendBar() {
 						strokeDasharray="6,4"
 					/>
 				</svg>
-				<span style={{ color: '#aaa', fontSize: 12 }}>Hates</span>
+				<span className="label">Hates</span>
 			</span>
-			<span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+			<span className="item">
 				<svg width="16" height="16">
 					<circle
 						cx="8"
@@ -43,9 +34,9 @@ function RelationshipLegendBar() {
 						strokeWidth="1.5"
 					/>
 				</svg>
-				<span style={{ color: '#aaa', fontSize: 12 }}>Female</span>
+				<span className="label">Female</span>
 			</span>
-			<span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+			<span className="item">
 				<svg width="16" height="16">
 					<circle
 						cx="8"
@@ -56,9 +47,9 @@ function RelationshipLegendBar() {
 						strokeWidth="1.5"
 					/>
 				</svg>
-				<span style={{ color: '#aaa', fontSize: 12 }}>Male</span>
+				<span className="label">Male</span>
 			</span>
-			<span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+			<span className="item">
 				<svg width="16" height="16">
 					<circle
 						cx="8"
@@ -69,21 +60,21 @@ function RelationshipLegendBar() {
 						strokeWidth="1.5"
 					/>
 				</svg>
-				<span style={{ color: '#aaa', fontSize: 12 }}>Herm</span>
+				<span className="label">Herm</span>
 			</span>
-			<span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+			<span className="item">
 				<svg width="32" height="8">
 					<line x1="0" y1="4" x2="30" y2="4" stroke="#f97316" strokeWidth="3" />
 				</svg>
-				<span style={{ color: '#aaa', fontSize: 12 }}>Parent</span>
+				<span className="label">Parent</span>
 			</span>
-			<span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+			<span className="item">
 				<svg width="32" height="8">
 					<line x1="0" y1="4" x2="30" y2="4" stroke="#fbbf24" strokeWidth="3" />
 				</svg>
-				<span style={{ color: '#aaa', fontSize: 12 }}>Sibling</span>
+				<span className="label">Sibling</span>
 			</span>
-			<span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+			<span className="item">
 				<svg width="32" height="8">
 					<line
 						x1="0"
@@ -95,7 +86,7 @@ function RelationshipLegendBar() {
 						strokeDasharray="8,4"
 					/>
 				</svg>
-				<span style={{ color: '#aaa', fontSize: 12 }}>Related</span>
+				<span className="label">Related</span>
 			</span>
 		</div>
 	);

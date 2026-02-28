@@ -1,0 +1,16 @@
+.relationship-header {
+	margin-bottom: 16px;
+
+	.title {
+		font-size: 20px;
+		font-weight: 700;
+		color: var(--color-text-primary);
+		margin: 0 0 4px;
+	}
+
+	.empty-state {
+		font-size: 13px;
+		color: var(--color-text-cool);
+		display: block;
+	}
+}

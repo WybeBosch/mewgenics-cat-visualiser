@@ -1,6 +1,7 @@
 import RelationshipHeader from './partials/RelationshipHeader.jsx';
 import RelationshipLegendBar from './partials/RelationshipLegendBar.jsx';
 import RelationshipSVG from './partials/RelationshipSVG/RelationshipSVG.jsx';
+import './RelationshipGraph.css';
 
 function RelationshipGraph({
 	cats,
@@ -13,20 +14,9 @@ function RelationshipGraph({
 	if (cats.length === 0) return '';
 
 	return (
-		<div style={{ marginTop: 32 }}>
+		<div className="relationship-graph">
 			<RelationshipHeader activeRoom={activeRoom} cats={cats} />
-			<div
-				style={{
-					background: '#1a1a2e',
-					borderRadius: 12,
-					border: '1px solid #333',
-					padding: 16,
-					display: 'flex',
-					flexDirection: 'column',
-					alignItems: 'center',
-					position: 'relative',
-				}}
-			>
+			<div className="panel">
 				<RelationshipSVG
 					cats={cats}
 					allCats={allCats}

@@ -1,0 +1,21 @@
+.relationship-legend-bar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 18px;
+	align-items: center;
+	margin-top: 18px;
+	background: var(--color-bg-legend);
+	border-radius: var(--radius-md);
+	padding: 8px 18px;
+
+	.item {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+	}
+
+	.label {
+		color: var(--color-text-muted);
+		font-size: 12px;
+	}
+}
