@@ -1,34 +1,20 @@
 import { SECURITY_LIMITS } from '../../../config/config.jsx';
+import './ButtonUploadJson.css';
 
 export function ButtonUploadJson({ onUploadJson }) {
 	const maxJsonUploadBytes = SECURITY_LIMITS.maxJsonUploadKb * 1024;
 	const maxJsonSizeMb = Math.round(SECURITY_LIMITS.maxJsonUploadKb / 1024);
 	return (
 		<>
-			<label
-				className="button-upload-json"
-				style={{
-					display: 'flex',
-					alignItems: 'center',
-					background: '#374151',
-					color: '#fff',
-					border: 'none',
-					borderRadius: 8,
-					padding: '10px 16px',
-					cursor: 'pointer',
-					fontWeight: 600,
-					fontSize: 14,
-					marginRight: 0,
-				}}
-			>
-				<span role="img" aria-label="Upload" style={{ marginRight: 6 }}>
+			<label className="button-upload-json">
+				<span role="img" aria-label="Upload" className="icon">
 					⬆️
 				</span>{' '}
 				Upload JSON
 				<input
 					type="file"
 					accept=".json,application/json"
-					style={{ display: 'none' }}
+					className="input"
 					onChange={async (e) => {
 						const file = e.target.files && e.target.files[0];
 						if (!file) return;

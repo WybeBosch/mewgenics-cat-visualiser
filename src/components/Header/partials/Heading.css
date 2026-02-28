@@ -1,0 +1,14 @@
+.heading {
+	.title {
+		margin: 0;
+		font-size: 28px;
+		font-weight: 700;
+		color: var(--color-text-primary);
+	}
+
+	.meta-text {
+		margin: 4px 0 0;
+		font-size: 14px;
+		color: var(--color-text-subtle);
+	}
+}

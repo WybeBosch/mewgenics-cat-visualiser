@@ -1,41 +1,15 @@
 import { ButtonCopySavePath } from './ButtonCopySavePath.jsx';
 import { SECURITY_LIMITS } from '../../../config/config.jsx';
+import './ButtonUploadSave.css';
 
 export function ButtonUploadSave({ onUploadSav, savLoading, savError }) {
-	const buttonName = 'button-upload-save';
 	const maxSaveUploadBytes = SECURITY_LIMITS.maxSaveUploadKb * 1024;
 	const maxSaveSizeMb = Math.round(SECURITY_LIMITS.maxSaveUploadKb / 1024);
 	return (
 		<>
-			<div
-				className={`${buttonName}--wrapper`}
-				style={{
-					position: 'relative',
-					display: 'flex',
-					flexDirection: 'column',
-					alignItems: 'center',
-					justifyContent: 'center',
-				}}
-			>
-				<label
-					className={buttonName}
-					style={{
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'center',
-						background: savLoading ? '#1f2937' : '#374151',
-						color: savLoading ? '#9ca3af' : '#fff',
-						border: 'none',
-						borderRadius: 8,
-						padding: '10px 16px',
-						cursor: savLoading ? 'not-allowed' : 'pointer',
-						fontWeight: 600,
-						fontSize: 14,
-						marginRight: 0,
-						minWidth: '155px',
-					}}
-				>
-					<span role="img" aria-label="Save File" style={{ marginRight: 6 }}>
+			<div className="upload-save-wrap">
+				<label className={`upload-save ${savLoading ? 'loading' : ''}`}>
+					<span role="img" aria-label="Save File" className="icon">
 						{savLoading ? '⏳' : '💾'}
 					</span>
 					{savLoading ? 'Reading...' : 'Upload Save File'}
@@ -43,7 +17,7 @@ export function ButtonUploadSave({ onUploadSav, savLoading, savError }) {
 						type="file"
 						accept=".sav"
 						disabled={savLoading}
-						style={{ display: 'none' }}
+						className="input"
 						onChange={(e) => {
 							const file = e.target.files?.[0];
 							if (file) {
@@ -63,11 +37,7 @@ export function ButtonUploadSave({ onUploadSav, savLoading, savError }) {
 				</label>
 				<ButtonCopySavePath />
 			</div>
-			{savError && (
-				<span style={{ color: '#f87171', fontSize: 12, maxWidth: 220 }}>
-					{savError}
-				</span>
-			)}
+			{savError && <span className="upload-save-error">{savError}</span>}
 		</>
 	);
 }

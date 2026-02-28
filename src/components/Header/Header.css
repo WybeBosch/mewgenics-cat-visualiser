@@ -1,0 +1,13 @@
+.header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: var(--space-6);
+
+	.button-bar {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		gap: 1.5rem;
+	}
+}
