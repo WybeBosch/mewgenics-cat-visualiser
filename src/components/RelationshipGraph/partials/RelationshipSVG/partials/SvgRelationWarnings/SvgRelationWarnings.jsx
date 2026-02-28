@@ -18,13 +18,6 @@ function getCatDisplayName(cat) {
 	return name || 'Unknown cat';
 }
 
-function toSortedNames(catMap, keySet) {
-	return [...keySet]
-		.map((key) => catMap.get(key))
-		.filter(Boolean)
-		.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-}
-
 function addRelatedName(relatedMap, key, relatedName) {
 	if (!relatedMap.has(key)) {
 		relatedMap.set(key, new Set());
@@ -181,11 +174,12 @@ function WarningPill({
 	onClose,
 	popupTitle,
 }) {
+	const [hoveredRowKey, setHoveredRowKey] = useState('');
+
 	if (count < 1) {
 		return null;
 	}
 
-	const [hoveredRowKey, setHoveredRowKey] = useState('');
 	const hoveredRow = rows.find((row) => row.key === hoveredRowKey);
 	const hoveredRelated = hoveredRowKey ? relatedLookup.get(hoveredRowKey) || [] : [];
 
