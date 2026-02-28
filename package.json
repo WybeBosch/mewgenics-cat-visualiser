@@ -29,6 +29,16 @@
 		"dev": "vite",
 		"build": "vite build",
 		"preview": "vite preview",
+		"format:check": "prettier --check \"**/*.{js,jsx,css,json,md,yaml,yml}\"",
+		"format:write": "prettier --write \"**/*.{js,jsx,css,json,md,yaml,yml}\"",
+		"lint": "pnpm run lint:js && pnpm run lint:styles && pnpm run lint:docs",
+		"lint:fix": "pnpm run lint:js:fix && pnpm run lint:styles:fix && pnpm run lint:docs:fix",
+		"lint:js": "eslint . --ext .js,.jsx",
+		"lint:js:fix": "pnpm run lint:js -- --fix",
+		"lint:styles": "stylelint \"**/*.css\"",
+		"lint:styles:fix": "pnpm run lint:styles -- --fix",
+		"lint:docs": "prettier --check \"**/*.{json,md,yaml,yml}\"",
+		"lint:docs:fix": "prettier --write \"**/*.{json,md,yaml,yml}\"",
 		"deploy": "vite build && gh-pages -d dist",
 		"patch": "pnpm version patch --no-git-tag-version",
 		"minor": "pnpm version minor --no-git-tag-version",
@@ -41,7 +51,14 @@
 		"sql.js": "^1.14.0"
 	},
 	"devDependencies": {
+		"@eslint/js": "^10.0.1",
+		"eslint": "^10.0.2",
+		"eslint-plugin-react-hooks": "^7.0.1",
 		"gh-pages": "^6.3.0",
+		"globals": "^17.3.0",
+		"prettier": "^3.8.1",
+		"stylelint": "^17.4.0",
+		"stylelint-config-standard": "^40.0.0",
 		"vite": "^7.3.1",
 		"vite-plugin-static-copy": "^3.2.0"
 	}

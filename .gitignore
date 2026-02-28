@@ -23,7 +23,6 @@ Thumbs.db
 *.swo
 *.swp
 .idea/
-.vscode/
 
 # Build
 /build/
