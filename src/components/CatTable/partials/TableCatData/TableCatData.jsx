@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { TableCatDataLogic } from './TableCatDataLogic.jsx';
 import { TableHead } from './partials/TableHead/TableHead.jsx';
 import { TableBody } from './partials/TableBody/TableBody.jsx';
@@ -56,8 +56,52 @@ export function TableCatData({
 	const resizeStateRef = useRef(null);
 	const activeHandlersRef = useRef(null);
 	const userPreferredHeightRef = useRef(null);
+	const searchTimerRef = useRef(null);
+
+	const [searchQuery, setSearchQuery] = useState('');
+	const [highlightedCatId, setHighlightedCatId] = useState(null);
 
 	const { columns, isPartnerInOtherRoom } = TableCatDataLogic({ cats });
+
+	const normalize = (str) => (str || '').toLowerCase().trim();
+
+	const executeSearch = useCallback(
+		(query) => {
+			const normalizedQuery = normalize(query);
+			if (!normalizedQuery) {
+				setHighlightedCatId(null);
+				return;
+			}
+			const match = sorted.find((cat) =>
+				normalize(cat.name).includes(normalizedQuery)
+			);
+			setHighlightedCatId(match ? match.id : null);
+		},
+		[sorted]
+	);
+
+	const handleSearchChange = useCallback(
+		(query) => {
+			setSearchQuery(query);
+			if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+			searchTimerRef.current = setTimeout(() => executeSearch(query), 500);
+		},
+		[executeSearch]
+	);
+
+	const handleSearchSubmit = useCallback(
+		(query) => {
+			if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+			executeSearch(query);
+		},
+		[executeSearch]
+	);
+
+	useEffect(() => {
+		return () => {
+			if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+		};
+	}, []);
 
 	const getHeightBounds = useCallback((tableContainer) => {
 		const computedStyles = window.getComputedStyle(tableContainer);
@@ -180,6 +224,9 @@ export function TableCatData({
 							handleSort={handleSort}
 							sortCol={sortCol}
 							sortAsc={sortAsc}
+							searchQuery={searchQuery}
+							onSearchChange={handleSearchChange}
+							onSearchSubmit={handleSearchSubmit}
 						/>
 						<TableBody
 							cats={cats}
@@ -190,6 +237,7 @@ export function TableCatData({
 							totalStat={totalStat}
 							getAge={getAge}
 							isPartnerInOtherRoom={isPartnerInOtherRoom}
+							highlightedCatId={highlightedCatId}
 						/>
 					</table>
 				</div>

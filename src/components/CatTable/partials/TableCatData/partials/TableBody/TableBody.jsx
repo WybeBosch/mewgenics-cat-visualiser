@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { STATS, SEX_ICON, CAT_ICON } from '../../../../../../shared/config/config.jsx';
 import { TableTooltipPopup, joinClass } from '../../../../../../shared/utils/utils.jsx';
 import './TableBody.css';
@@ -21,8 +22,16 @@ export function TableBody({
 	totalStat,
 	getAge,
 	isPartnerInOtherRoom,
+	highlightedCatId,
 }) {
 	const noCatsFound = sorted.length === 0;
+	const highlightedRowRef = useRef(null);
+
+	useEffect(() => {
+		if (highlightedCatId && highlightedRowRef.current) {
+			highlightedRowRef.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+		}
+	}, [highlightedCatId]);
 
 	function getAggressionClass(aggression) {
 		if (aggression <= 3) return 'low';
@@ -47,12 +56,14 @@ export function TableBody({
 				const total = totalStat(cat);
 				const age = getAge(cat);
 				const isHovered = hoveredCatId === cat.id;
+				const isHighlighted = highlightedCatId === cat.id;
 				const partnerInOtherRoom = isPartnerInOtherRoom(cat);
 
 				return (
 					<tr
 						key={cat.id + i}
-						className={joinClass('row', { hovered: isHovered })}
+						ref={isHighlighted ? highlightedRowRef : undefined}
+						className={joinClass('row', { hovered: isHovered, 'search-match': isHighlighted })}
 						onMouseEnter={() => setHoveredCatId(cat.id)}
 						onMouseLeave={() => setHoveredCatId(null)}
 					>

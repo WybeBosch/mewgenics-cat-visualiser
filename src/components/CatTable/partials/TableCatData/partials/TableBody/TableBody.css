@@ -4,7 +4,9 @@
 	.row {
 		border-bottom: 1px solid var(--color-bg-muted);
 		background: var(--color-bg-muted-alt);
-		transition: background 0.1s;
+		transition:
+			background 0.1s,
+			box-shadow 0.2s ease;
 
 		&:nth-child(odd) {
 			background: var(--color-bg-page);
@@ -12,6 +14,13 @@
 
 		&.hovered {
 			background: var(--color-bg-strong);
+		}
+
+		&.search-match {
+			box-shadow:
+				inset 0 2px 0 var(--color-negative),
+				inset 0 -2px 0 var(--color-negative);
+			animation: search-pulse 0.6s ease;
 		}
 	}
 
@@ -159,5 +168,26 @@
 		padding: 40px;
 		color: var(--color-border-dash);
 		text-align: center;
+	}
+}
+
+@keyframes search-pulse {
+	0% {
+		background: inherit;
+		box-shadow:
+			inset 0 2px 0 transparent,
+			inset 0 -2px 0 transparent;
+	}
+	40% {
+		background: color-mix(in srgb, var(--color-negative) 30%, transparent);
+		box-shadow:
+			inset 0 3px 0 var(--color-negative),
+			inset 0 -3px 0 var(--color-negative);
+	}
+	100% {
+		background: inherit;
+		box-shadow:
+			inset 0 2px 0 var(--color-negative),
+			inset 0 -2px 0 var(--color-negative);
 	}
 }
