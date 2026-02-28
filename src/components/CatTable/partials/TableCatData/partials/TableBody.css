@@ -4,7 +4,7 @@
 		transition: background 0.1s;
 		background: var(--color-bg-muted-alt);
 
-		&.even {
+		&:nth-child(odd) {
 			background: var(--color-bg-page);
 		}
 
