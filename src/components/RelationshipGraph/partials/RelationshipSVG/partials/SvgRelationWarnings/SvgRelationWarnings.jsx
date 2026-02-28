@@ -48,9 +48,7 @@ function toSortedRows(catMap, keySet, roleMap) {
 			};
 		})
 		.filter((item) => Boolean(item.name))
-		.sort((a, b) =>
-			a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
-		);
+		.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
 }
 
 function toSortedRelatedLookup(relatedMap) {
@@ -59,9 +57,7 @@ function toSortedRelatedLookup(relatedMap) {
 	for (const [key, values] of relatedMap.entries()) {
 		lookup.set(
 			key,
-			[...values].sort((a, b) =>
-				a.localeCompare(b, undefined, { sensitivity: 'base' })
-			)
+			[...values].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
 		);
 	}
 
@@ -191,9 +187,7 @@ function WarningPill({
 
 	const [hoveredRowKey, setHoveredRowKey] = useState('');
 	const hoveredRow = rows.find((row) => row.key === hoveredRowKey);
-	const hoveredRelated = hoveredRowKey
-		? relatedLookup.get(hoveredRowKey) || []
-		: [];
+	const hoveredRelated = hoveredRowKey ? relatedLookup.get(hoveredRowKey) || [] : [];
 
 	const categoryClass = categoryKey;
 

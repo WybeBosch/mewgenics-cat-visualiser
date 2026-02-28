@@ -7,13 +7,7 @@ import SvgMatchedRelationships from './partials/SvgMatchedRelationships/SvgMatch
 import SvgRelationLines from './partials/SvgRelationLines.jsx';
 import SvgCatNodes from './partials/SvgCatNodes/SvgCatNodes.jsx';
 
-export default function RelationshipSVG({
-	cats,
-	allCats,
-	hoveredCatId,
-	setHoveredCatId,
-	getAge,
-}) {
+export default function RelationshipSVG({ cats, allCats, hoveredCatId, setHoveredCatId, getAge }) {
 	const [selectedCatId, setSelectedCatId] = useState(null);
 
 	// Reorder cats: 1. mutual pairs, 2. one-way lovers, 3. others
@@ -24,11 +18,7 @@ export default function RelationshipSVG({
 			if (paired.has(a.id)) return;
 			const match = cats.find(
 				(b) =>
-					b.id !== a.id &&
-					a.loves &&
-					b.loves &&
-					a.loves === b.name &&
-					b.loves === a.name
+					b.id !== a.id && a.loves && b.loves && a.loves === b.name && b.loves === a.name
 			);
 			if (match && !paired.has(match.id)) {
 				pairs.push([a, match]);
@@ -102,8 +92,7 @@ export default function RelationshipSVG({
 			const row = Math.floor(i / perRow);
 			const col = i % perRow;
 			const y = startY + row * rowHeight;
-			const x =
-				marginX + col * (usableW / (Math.min(perRow, ordered.length) - 1));
+			const x = marginX + col * (usableW / (Math.min(perRow, ordered.length) - 1));
 			return {
 				name: cat.name,
 				sex: cat.sex,
@@ -126,34 +115,13 @@ export default function RelationshipSVG({
 	}
 
 	return (
-		<svg
-			className="relationship-graph-svg"
-			width={W}
-			height={H}
-			viewBox={`0 0 ${W} ${H}`}
-		>
-			<SvgLoveHateLines
-				zIndex="2"
-				hovIdx={hovIdx}
-				ordered={ordered}
-				positions={positions}
-			/>
+		<svg className="relationship-graph-svg" width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+			<SvgLoveHateLines zIndex="2" hovIdx={hovIdx} ordered={ordered} positions={positions} />
 
-			<SvgMatchedRelationships
-				hovIdx={hovIdx}
-				ordered={ordered}
-				positions={positions}
-			/>
-			<SvgRelationLines
-				hovIdx={hovIdx}
-				ordered={ordered}
-				positions={positions}
-			/>
+			<SvgMatchedRelationships hovIdx={hovIdx} ordered={ordered} positions={positions} />
+			<SvgRelationLines hovIdx={hovIdx} ordered={ordered} positions={positions} />
 
-			<TooltipCloseArea
-				selectedCatId={selectedCatId}
-				setSelectedCatId={setSelectedCatId}
-			/>
+			<TooltipCloseArea selectedCatId={selectedCatId} setSelectedCatId={setSelectedCatId} />
 			<SvgCatNodes
 				hovIdx={hovIdx}
 				ordered={ordered}

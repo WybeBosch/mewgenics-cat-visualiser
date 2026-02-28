@@ -1,9 +1,4 @@
-import {
-	SEX_ICON,
-	SEX_COLOR,
-	SEX_BG,
-	SEX_BG_HOVER,
-} from '../../../../../../config/config.jsx';
+import { SEX_ICON, SEX_COLOR, SEX_BG, SEX_BG_HOVER } from '../../../../../../config/config.jsx';
 import './SvgCatNodes.css';
 
 export default function SvgCatNodes({

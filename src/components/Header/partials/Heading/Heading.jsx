@@ -2,9 +2,7 @@ import { APP_EMOJIS } from '../../../../config/config.jsx';
 import './Heading.css';
 
 export function Heading({ cats, rooms, getAge, dataTimeLineText }) {
-	const headingEmoji = import.meta.env.DEV
-		? APP_EMOJIS.local
-		: APP_EMOJIS.default;
+	const headingEmoji = import.meta.env.DEV ? APP_EMOJIS.local : APP_EMOJIS.default;
 
 	const maleCount = cats.filter((cat) => cat.sex === 'male').length;
 	const femaleCount = cats.filter((cat) => cat.sex === 'female').length;

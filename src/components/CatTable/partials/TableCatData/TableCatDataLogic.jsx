@@ -1,8 +1,4 @@
-import {
-	STAT_ICONS,
-	STATS,
-	OTHER_INFO_ICONS,
-} from '../../../../config/config.jsx';
+import { STAT_ICONS, STATS, OTHER_INFO_ICONS } from '../../../../config/config.jsx';
 
 export function TableCatDataLogic({ cats }) {
 	// Derived columns for table header
@@ -39,9 +35,7 @@ export function TableCatDataLogic({ cats }) {
 	// Helper to get partnerInOtherRoom
 	function isPartnerInOtherRoom(cat) {
 		if (!cat.loves) return false;
-		const partner = cats.find(
-			(c) => c.name === cat.loves || c.id === cat.loves
-		);
+		const partner = cats.find((c) => c.name === cat.loves || c.id === cat.loves);
 		return partner && partner.room && cat.room && partner.room !== cat.room;
 	}
 
@@ -60,8 +54,7 @@ export function TableCatDataLogic({ cats }) {
 
 	// Helper to get stat style
 	function getStatStyle(val) {
-		if (val >= 7)
-			return { fontWeight: 800, color: '#4ade80', fontSize: '1.05em' };
+		if (val >= 7) return { fontWeight: 800, color: '#4ade80', fontSize: '1.05em' };
 		return { fontWeight: 400, color: '#ccc', fontSize: '1em' };
 	}
 

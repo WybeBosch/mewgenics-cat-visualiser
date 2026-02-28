@@ -1,10 +1,6 @@
 import './SvgMatchedRelationships.css';
 
-export default function SvgMatchedRelationships({
-	hovIdx,
-	ordered,
-	positions,
-}) {
+export default function SvgMatchedRelationships({ hovIdx, ordered, positions }) {
 	return (
 		<>
 			{/* Draw shared box for mutual love pairs */}

@@ -76,9 +76,7 @@ export function parseRoomAssignments(houseState) {
 		const slen = view.getUint32(pos + 8, true);
 		if (slen < 1 || slen > 30) break;
 		if (pos + 16 + slen + 24 > buf.length) break;
-		const roomName = new TextDecoder('ascii').decode(
-			buf.subarray(pos + 16, pos + 16 + slen)
-		);
+		const roomName = new TextDecoder('ascii').decode(buf.subarray(pos + 16, pos + 16 + slen));
 		roomMap.set(catKey, roomName);
 		pos = pos + 16 + slen + 24;
 	}
@@ -143,11 +141,7 @@ export function parsePedigree(pedigree, maxCatKey) {
 		} else {
 			const existing = parentMap.get(v1);
 			// If previous was (-1,-1), upgrade to this better result
-			if (
-				existing[0] === -1 &&
-				existing[1] === -1 &&
-				!(v3 === -1 && v2 === -1)
-			) {
+			if (existing[0] === -1 && existing[1] === -1 && !(v3 === -1 && v2 === -1)) {
 				parentMap.set(v1, pair);
 			}
 			// else: ambiguous — keep first found (matches Python behaviour)
@@ -241,9 +235,7 @@ export function parseCatBlob(key, blob, saveDay) {
 		logIfEnabled('Cat extractor version v3');
 	}
 	if (blob.length < 8) {
-		logIfEnabled(
-			`[parseCatBlob] key=${key} fail: blob too short (${blob.length})`
-		);
+		logIfEnabled(`[parseCatBlob] key=${key} fail: blob too short (${blob.length})`);
 		return null;
 	}
 
@@ -264,9 +256,7 @@ export function parseCatBlob(key, blob, saveDay) {
 		return null;
 	}
 	if (dec.length < 200) {
-		logIfEnabled(
-			`[parseCatBlob] key=${key} fail: decompressed too short (${dec.length})`
-		);
+		logIfEnabled(`[parseCatBlob] key=${key} fail: decompressed too short (${dec.length})`);
 		return null;
 	}
 
@@ -276,25 +266,19 @@ export function parseCatBlob(key, blob, saveDay) {
 	const nameLen = view.getInt32(12, true);
 	const pad16 = view.getInt32(16, true);
 	if (nameLen > 30 || pad16 !== 0) {
-		logIfEnabled(
-			`[parseCatBlob] key=${key} fail: nameLen=${nameLen} pad16=${pad16}`
-		);
+		logIfEnabled(`[parseCatBlob] key=${key} fail: nameLen=${nameLen} pad16=${pad16}`);
 		return null;
 	}
 	let name;
 	try {
-		name = new TextDecoder('utf-16le').decode(
-			dec.subarray(20, 20 + nameLen * 2)
-		);
+		name = new TextDecoder('utf-16le').decode(dec.subarray(20, 20 + nameLen * 2));
 	} catch (e) {
 		logIfEnabled(`[parseCatBlob] key=${key} fail: name decode error`, e);
 		return null;
 	}
 	const nameEnd = 20 + nameLen * 2;
 	// Log name extraction
-	logIfEnabled(
-		`[parseCatBlob] key=${key} nameLen=${nameLen} pad16=${pad16} name='${name}'`
-	);
+	logIfEnabled(`[parseCatBlob] key=${key} nameLen=${nameLen} pad16=${pad16} name='${name}'`);
 
 	// --- Gender/sprite string (e.g. "male15", "female52") ---
 	// The string is preceded by: int32(str_len) + int32(0).
@@ -311,13 +295,9 @@ export function parseCatBlob(key, blob, saveDay) {
 			dec[i + 4] === 108 &&
 			dec[i + 5] === 101; // "female"
 		const isMale =
-			dec[i] === 109 &&
-			dec[i + 1] === 97 &&
-			dec[i + 2] === 108 &&
-			dec[i + 3] === 101; // "male"
+			dec[i] === 109 && dec[i + 1] === 97 && dec[i + 2] === 108 && dec[i + 3] === 101; // "male"
 		// Exclude "female" prefix when checking for "male"
-		const isMaleOnly =
-			isMale && !(i >= 2 && dec[i - 2] === 102 && dec[i - 1] === 101); // not preceded by "fe"
+		const isMaleOnly = isMale && !(i >= 2 && dec[i - 2] === 102 && dec[i - 1] === 101); // not preceded by "fe"
 
 		if (isFemale || isMaleOnly) {
 			// Try reading header at i-8
@@ -325,9 +305,7 @@ export function parseCatBlob(key, blob, saveDay) {
 				const headerLen = view.getInt32(i - 8, true);
 				const headerPad = view.getInt32(i - 4, true);
 				if (headerLen >= 4 && headerLen <= 20 && headerPad === 0) {
-					genderStr = new TextDecoder('ascii').decode(
-						dec.subarray(i, i + headerLen)
-					);
+					genderStr = new TextDecoder('ascii').decode(dec.subarray(i, i + headerLen));
 					genderOff = i;
 					logIfEnabled(
 						`[parseCatBlob] key=${key} genderStr(header)='${genderStr}' at ${i} headerLen=${headerLen} headerPad=${headerPad}`
@@ -341,9 +319,7 @@ export function parseCatBlob(key, blob, saveDay) {
 			while (end < dec.length && dec[end] >= 48 && dec[end] <= 57) end++; // '0'-'9'
 			genderStr = new TextDecoder('ascii').decode(dec.subarray(i, end));
 			genderOff = i;
-			logIfEnabled(
-				`[parseCatBlob] key=${key} genderStr(fallback)='${genderStr}' at ${i}`
-			);
+			logIfEnabled(`[parseCatBlob] key=${key} genderStr(fallback)='${genderStr}' at ${i}`);
 			break;
 		}
 	}
@@ -408,9 +384,7 @@ export function parseCatBlob(key, blob, saveDay) {
 			const v = view.getUint32(hatesOff, true);
 			hatesKey = v === 0xffffffff ? -1 : v;
 		}
-		logIfEnabled(
-			`[parseCatBlob] key=${key} lovesKey=${lovesKey} hatesKey=${hatesKey}`
-		);
+		logIfEnabled(`[parseCatBlob] key=${key} lovesKey=${lovesKey} hatesKey=${hatesKey}`);
 	}
 
 	// --- Sex byte: right after the tag string that follows the name ---

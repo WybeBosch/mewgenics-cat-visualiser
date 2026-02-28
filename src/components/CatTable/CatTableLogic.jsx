@@ -32,9 +32,7 @@ export function CatTableLogic({ cats, activeRoom }) {
 	const sorted = [...roomCats].sort((a, b) => {
 		if (!sortCol) return 0;
 		if (sortCol === 'total')
-			return sortAsc
-				? totalStat(a) - totalStat(b)
-				: totalStat(b) - totalStat(a);
+			return sortAsc ? totalStat(a) - totalStat(b) : totalStat(b) - totalStat(a);
 		if (sortCol === 'age') {
 			const av = getAge(a);
 			const bv = getAge(b);
@@ -42,8 +40,7 @@ export function CatTableLogic({ cats, activeRoom }) {
 		}
 		const av = a[sortCol],
 			bv = b[sortCol];
-		if (typeof av === 'string')
-			return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
+		if (typeof av === 'string') return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
 		return sortAsc ? av - bv : bv - av;
 	});
 

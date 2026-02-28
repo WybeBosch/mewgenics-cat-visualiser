@@ -59,22 +59,16 @@ export function TableBody({
 						onMouseLeave={() => setHoveredCatId(null)}
 					>
 						<TableTooltipPopup cat={cat} allCats={cats} />
-						<td className="cell partner-indicator">
-							{partnerInOtherRoom ? '🕵️‍♂️' : ''}
-						</td>
+						<td className="cell partner-indicator">{partnerInOtherRoom ? '🕵️‍♂️' : ''}</td>
 						<td
 							className={`cell age ${getAgeClass(age)}`}
 							title={
-								age !== null
-									? `${age} day${age === 1 ? '' : 's'} old`
-									: 'Unknown'
+								age !== null ? `${age} day${age === 1 ? '' : 's'} old` : 'Unknown'
 							}
 						>
 							{age !== null ? age : '—'}
 						</td>
-						<td className={`cell sex ${sexClass}`}>
-							{SEX_ICON[cat.sex] || cat.sex}
-						</td>
+						<td className={`cell sex ${sexClass}`}>{SEX_ICON[cat.sex] || cat.sex}</td>
 						{STATS.map((s) => (
 							<td key={s} className={`cell stat ${getStatClass(cat[s])}`}>
 								{cat[s]}

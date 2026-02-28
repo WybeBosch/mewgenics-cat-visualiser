@@ -83,8 +83,7 @@ function getFamilySummary(cats) {
 		siblings: siblingCats.size,
 		parentChild: parentChildCats.size,
 		distantlyRelated: distantCats.size,
-		hasFamily:
-			siblingCats.size > 0 || parentChildCats.size > 0 || distantCats.size > 0,
+		hasFamily: siblingCats.size > 0 || parentChildCats.size > 0 || distantCats.size > 0,
 	};
 }
 

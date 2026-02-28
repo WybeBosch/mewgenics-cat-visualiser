@@ -2,23 +2,17 @@
 
 This project can be run locally
 or by visiting the web url: </br>
- https://wybebosch.github.io/mewgenics-cat-visualiser/
+https://wybebosch.github.io/mewgenics-cat-visualiser/
 
- This project is only meant as a visualiser, you cannot edit your save file with it.
+This project is only meant as a visualiser, you cannot edit your save file with it.
 <img width="1499" height="1256" alt="afbeelding" src="https://github.com/user-attachments/assets/973aa2a7-b75d-4046-9330-312fe0c222e8" />
-
-
-
-
-
 
 ## Features
 
 - Upload your .sav file and we parse it to get the cats out of it
 - Visualize cat relationships and attributes
 - No persistent storage or editing
-(Yall can just use some other mod to edit your game)
-
+  (Yall can just use some other mod to edit your game)
 
 ## Smaller things explained
 
@@ -26,29 +20,29 @@ or by visiting the web url: </br>
 
 **Stat Icons:**
 
-| Stat | Icon | Meaning |
-|------|------|---------|
-| STR  | 💪   | Strength |
-| DEX  | 🏹   | Dexterity |
+| Stat | Icon | Meaning      |
+| ---- | ---- | ------------ |
+| STR  | 💪   | Strength     |
+| DEX  | 🏹   | Dexterity    |
 | CON  | ➕   | Constitution |
 | INT  | 💡   | Intelligence |
-| SPD  | 🥾   | Speed |
-| CHA  | 💋   | Charisma |
-| LCK  | 🍀   | Luck |
+| SPD  | 🥾   | Speed        |
+| CHA  | 💋   | Charisma     |
+| LCK  | 🍀   | Luck         |
 
 **Other Info Icons:**
 
-| Info        | Icon | Meaning         |
-|-------------|------|----------------|
-| Libido      | 💕   | Cat's libido    |
-| Aggression  | 😾   | Aggression      |
-| Loves       | ❤️   | Cats they love  |
-| Hates       | ⚔️   | Cats they hate  |
+| Info       | Icon | Meaning        |
+| ---------- | ---- | -------------- |
+| Libido     | 💕   | Cat's libido   |
+| Aggression | 😾   | Aggression     |
+| Loves      | ❤️   | Cats they love |
+| Hates      | ⚔️   | Cats they hate |
 
 **Sex Icons:**
 
 | Sex    | Icon |
-|--------|------|
+| ------ | ---- |
 | Male   | ♂    |
 | Female | ♀    |
 | Herm   | ⚥    |
@@ -62,13 +56,11 @@ If a cat has a matching partner (they both love each other) but are not in the s
 
 https://wybebosch.github.io/mewgenics-cat-visualiser/
 
-
 ## How to Use locally
 
 1. Run `pnpm install` to install dependencies.
 2. Start the local server with `pnpm run dev`.
 3. Upload or load your cat data JSON file.
-
 
 ## Developer workflow
 
@@ -97,8 +89,7 @@ https://wybebosch.github.io/mewgenics-cat-visualiser/
 - On save, VS Code runs Prettier formatting plus ESLint/Stylelint fix actions.
 - `.editorconfig` provides cross-editor basics (tabs, line endings, final newline).
 
-
--------
+---
 
 ## Releases (GitHub + Pages)
 
@@ -113,15 +104,15 @@ So you can quickly verify which deployed build is currently served by GitHub Pag
 
 1. Make sure you are on `main` with clean working tree.
 2. Bump `package.json` version (manual edit or optional command):
-	- Patch: `pnpm run patch`
-	- Minor: `pnpm run minor`
-	- Major: `pnpm run major`
+    - Patch: `pnpm run patch`
+    - Minor: `pnpm run minor`
+    - Major: `pnpm run major`
 3. Commit and push (example commit message: `release: v1.0.1`).
 4. In GitHub UI, create/publish a Release for that version tag (for example `v1.0.1`).
 5. GitHub Actions workflow (`.github/workflows/release-pages.yml`) runs on release publish:
-	- builds the app
-	- deploys to GitHub Pages
-	- deploys exactly the release tag commit
+    - builds the app
+    - deploys to GitHub Pages
+    - deploys exactly the release tag commit
 
 ### Verifying a new release
 
@@ -130,22 +121,13 @@ So you can quickly verify which deployed build is currently served by GitHub Pag
 3. Confirm logged version matches your tag/release (for example `v1.0.1`).
 4. If Pages/CDN cache is delayed, hard refresh and re-check the console version line.
 
-
-
 ## Styling conventions (Native CSS + nesting)
 
 - Use native CSS files (no Tailwind, no CSS modules).
 - Use one CSS file per React component, co-located next to the component file.
 - Use short, component-scoped class names (avoid long BEM chains).
 - Prefer native CSS nesting to keep selectors close to their component root.
-- Keep defaults as base styles, and only add classes for exceptions/states.
-   	- Base: `.cell`
-   	- Optional state: `.stat-high`
-   	- Avoid adding a class for the common/default case if it can be the base rule.
+- Keep defaults as base styles, and only add classes for exceptions/states. - Base: `.cell` - Optional state: `.stat-high` - Avoid adding a class for the common/default case if it can be the base rule.
 - Scope short state classes under a local component root to avoid collisions.
-- Keep global styles minimal:
-   	- `src/styles/tokens.css` for shared CSS custom properties.
-   	- `src/styles/base.css` for reset/base rules.
+- Keep global styles minimal: - `src/styles/tokens.css` for shared CSS custom properties. - `src/styles/base.css` for reset/base rules.
 - Import global CSS once in `src/index.jsx`, and each component CSS inside its own component file.
-
-

@@ -32,12 +32,7 @@ function sharedTooltipContents(cat, allCats) {
 			: '—';
 		lines.push({ label: 'Parents', value: `${p1}  ×  ${p2}` });
 	}
-	const gps = [
-		cat.grandparent1,
-		cat.grandparent2,
-		cat.grandparent3,
-		cat.grandparent4,
-	];
+	const gps = [cat.grandparent1, cat.grandparent2, cat.grandparent3, cat.grandparent4];
 	if (gps.some((g) => g)) {
 		const gpn = gps.map((g) => (g ? displayName(g) : '—'));
 		lines.push({ label: 'GP (P1 side)', value: `${gpn[0]}  ×  ${gpn[1]}` });
@@ -45,9 +40,7 @@ function sharedTooltipContents(cat, allCats) {
 	}
 	// Partner in other room logic (always last)
 	if (cat.loves) {
-		const partner = allCats.find(
-			(c) => c.name === cat.loves || c.id === cat.loves
-		);
+		const partner = allCats.find((c) => c.name === cat.loves || c.id === cat.loves);
 		if (partner && partner.room && cat.room && partner.room !== cat.room) {
 			lines.push({ label: '—', value: '' }); // separator line
 			lines.push({

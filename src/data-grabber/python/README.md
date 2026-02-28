@@ -54,34 +54,34 @@ Example `mewgenics_cats.json`:
 
 ```json
 [
-  {
-    "name": "Snoozy",
-    "id": "snoozy",
-    "sex": "male",
-    "STR": 6,
-    "DEX": 5,
-    "CON": 7,
-    "INT": 6,
-    "SPD": 5,
-    "CHA": 6,
-    "LCK": 4,
-    "libido": "average",
-    "libido_raw": 0.4264,
-    "aggression": "high",
-    "aggression_raw": 0.723,
-    "loves": "Madame Maxime",
-    "hates": "Omry",
-    "room": "Attic",
-    "stray": false,
-    "parent1": "Lucille",
-    "parent2": "Fatman",
-    "grandparent1": "",
-    "grandparent2": "",
-    "grandparent3": "",
-    "grandparent4": "",
-    "saveDay": 113,
-    "birthday": 38,
-    "script_start_time": "2026-02-26T12:01:14"
-  }
+	{
+		"name": "Snoozy",
+		"id": "snoozy",
+		"sex": "male",
+		"STR": 6,
+		"DEX": 5,
+		"CON": 7,
+		"INT": 6,
+		"SPD": 5,
+		"CHA": 6,
+		"LCK": 4,
+		"libido": "average",
+		"libido_raw": 0.4264,
+		"aggression": "high",
+		"aggression_raw": 0.723,
+		"loves": "Madame Maxime",
+		"hates": "Omry",
+		"room": "Attic",
+		"stray": false,
+		"parent1": "Lucille",
+		"parent2": "Fatman",
+		"grandparent1": "",
+		"grandparent2": "",
+		"grandparent3": "",
+		"grandparent4": "",
+		"saveDay": 113,
+		"birthday": 38,
+		"script_start_time": "2026-02-26T12:01:14"
+	}
 ]
 ```

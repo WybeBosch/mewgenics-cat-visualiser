@@ -104,10 +104,7 @@ export function useMewgenicsCatsLogic() {
 					};
 				}
 			} catch (err) {
-				logIfEnabled(
-					'[cats] optional preload JSON not used:',
-					err?.message || err
-				);
+				logIfEnabled('[cats] optional preload JSON not used:', err?.message || err);
 			}
 			try {
 				// Load localStorage
@@ -135,8 +132,7 @@ export function useMewgenicsCatsLogic() {
 			const isLocalDevelopment = import.meta.env.DEV;
 			const hasPreloadJson = jsonCats.length > 0;
 			const useJson =
-				(isLocalDevelopment && hasPreloadJson) ||
-				(!storageFound && hasPreloadJson);
+				(isLocalDevelopment && hasPreloadJson) || (!storageFound && hasPreloadJson);
 
 			const mergedCats = useJson ? jsonCats : storageCats;
 			if (!cancelled) {
@@ -155,10 +151,7 @@ export function useMewgenicsCatsLogic() {
 	useEffect(() => {
 		if (!loaded) return;
 		try {
-			window.localStorage.setItem(
-				'mewgenics-v14',
-				JSON.stringify({ cats, sourceMeta })
-			);
+			window.localStorage.setItem('mewgenics-v14', JSON.stringify({ cats, sourceMeta }));
 			logIfEnabled('[cats] saved to localStorage:', cats);
 		} catch {}
 	}, [cats, loaded, sourceMeta]);
@@ -177,8 +170,7 @@ export function useMewgenicsCatsLogic() {
 			}
 			const nextSourceMeta = {
 				sourceType: 'upload-sav',
-				fileModifiedAt:
-					typeof file?.lastModified === 'number' ? file.lastModified : '',
+				fileModifiedAt: typeof file?.lastModified === 'number' ? file.lastModified : '',
 				scriptStartTime: extractedCats[0]?.script_start_time || '',
 				loadedAt: new Date().toISOString(),
 			};
@@ -205,8 +197,7 @@ export function useMewgenicsCatsLogic() {
 	const handleUploadJson = useCallback((uploadedCats, file) => {
 		const nextSourceMeta = {
 			sourceType: 'upload-json',
-			fileModifiedAt:
-				typeof file?.lastModified === 'number' ? file.lastModified : '',
+			fileModifiedAt: typeof file?.lastModified === 'number' ? file.lastModified : '',
 			scriptStartTime: uploadedCats[0]?.script_start_time || '',
 			loadedAt: new Date().toISOString(),
 		};

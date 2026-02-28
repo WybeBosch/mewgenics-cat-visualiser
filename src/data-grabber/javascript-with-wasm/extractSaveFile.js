@@ -12,11 +12,7 @@
 
 import { logIfEnabled } from '../../utils/utils.jsx';
 import { SECURITY_LIMITS } from '../../config/config.jsx';
-import {
-	parseRoomAssignments,
-	parsePedigree,
-	parseCatBlob,
-} from './parsers.js';
+import { parseRoomAssignments, parsePedigree, parseCatBlob } from './parsers.js';
 import { lz4DecompressBlock } from './lz4.js';
 // Static import lets Vite/esbuild handle CJS→ESM conversion reliably.
 // Lazy-loading still works because extractSaveFile.js itself is dynamically
@@ -44,11 +40,7 @@ export async function extractSaveFile(file) {
 	const maxLz4DecompressedBytes = SECURITY_LIMITS.maxLz4DecompressedKb * 1024;
 	const maxSaveSizeMb = Math.round(SECURITY_LIMITS.maxSaveUploadKb / 1024);
 
-	if (
-		!file ||
-		typeof file.size !== 'number' ||
-		file.size > maxSaveUploadBytes
-	) {
+	if (!file || typeof file.size !== 'number' || file.size > maxSaveUploadBytes) {
 		throw new Error(`Save file exceeds max size (${maxSaveSizeMb} MB).`);
 	}
 
@@ -62,18 +54,14 @@ export async function extractSaveFile(file) {
 
 	try {
 		// --- 1. Parse room assignments ---
-		const houseResult = db.exec(
-			"SELECT data FROM files WHERE key='house_state'"
-		);
+		const houseResult = db.exec("SELECT data FROM files WHERE key='house_state'");
 		logIfEnabled(
 			'[extract] house_state rows:',
 			houseResult.length,
 			houseResult[0]?.values?.length
 		);
 		if (!houseResult.length || !houseResult[0].values.length) {
-			throw new Error(
-				'house_state not found — is this a valid Mewgenics save file?'
-			);
+			throw new Error('house_state not found — is this a valid Mewgenics save file?');
 		}
 		const houseStateBlob = houseResult[0].values[0][0]; // Uint8Array from WASM heap
 		logIfEnabled(
@@ -106,18 +94,14 @@ export async function extractSaveFile(file) {
 		}
 
 		// --- 2. Get max cat key (for pedigree validation) ---
-		const maxKeyResult = db.exec(
-			'SELECT key FROM cats ORDER BY key DESC LIMIT 1'
-		);
+		const maxKeyResult = db.exec('SELECT key FROM cats ORDER BY key DESC LIMIT 1');
 		const maxCatKey = maxKeyResult[0].values[0][0];
 		logIfEnabled('[extract] maxCatKey:', maxCatKey);
 
 		// --- 3. Parse pedigree (parent map + saveDay) ---
 		let parentMap = new Map();
 		let saveDay = 0;
-		const pedigreeResult = db.exec(
-			"SELECT data FROM files WHERE key='pedigree'"
-		);
+		const pedigreeResult = db.exec("SELECT data FROM files WHERE key='pedigree'");
 		if (pedigreeResult.length && pedigreeResult[0].values.length) {
 			const pedigreeBlob = pedigreeResult[0].values[0][0];
 			parentMap = parsePedigree(pedigreeBlob, maxCatKey);
@@ -128,12 +112,7 @@ export async function extractSaveFile(file) {
 				saveDay = pdgView.getInt32(4584, true);
 			}
 		}
-		logIfEnabled(
-			'[extract] saveDay:',
-			saveDay,
-			'parentMap size:',
-			parentMap.size
-		);
+		logIfEnabled('[extract] saveDay:', saveDay, 'parentMap size:', parentMap.size);
 
 		// --- 4. Fetch and parse housed cat blobs ---
 		// Note: sql.js db.exec() doesn't reliably bind arrays for IN clauses the same
@@ -142,10 +121,7 @@ export async function extractSaveFile(file) {
 		const catsResult = db.exec(
 			`SELECT key, data FROM cats WHERE key IN (${housedKeys.join(',')}) ORDER BY key`
 		);
-		logIfEnabled(
-			'[extract] cat rows fetched:',
-			catsResult[0]?.values?.length ?? 0
-		);
+		logIfEnabled('[extract] cat rows fetched:', catsResult[0]?.values?.length ?? 0);
 
 		const housedCats = new Map();
 		let parseFailCount = 0;
@@ -212,12 +188,7 @@ export async function extractSaveFile(file) {
 				}
 			}
 		}
-		logIfEnabled(
-			'[extract] housedCats parsed:',
-			housedCats.size,
-			'failed:',
-			parseFailCount
-		);
+		logIfEnabled('[extract] housedCats parsed:', housedCats.size, 'failed:', parseFailCount);
 
 		const successfulKeys = new Set(housedCats.keys());
 
@@ -239,9 +210,7 @@ export async function extractSaveFile(file) {
 		}
 
 		// Only fetch ancestors we don't already have
-		const missingKeys = Array.from(ancestorKeys).filter(
-			(k) => !successfulKeys.has(k)
-		);
+		const missingKeys = Array.from(ancestorKeys).filter((k) => !successfulKeys.has(k));
 
 		// --- 6. Fetch ancestor blobs for name lookups ---
 		const ancestorCats = new Map();

@@ -25,40 +25,19 @@ function RelationshipLegendBar() {
 			</span>
 			<span className="item">
 				<svg width="16" height="16">
-					<circle
-						cx="8"
-						cy="8"
-						r="6"
-						fill="#3b1a3b"
-						stroke="#f472b6"
-						strokeWidth="1.5"
-					/>
+					<circle cx="8" cy="8" r="6" fill="#3b1a3b" stroke="#f472b6" strokeWidth="1.5" />
 				</svg>
 				<span className="label">Female</span>
 			</span>
 			<span className="item">
 				<svg width="16" height="16">
-					<circle
-						cx="8"
-						cy="8"
-						r="6"
-						fill="#1a2a4a"
-						stroke="#60a5fa"
-						strokeWidth="1.5"
-					/>
+					<circle cx="8" cy="8" r="6" fill="#1a2a4a" stroke="#60a5fa" strokeWidth="1.5" />
 				</svg>
 				<span className="label">Male</span>
 			</span>
 			<span className="item">
 				<svg width="16" height="16">
-					<circle
-						cx="8"
-						cy="8"
-						r="6"
-						fill="#2a1a4a"
-						stroke="#c084fc"
-						strokeWidth="1.5"
-					/>
+					<circle cx="8" cy="8" r="6" fill="#2a1a4a" stroke="#c084fc" strokeWidth="1.5" />
 				</svg>
 				<span className="label">Herm</span>
 			</span>

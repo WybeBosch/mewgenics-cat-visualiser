@@ -1,12 +1,6 @@
 import './TableRoomTabs.css';
 
-export function TableRoomTabs({
-	cats,
-	rooms,
-	activeRoom,
-	setActiveRoom,
-	sortedRooms,
-}) {
+export function TableRoomTabs({ cats, rooms, activeRoom, setActiveRoom, sortedRooms }) {
 	// Always sort rooms alphabetically for tab rendering
 	sortedRooms = [...rooms].sort((a, b) => a.localeCompare(b));
 
