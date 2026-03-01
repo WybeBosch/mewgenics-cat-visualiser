@@ -65,6 +65,15 @@
 		stroke: var(--color-relation-related);
 	}
 
+	.kin-inbreeding .kin-line,
+	.kin-inbreeding .kin-label {
+		fill: var(--color-relation-inbreeding);
+	}
+
+	.kin-inbreeding .kin-line {
+		stroke: var(--color-relation-inbreeding);
+	}
+
 	.tooltip-panel {
 		fill: var(--color-bg-tooltip-panel);
 		stroke: var(--color-border-mid);
@@ -104,6 +113,10 @@
 
 	.legend-line-related {
 		stroke: var(--color-relation-related);
+	}
+
+	.legend-line-inbreeding {
+		stroke: var(--color-relation-inbreeding);
 	}
 
 	.legend-node-female {
