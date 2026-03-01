@@ -22,6 +22,9 @@ export default function App() {
 		setHoveredCatId,
 		handleUploadSav,
 		handleUploadJson,
+		handleLoadDemo,
+		handleClearData,
+		isDemoLoaded,
 	} = useMewgenicsCatsLogic();
 
 	return (
@@ -32,6 +35,9 @@ export default function App() {
 				dataTimeLineText={dataTimeLineText}
 				onUploadJson={handleUploadJson}
 				onUploadSav={handleUploadSav}
+				onLoadDemo={handleLoadDemo}
+				onClearData={handleClearData}
+				isDemoLoaded={isDemoLoaded}
 				savLoading={savLoading}
 				savError={savError}
 			/>

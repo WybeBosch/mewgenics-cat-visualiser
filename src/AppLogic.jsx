@@ -54,6 +54,8 @@ export function useMewgenicsCatsLogic() {
 				return '[.JSON]';
 			case 'upload-sav':
 				return '[.SAV]';
+			case 'demo':
+				return '[Demo]';
 			default:
 				return '[data]';
 		}
@@ -197,6 +199,52 @@ export function useMewgenicsCatsLogic() {
 		}
 	}, []);
 
+	// Handler for loading demo data
+	const handleLoadDemo = useCallback(async () => {
+		try {
+			const demoUrl = `${import.meta.env.BASE_URL}demo_mewgenics_cats.json`;
+			const response = await fetch(demoUrl, { cache: 'no-store' });
+			if (!response.ok) throw new Error(`Failed to fetch demo data: ${response.status}`);
+			const data = await response.json();
+			const demoCats = Array.isArray(data) ? data : data.cats || [];
+			if (!demoCats.length) return;
+			const nextSourceMeta = {
+				sourceType: 'demo',
+				scriptStartTime: demoCats[0]?.script_start_time || '',
+				loadedAt: new Date().toISOString(),
+			};
+			setCats(demoCats);
+			setSourceMeta(nextSourceMeta);
+			setLoaded(true);
+			setActiveRoom([...new Set(demoCats.map((c) => c.room))][0] || '');
+			try {
+				window.localStorage.setItem(
+					'mewgenics-v14',
+					JSON.stringify({ cats: demoCats, sourceMeta: nextSourceMeta })
+				);
+				logIfEnabled('[demo] loaded demo cats:', demoCats);
+			} catch (err) {
+				logIfEnabled('[demo] failed to save demo cats:', err);
+			}
+		} catch (err) {
+			logIfEnabled('[demo] Error loading demo data:', err);
+			alert('Failed to load demo data.');
+		}
+	}, []);
+
+	// Handler for clearing all data (reset to initial empty state)
+	const handleClearData = useCallback(() => {
+		setCats([]);
+		setSourceMeta(null);
+		setActiveRoom('');
+		try {
+			window.localStorage.removeItem('mewgenics-v14');
+			logIfEnabled('[clear] cleared all data and localStorage');
+		} catch (err) {
+			logIfEnabled('[clear] failed to clear localStorage:', err);
+		}
+	}, []);
+
 	// Handler for uploaded JSON
 	const handleUploadJson = useCallback((uploadedCats, file) => {
 		const nextSourceMeta = {
@@ -235,5 +283,8 @@ export function useMewgenicsCatsLogic() {
 		setHoveredCatId,
 		handleUploadSav,
 		handleUploadJson,
+		handleLoadDemo,
+		handleClearData,
+		isDemoLoaded: sourceMeta?.sourceType === 'demo',
 	};
 }
