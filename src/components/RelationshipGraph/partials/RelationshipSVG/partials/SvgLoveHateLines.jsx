@@ -14,30 +14,32 @@ export default function SvgLoveHateLines({ hovIdx, ordered, positions, hiddenLin
 		// Hate edges
 		if (cat.hates) {
 			const toCat = findCatByName(ordered, cat.hates);
-			if (!isSameRoom(cat, toCat)) return;
-			const to = findPositionByName(positions, toCat.name);
-			if (to)
-				edges.push({
-					from,
-					to,
-					type: 'hate',
-					fromId: cat.id,
-					toName: toCat.name,
-				});
+			if (isSameRoom(cat, toCat)) {
+				const to = findPositionByName(positions, toCat.name);
+				if (to)
+					edges.push({
+						from,
+						to,
+						type: 'hate',
+						fromId: cat.id,
+						toName: toCat.name,
+					});
+			}
 		}
 		// Love edges
 		if (cat.loves) {
 			const toCat = findCatByName(ordered, cat.loves);
-			if (!isSameRoom(cat, toCat)) return;
-			const to = findPositionByName(positions, toCat.name);
-			if (to) {
-				edges.push({
-					from,
-					to,
-					type: 'love',
-					fromId: cat.id,
-					toName: toCat.name,
-				});
+			if (isSameRoom(cat, toCat)) {
+				const to = findPositionByName(positions, toCat.name);
+				if (to) {
+					edges.push({
+						from,
+						to,
+						type: 'love',
+						fromId: cat.id,
+						toName: toCat.name,
+					});
+				}
 			}
 		}
 	});
