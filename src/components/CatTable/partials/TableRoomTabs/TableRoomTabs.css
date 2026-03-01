@@ -31,4 +31,20 @@
 		font-size: 12px;
 		opacity: 0.6;
 	}
+
+	.clear-filters {
+		padding: 6px 12px;
+		border: none;
+		border-radius: 8px 8px 0 0;
+		background: var(--color-bg-button);
+		color: var(--color-text-primary);
+		cursor: pointer;
+		font-size: 12px;
+		font-weight: 500;
+		transition: opacity 0.15s;
+
+		&:hover {
+			opacity: 0.8;
+		}
+	}
 }

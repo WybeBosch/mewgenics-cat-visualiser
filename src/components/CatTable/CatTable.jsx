@@ -14,6 +14,9 @@ export function CatTable({ cats, rooms, activeRoom, setActiveRoom }) {
 		getAge,
 		sortCol,
 		sortAsc,
+		statFilters,
+		setStatFilter,
+		clearStatFilters,
 	} = CatTableLogic({ cats, activeRoom });
 	return (
 		<>
@@ -22,6 +25,8 @@ export function CatTable({ cats, rooms, activeRoom, setActiveRoom }) {
 				rooms={rooms}
 				activeRoom={activeRoom}
 				setActiveRoom={setActiveRoom}
+				statFilters={statFilters}
+				clearStatFilters={clearStatFilters}
 			/>
 			<TableCatData
 				cats={cats}
@@ -34,6 +39,8 @@ export function CatTable({ cats, rooms, activeRoom, setActiveRoom }) {
 				sortCol={sortCol}
 				sortAsc={sortAsc}
 				sorted={sorted}
+				statFilters={statFilters}
+				setStatFilter={setStatFilter}
 			/>
 		</>
 	);

@@ -49,6 +49,8 @@ export function TableCatData({
 	sorted,
 	totalStat,
 	getAge,
+	statFilters,
+	setStatFilter,
 }) {
 	const tableContainerRef = useRef(null);
 	const tableRef = useRef(null);
@@ -227,6 +229,8 @@ export function TableCatData({
 							searchQuery={searchQuery}
 							onSearchChange={handleSearchChange}
 							onSearchSubmit={handleSearchSubmit}
+							statFilters={statFilters}
+							setStatFilter={setStatFilter}
 						/>
 						<TableBody
 							cats={cats}

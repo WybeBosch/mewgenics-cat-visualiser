@@ -6,6 +6,19 @@ export function CatTableLogic({ cats, activeRoom }) {
 	const [sortCol, setSortCol] = useState(null);
 	const [sortAsc, setSortAsc] = useState(true);
 	const [hoveredCatId, setHoveredCatId] = useState(null);
+	const [statFilters, setStatFilters] = useState({});
+
+	const setStatFilter = useCallback((statKey, value) => {
+		setStatFilters((prev) => {
+			if (value === null || value === undefined || value === '') {
+				const { [statKey]: _, ...rest } = prev;
+				return rest;
+			}
+			return { ...prev, [statKey]: value };
+		});
+	}, []);
+
+	const clearStatFilters = useCallback(() => setStatFilters({}), []);
 
 	const handleSort = useCallback(
 		(col) => {
@@ -29,7 +42,11 @@ export function CatTableLogic({ cats, activeRoom }) {
 		return null;
 	};
 	const roomCats = cats.filter((c) => c.room === activeRoom);
-	const sorted = [...roomCats].sort((a, b) => {
+	const activeFilters = Object.entries(statFilters);
+	const filtered = activeFilters.length > 0
+		? roomCats.filter((cat) => activeFilters.every(([key, val]) => cat[key] === val))
+		: roomCats;
+	const sorted = [...filtered].sort((a, b) => {
 		if (!sortCol) return 0;
 		if (sortCol === 'total')
 			return sortAsc ? totalStat(a) - totalStat(b) : totalStat(b) - totalStat(a);
@@ -61,5 +78,8 @@ export function CatTableLogic({ cats, activeRoom }) {
 		getAge,
 		sortCol,
 		sortAsc,
+		statFilters,
+		setStatFilter,
+		clearStatFilters,
 	};
 }
