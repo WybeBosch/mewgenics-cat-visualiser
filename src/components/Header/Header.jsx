@@ -7,7 +7,6 @@ import './Header.css';
 export function Header({
 	cats,
 	rooms,
-	getAge,
 	dataTimeLineText,
 	onUploadJson,
 	onUploadSav,
@@ -20,7 +19,6 @@ export function Header({
 				<Heading
 					cats={cats}
 					rooms={rooms}
-					getAge={getAge}
 					dataTimeLineText={dataTimeLineText}
 				/>
 				<div className="button-bar">

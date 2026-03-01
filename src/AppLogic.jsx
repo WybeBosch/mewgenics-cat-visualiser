@@ -221,14 +221,6 @@ export function useMewgenicsCatsLogic() {
 		}
 	}, []);
 
-	// Utility: get cat age
-	const getAge = useCallback((cat) => {
-		if (typeof cat.saveDay === 'number' && typeof cat.birthday === 'number') {
-			return cat.saveDay - cat.birthday;
-		}
-		return null;
-	}, []);
-
 	return {
 		cats,
 		setCats,
@@ -243,6 +235,5 @@ export function useMewgenicsCatsLogic() {
 		setHoveredCatId,
 		handleUploadSav,
 		handleUploadJson,
-		getAge,
 	};
 }

@@ -1,24 +1,14 @@
 import { APP_EMOJIS } from '../../../../shared/config/config.jsx';
+import { isKitten } from '../../../../shared/utils/ageUtils.jsx';
 import './Heading.css';
 
-export function Heading({ cats, rooms, getAge, dataTimeLineText }) {
+export function Heading({ cats, rooms, dataTimeLineText }) {
 	const headingEmoji = import.meta.env.DEV ? APP_EMOJIS.local : APP_EMOJIS.default;
 
 	const maleCount = cats.filter((cat) => cat.sex === 'male').length;
 	const femaleCount = cats.filter((cat) => cat.sex === 'female').length;
 	const hermCount = cats.filter((cat) => cat.sex === 'herm').length;
-	const kittenCount = cats.filter((cat) => {
-		if (typeof getAge === 'function') {
-			const age = getAge(cat);
-			return age !== null && age <= 1;
-		}
-
-		if (typeof cat.saveDay === 'number' && typeof cat.birthday === 'number') {
-			return cat.saveDay - cat.birthday <= 1;
-		}
-
-		return false;
-	}).length;
+	const kittenCount = cats.filter((cat) => isKitten(cat)).length;
 
 	return (
 		<div className="heading">

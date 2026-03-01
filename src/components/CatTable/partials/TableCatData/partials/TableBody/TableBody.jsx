@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { STATS, SEX_ICON, CAT_ICON } from '../../../../../../shared/config/config.jsx';
 import { TableTooltipPopup, joinClass } from '../../../../../../shared/utils/utils.jsx';
+import { getAge } from '../../../../../../shared/utils/ageUtils.jsx';
 import './TableBody.css';
 
 function NoCatsFoundWarning({ columnsLength }) {
@@ -20,7 +21,6 @@ export function TableBody({
 	hoveredCatId,
 	setHoveredCatId,
 	totalStat,
-	getAge,
 	isPartnerInOtherRoom,
 	highlightedCatId,
 }) {
@@ -63,7 +63,10 @@ export function TableBody({
 					<tr
 						key={cat.id + i}
 						ref={isHighlighted ? highlightedRowRef : undefined}
-						className={joinClass('row', { hovered: isHovered, 'search-match': isHighlighted })}
+						className={joinClass('row', {
+							hovered: isHovered,
+							'search-match': isHighlighted,
+						})}
 						onMouseEnter={() => setHoveredCatId(cat.id)}
 						onMouseLeave={() => setHoveredCatId(null)}
 					>
