@@ -50,9 +50,9 @@
 	}
 
 	.kin-label {
+		paint-order: stroke;
 		stroke: var(--color-bg-page);
 		stroke-width: 3px;
-		paint-order: stroke;
 	}
 
 	.kin-parent .kin-line {

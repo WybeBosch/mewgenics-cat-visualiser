@@ -11,6 +11,33 @@
 	}
 }
 
+.room-inbreeding-stats {
+	position: relative;
+	cursor: default;
+
+	.popup {
+		display: none;
+		position: absolute;
+		z-index: 20;
+		top: 100%;
+		left: 0;
+		min-width: 240px;
+		max-width: 300px;
+		padding: 10px 12px;
+		border: 1px solid var(--color-border-strong);
+		border-radius: 10px;
+		background: var(--color-bg-tooltip);
+		box-shadow: var(--shadow-popup-lg);
+		color: var(--color-text-secondary);
+		font-size: 12px;
+		line-height: 1.4;
+	}
+
+	&:hover .popup {
+		display: block;
+	}
+}
+
 .warning-pill {
 	position: relative;
 	display: inline-flex;
