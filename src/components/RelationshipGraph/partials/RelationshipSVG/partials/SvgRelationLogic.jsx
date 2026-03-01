@@ -190,65 +190,79 @@ function canBreed(a, b) {
 	return sa !== sb;
 }
 
-function getInbreedingCoefficient(catX, catY, allCats) {
-	const memo = new Map();
+function kinship(x, y, allCats, memo) {
+	if (!x || !y) return 0;
 
-	function kinship(x, y) {
-		if (!x || !y) return 0;
+	const nameX = normalizeLineageName(x.name);
+	const nameY = normalizeLineageName(y.name);
 
-		const nameX = normalizeLineageName(x.name);
-		const nameY = normalizeLineageName(y.name);
-
-		// Normalize order: older cat first (lower birthday = older)
-		// If birthdays are equal or missing, use alphabetical as tiebreaker
-		const bx = x.birthday ?? Infinity;
-		const by = y.birthday ?? Infinity;
-		let first = x,
-			second = y,
-			keyA = nameX,
-			keyB = nameY;
-		if (by < bx || (by === bx && nameY < nameX)) {
-			first = y;
-			second = x;
-			keyA = nameY;
-			keyB = nameX;
-		}
-
-		const key = `${keyA}|${keyB}`;
-		if (memo.has(key)) return memo.get(key);
-
-		// Prevent infinite recursion while computing
-		memo.set(key, 0);
-
-		let result;
-		if (keyA === keyB) {
-			// Self-kinship: ψ(x,x) = 0.5(1 + f_x)
-			const mother = findCatByName(allCats, first.parent1);
-			const father = findCatByName(allCats, first.parent2);
-			if (mother && father) {
-				result = 0.5 * (1 + kinship(mother, father));
-			} else {
-				result = 0.5; // Founder: assume not inbred
-			}
-		} else {
-			// ψ(x,y) = 0.5(ψ(x, φ(y)) + ψ(x, ρ(y)))
-			const motherY = findCatByName(allCats, second.parent1);
-			const fatherY = findCatByName(allCats, second.parent2);
-			if (!motherY && !fatherY) {
-				result = 0; // y is a founder, unrelated
-			} else {
-				result = 0;
-				if (motherY) result += 0.5 * kinship(first, motherY);
-				if (fatherY) result += 0.5 * kinship(first, fatherY);
-			}
-		}
-
-		memo.set(key, result);
-		return result;
+	// Normalize order: older cat first (lower birthday = older)
+	// If birthdays are equal or missing, use alphabetical as tiebreaker
+	const bx = x.birthday ?? Infinity;
+	const by = y.birthday ?? Infinity;
+	let first = x,
+		second = y,
+		keyA = nameX,
+		keyB = nameY;
+	if (by < bx || (by === bx && nameY < nameX)) {
+		first = y;
+		second = x;
+		keyA = nameY;
+		keyB = nameX;
 	}
 
+	const key = `${keyA}|${keyB}`;
+	if (memo.has(key)) return memo.get(key);
+
+	// Prevent infinite recursion while computing
+	memo.set(key, 0);
+
+	let result;
+	if (keyA === keyB) {
+		// Self-kinship: ψ(x,x) = 0.5(1 + f_x)
+		const mother = findCatByName(allCats, first.parent1);
+		const father = findCatByName(allCats, first.parent2);
+		if (mother && father) {
+			result = 0.5 * (1 + kinship(mother, father, allCats, memo));
+		} else {
+			result = 0.5; // Founder: assume not inbred
+		}
+	} else {
+		// ψ(x,y) = 0.5(ψ(x, φ(y)) + ψ(x, ρ(y)))
+		const motherY = findCatByName(allCats, second.parent1);
+		const fatherY = findCatByName(allCats, second.parent2);
+		if (!motherY && !fatherY) {
+			result = 0; // y is a founder, unrelated
+		} else {
+			result = 0;
+			if (motherY) result += 0.5 * kinship(first, motherY, allCats, memo);
+			if (fatherY) result += 0.5 * kinship(first, fatherY, allCats, memo);
+		}
+	}
+
+	memo.set(key, result);
+	return result;
+}
+
+function getInbreedingCoefficient(catX, catY, allCats) {
 	// Inbreeding coefficient of offspring = kinship between the two parents
-	return kinship(catX, catY);
+	return kinship(catX, catY, allCats, new Map());
+}
+
+function getRoomInbreedingStats(roomCats, allCats) {
+	const memo = new Map();
+	let totalPairs = 0;
+	let riskyPairs = 0;
+	for (let i = 0; i < roomCats.length; i++) {
+		for (let j = i + 1; j < roomCats.length; j++) {
+			if (!canBreed(roomCats[i], roomCats[j])) continue;
+			totalPairs++;
+			const coeff = kinship(roomCats[i], roomCats[j], allCats, memo);
+			if (coeff > 0) riskyPairs++;
+		}
+	}
+
+	return { totalPairs, riskyPairs };
 }
 
 export {
@@ -273,4 +287,5 @@ export {
 	getFamilySummary,
 	canBreed,
 	getInbreedingCoefficient,
+	getRoomInbreedingStats,
 };

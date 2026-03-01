@@ -53,44 +53,19 @@
 		position: relative;
 
 		.inbreeding-tooltip {
-			display: none;
 			position: absolute;
+			z-index: 10;
 			bottom: calc(100% + 8px);
 			left: 50%;
-			transform: translateX(-50%);
+			display: none;
 			padding: 10px 14px;
 			border: 1px solid var(--color-border-mid);
 			border-radius: var(--radius-md);
 			background: var(--color-bg-tooltip);
 			box-shadow: var(--shadow-tooltip);
-			white-space: nowrap;
-			z-index: 10;
 			pointer-events: none;
-
-			table {
-				border-collapse: collapse;
-				font-size: 11px;
-				color: var(--color-text-tooltip);
-			}
-
-			th {
-				text-align: left;
-				padding: 2px 12px 4px 0;
-				font-weight: 600;
-				color: var(--color-text-muted);
-				border-bottom: 1px solid var(--color-border-soft);
-			}
-
-			td {
-				padding: 3px 12px 3px 0;
-			}
-
-			td:last-child,
-			th:last-child {
-				padding-right: 0;
-				text-align: right;
-				color: var(--color-relation-inbreeding);
-			}
+			transform: translateX(-50%);
+			white-space: nowrap;
 		}
 
 		&:hover .inbreeding-tooltip {

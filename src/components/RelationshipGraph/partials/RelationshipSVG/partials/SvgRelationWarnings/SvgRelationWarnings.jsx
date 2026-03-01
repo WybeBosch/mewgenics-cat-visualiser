@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react';
+import { InbreedingTable } from '../../../../../../shared/common/InbreedingTable/InbreedingTable.jsx';
 import { Pill } from '../../../../../../shared/common/Pill/Pill.jsx';
 import './SvgRelationWarnings.css';
 
 import {
 	getParentNames,
+	getRoomInbreedingStats,
 	isParentChild,
 	isRelated,
 	isSibling,
@@ -237,12 +239,32 @@ function WarningPill({
 	);
 }
 
-function SvgRelationWarnings({ cats = [] }) {
+function formatPct(value) {
+	const pct = value * 100;
+	return Number.isInteger(pct) ? pct : parseFloat(pct.toFixed(2));
+}
+
+function SvgRelationWarnings({ cats = [], allCats = [] }) {
 	const [hoveredCategory, setHoveredCategory] = useState('');
 	const warningBuckets = useMemo(() => getWarningBuckets(cats), [cats]);
+	const roomStats = useMemo(() => getRoomInbreedingStats(cats, allCats), [cats, allCats]);
 
 	return (
 		<div className="svg-relation-warnings">
+			{roomStats.riskyPairs > 0 ? (
+				<span className="room-inbreeding-stats">
+					{roomStats.riskyPairs}/{roomStats.totalPairs} (
+					{formatPct(roomStats.riskyPairs / roomStats.totalPairs)}%) risky pairings{' '}
+					<span> - </span>
+					<span className="popup">
+						A risky pairing is a breedable pair (male + female or herm) whose offspring
+						would be inbred due to shared ancestry.
+						<br />
+						<p>Examples of inbreeding include:</p>
+						<InbreedingTable />
+					</span>
+				</span>
+			) : null}
 			<span>🚨 Inbreeding alert!</span>
 
 			<WarningPill

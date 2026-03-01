@@ -23,7 +23,7 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId, activ
 
 	return (
 		<section className="section-relationships">
-			<RelationshipHeader activeRoom={activeRoom} cats={cats} />
+			<RelationshipHeader activeRoom={activeRoom} cats={cats} allCats={allCats} />
 			<div className="panel">
 				<RelationshipSVG
 					cats={cats}
