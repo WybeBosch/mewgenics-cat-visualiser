@@ -10,5 +10,3 @@ TODO:
 - parent lines in the relationship graph, sometimes wayy to the side of the node they are supposed to connect to.. AH it snot just parent lines, its all lines. it seems that if there are to many lines coming out of a unit, things go wrong?. Rozi and Milka
 
 - also start scraping the Actual stats not just the base stats and add checkmark somewhere in the table to toggle between em.
-
-- todo sometimes the svg graph gets cut off at the bottom? only for the horizontal version tho.20 it failed, 21 it was fine? very weird

@@ -77,7 +77,7 @@ export default function RelationshipSVG({
 	const hovIdx = hovered >= 0 ? hovered : null;
 
 	const W = 800,
-		H = useRowLayout ? 120 + Math.ceil(ordered.length / 10) * 80 : 500;
+		H = useRowLayout ? 20 + Math.ceil(ordered.length / 8) * 110 : 500;
 	const cx = W / 2,
 		cy = H / 2;
 	const radius = Math.min(200, 60 + ordered.length * 12);
