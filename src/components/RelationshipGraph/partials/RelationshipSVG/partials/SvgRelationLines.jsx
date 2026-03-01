@@ -1,6 +1,8 @@
 import {
 	getAncestorNames,
 	getGrandparentNames,
+	isLineTypeActive,
+	isSameRoom,
 	isGrandparentGrandchild,
 	isParentChild,
 	isSibling,
@@ -8,7 +10,7 @@ import {
 } from './SvgRelationLogic.jsx';
 import { joinClass } from '../../../../../shared/utils/utils.jsx';
 
-export default function SvgRelationLines({ hovIdx, ordered, positions }) {
+export default function SvgRelationLines({ hovIdx, ordered, positions, hiddenLineTypes }) {
 	return (
 		<g className="relation-lines">
 			{/* (shared lineage, nodes) */}
@@ -18,6 +20,7 @@ export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 					const hovAnc = getAncestorNames(hovCat);
 					return ordered.map((other, oi) => {
 						if (oi === hovIdx) return null;
+						if (!isSameRoom(hovCat, other)) return null;
 						const from = positions[hovIdx],
 							to = positions[oi];
 						const hovIsParent =
@@ -26,6 +29,7 @@ export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 							normalizeLineageName(other.parent2) ===
 								normalizeLineageName(hovCat.name);
 						if (isParentChild(hovCat, other)) {
+							if (!isLineTypeActive(hiddenLineTypes, 'parent')) return null;
 							// Draw line from parent to child, and add emoji at each end
 							let parentPos, childPos;
 							if (hovIsParent) {
@@ -91,10 +95,10 @@ export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 							);
 						}
 						if (isGrandparentGrandchild(hovCat, other)) {
-							const hovIsGrandparent =
-								getGrandparentNames(other).includes(
-									normalizeLineageName(hovCat.name),
-								);
+							if (!isLineTypeActive(hiddenLineTypes, 'grandparent')) return null;
+							const hovIsGrandparent = getGrandparentNames(other).includes(
+								normalizeLineageName(hovCat.name)
+							);
 							let grandparentPos, grandchildPos;
 							if (hovIsGrandparent) {
 								grandparentPos = from;
@@ -108,10 +112,8 @@ export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 							const dist = Math.sqrt(dx * dx + dy * dy) || 1;
 							const nodeR = 28;
 							const emojiPad = 18;
-							const x1 =
-								grandparentPos.x + dx * ((nodeR + emojiPad) / dist);
-							const y1 =
-								grandparentPos.y + dy * ((nodeR + emojiPad) / dist);
+							const x1 = grandparentPos.x + dx * ((nodeR + emojiPad) / dist);
+							const y1 = grandparentPos.y + dy * ((nodeR + emojiPad) / dist);
 							const x2 = grandchildPos.x - dx * (nodeR / dist);
 							const y2 = grandchildPos.y - dy * (nodeR / dist);
 							return (
@@ -127,10 +129,7 @@ export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 										opacity={0.6}
 									/>
 									<text
-										x={
-											grandparentPos.x +
-											dx * ((nodeR + emojiPad - 8) / dist)
-										}
+										x={grandparentPos.x + dx * ((nodeR + emojiPad - 8) / dist)}
 										y={
 											grandparentPos.y +
 											dy * ((nodeR + emojiPad - 8) / dist) +
@@ -145,11 +144,7 @@ export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 									</text>
 									<text
 										x={grandchildPos.x - dx * ((nodeR + 20) / dist)}
-										y={
-											grandchildPos.y -
-											dy * ((nodeR + 20) / dist) +
-											8
-										}
+										y={grandchildPos.y - dy * ((nodeR + 20) / dist) + 8}
 										fontSize={16}
 										textAnchor="middle"
 										dominantBaseline="middle"
@@ -174,6 +169,8 @@ export default function SvgRelationLines({ hovIdx, ordered, positions }) {
 						const shared = hovAnc.filter((a) => otherAnc.includes(a));
 						if (shared.length === 0) return null;
 						const sibling = isSibling(hovCat, other);
+						if (sibling && !isLineTypeActive(hiddenLineTypes, 'sibling')) return null;
+						if (!sibling && !isLineTypeActive(hiddenLineTypes, 'related')) return null;
 						return (
 							<g
 								key={`kin-${oi}`}
