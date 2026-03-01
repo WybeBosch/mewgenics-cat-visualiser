@@ -1,11 +1,12 @@
 import {
 	canBreed,
+	createKinshipContext,
 	getInbreedingCoefficient,
 	isLineTypeActive,
 	isSameRoom,
 } from './SvgRelationLogic.jsx';
 
-export default function SvgInbreedingLines({
+export default function SvgInbreedingPercentages({
 	hovIdx,
 	ordered,
 	positions,
@@ -16,16 +17,17 @@ export default function SvgInbreedingLines({
 	if (!isLineTypeActive(hiddenLineTypes, 'inbreeding')) return null;
 
 	const hovCat = ordered[hovIdx];
+	const ctx = createKinshipContext(allCats);
 
 	return (
-		<g className="inbreeding-lines">
+		<g className="inbreeding-percentages">
 			{ordered.map((other, oi) => {
 				if (oi === hovIdx) return null;
 				if (!isSameRoom(hovCat, other)) return null;
 				if (!canBreed(hovCat, other)) return null;
 
 				const to = positions[oi];
-				const coeff = getInbreedingCoefficient(hovCat, other, allCats);
+				const coeff = getInbreedingCoefficient(hovCat, other, allCats, ctx);
 				const hasRisk = coeff > 0;
 				const pctRaw = coeff * 100;
 				const pct = Number.isInteger(pctRaw) ? pctRaw : parseFloat(pctRaw.toFixed(2));
