@@ -71,6 +71,10 @@
 		stroke: var(--color-relation-related);
 	}
 
+	.arrow-related {
+		fill: var(--color-relation-related);
+	}
+
 	.kin-inbreeding .kin-label {
 		fill: var(--color-relation-inbreeding);
 	}

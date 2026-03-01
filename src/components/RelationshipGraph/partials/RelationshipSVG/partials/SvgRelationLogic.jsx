@@ -114,12 +114,17 @@ function isUncleAunt(a, b) {
 	return hasOverlap(aParents, bGrandparents) || hasOverlap(bParents, aGrandparents);
 }
 
-function getUncleAuntLabel(a, b) {
-	const aParents = getParentNames(a);
-	const bGrandparents = getGrandparentNames(b);
-	// If a's parent is in b's grandparents, a is the uncle/aunt
-	const uncleAuntCat = hasOverlap(aParents, bGrandparents) ? a : b;
-	const sex = uncleAuntCat.sex?.toLowerCase();
+function getUncleAuntLabel(hovCat, other) {
+	const hovParents = getParentNames(hovCat);
+	const otherGrandparents = getGrandparentNames(other);
+	const sex = other.sex?.toLowerCase();
+	// If hovCat's parent is in other's grandparents, hovCat is the uncle/aunt → other is nephew/niece
+	if (hasOverlap(hovParents, otherGrandparents)) {
+		if (sex === 'female') return 'niece';
+		if (sex === 'male') return 'nephew';
+		return 'nephew/niece';
+	}
+	// Otherwise other is the uncle/aunt
 	if (sex === 'female') return 'aunt';
 	if (sex === 'male') return 'uncle';
 	return 'uncle/aunt';

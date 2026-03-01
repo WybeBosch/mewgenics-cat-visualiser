@@ -16,6 +16,19 @@ import { joinClass } from '../../../../../shared/utils/utils.jsx';
 export default function SvgRelationLines({ hovIdx, ordered, positions, hiddenLineTypes }) {
 	return (
 		<g className="relation-lines">
+			<defs>
+				<marker
+					id="arrow-related"
+					viewBox="0 0 10 10"
+					refX="10"
+					refY="5"
+					markerWidth="8"
+					markerHeight="8"
+					orient="auto-start-reverse"
+				>
+					<path d="M 0 0 L 10 5 L 0 10 z" className="arrow-related" />
+				</marker>
+			</defs>
 			{/* (shared lineage, nodes) */}
 			{hovIdx !== null &&
 				(() => {
@@ -92,7 +105,7 @@ export default function SvgRelationLines({ hovIdx, ordered, positions, hiddenLin
 										fontSize={9}
 										opacity={0.8}
 									>
-										parent
+										{hovIsParent ? 'child' : 'parent'}
 									</text>
 								</g>
 							);
@@ -163,7 +176,7 @@ export default function SvgRelationLines({ hovIdx, ordered, positions, hiddenLin
 										fontSize={9}
 										opacity={0.8}
 									>
-										grandparent
+										{hovIsGrandparent ? 'grandchild' : 'grandparent'}
 									</text>
 								</g>
 							);
@@ -191,6 +204,7 @@ export default function SvgRelationLines({ hovIdx, ordered, positions, hiddenLin
 									strokeWidth={sibling ? 3 : 2}
 									strokeDasharray={sibling ? 'none' : '8,4'}
 									opacity={0.6}
+									markerEnd={!sibling ? 'url(#arrow-related)' : undefined}
 								/>
 								<text
 									className="kin-label"
