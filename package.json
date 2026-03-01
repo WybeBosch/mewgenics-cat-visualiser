@@ -48,10 +48,9 @@
 		"lint:other": "prettier --check \"**/*.{json,md,yaml,yml,mjs,cjs}\"",
 		"lint:other:fix": "prettier --write \"**/*.{json,md,yaml,yml,mjs,cjs}\"",
 		"deploy": "vite build && gh-pages -d dist",
-		"version-release": "git add package.json pnpm-lock.yaml && node -e \"const{spawnSync}=require('child_process');const v=require('./package.json').version;const r=spawnSync('git',['commit','-m','release: v'+v],{stdio:'inherit'});process.exit(r.status)\"",
-		"patch": "pnpm version patch && pnpm run version-release",
-		"minor": "pnpm version minor && pnpm run version-release",
-		"major": "pnpm version major && pnpm run version-release"
+		"patch": "pnpm version patch -m \"release: v%s\"",
+		"minor": "pnpm version minor -m \"release: v%s\"",
+		"major": "pnpm version major -m \"release: v%s\""
 	},
 	"dependencies": {
 		"@vitejs/plugin-react-swc": "^4.2.3",
