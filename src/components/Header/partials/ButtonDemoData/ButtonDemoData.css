@@ -1,0 +1,25 @@
+.button-demo-data {
+	position: absolute;
+	top: 100%;
+	display: flex;
+	gap: 6px;
+
+	.button {
+		padding: 4px 10px;
+		border: none;
+		border-radius: var(--radius-sm);
+		margin-top: 5px;
+		background: var(--color-bg-button);
+		color: var(--color-text-primary);
+		cursor: pointer;
+		font-size: 13px;
+		font-style: italic;
+		font-weight: 500;
+		opacity: 0.85;
+		transition: background 0.2s;
+	}
+
+	.clear {
+		opacity: 0.7;
+	}
+}

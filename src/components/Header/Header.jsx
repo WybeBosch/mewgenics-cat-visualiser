@@ -2,6 +2,7 @@ import { Heading } from './partials/Heading/Heading';
 import { ButtonUploadSave } from './partials/ButtonUploadSave/ButtonUploadSave';
 import { ButtonUploadJson } from './partials/ButtonUploadJson/ButtonUploadJson';
 import { ButtonDownloadJson } from './partials/ButtonDownloadJson/ButtonDownloadJson';
+import { ButtonDemoData } from './partials/ButtonDemoData/ButtonDemoData';
 import './Header.css';
 
 export function Header({
@@ -10,6 +11,9 @@ export function Header({
 	dataTimeLineText,
 	onUploadJson,
 	onUploadSav,
+	onLoadDemo,
+	onClearData,
+	isDemoLoaded,
 	savLoading,
 	savError,
 }) {
@@ -27,7 +31,14 @@ export function Header({
 						savLoading={savLoading}
 						savError={savError}
 					/>
-					<ButtonUploadJson onUploadJson={onUploadJson} />
+					<div className="upload-json-wrap">
+						<ButtonUploadJson onUploadJson={onUploadJson} />
+						<ButtonDemoData
+							onLoadDemo={onLoadDemo}
+							onClearData={onClearData}
+							isDemoLoaded={isDemoLoaded}
+						/>
+					</div>
 					<ButtonDownloadJson cats={cats} />
 				</div>
 			</header>

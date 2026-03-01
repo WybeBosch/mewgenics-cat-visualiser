@@ -15,7 +15,7 @@ export default defineConfig({
 		viteStaticCopy({
 			targets: [
 				{
-					src: 'data-grabber/python/public/example_mewgenics_cats.json',
+					src: 'data-grabber/python/public/demo_mewgenics_cats.json',
 					dest: '.',
 				},
 				{
