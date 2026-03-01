@@ -17,10 +17,10 @@
 		}
 
 		&.search-match {
+			animation: search-pulse 0.6s ease;
 			box-shadow:
 				inset 0 2px 0 var(--color-negative),
 				inset 0 -2px 0 var(--color-negative);
-			animation: search-pulse 0.6s ease;
 		}
 	}
 
@@ -88,8 +88,8 @@
 		max-width: 56px;
 		border-right: 1px solid var(--color-border-soft);
 		color: var(--color-text-muted);
-		font-size: 16px;
 		filter: grayscale(1) brightness(1);
+		font-size: 16px;
 	}
 
 	.stat {
@@ -178,12 +178,14 @@
 			inset 0 2px 0 transparent,
 			inset 0 -2px 0 transparent;
 	}
+
 	40% {
 		background: color-mix(in srgb, var(--color-negative) 30%, transparent);
 		box-shadow:
 			inset 0 3px 0 var(--color-negative),
 			inset 0 -3px 0 var(--color-negative);
 	}
+
 	100% {
 		background: inherit;
 		box-shadow:

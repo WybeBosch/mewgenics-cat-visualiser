@@ -207,8 +207,8 @@
 				font-family: inherit;
 				font-size: 13px;
 				line-height: 1.4;
-				text-align: center;
 				outline: none;
+				text-align: center;
 
 				&::placeholder {
 					color: var(--color-text-subtle, #999);
