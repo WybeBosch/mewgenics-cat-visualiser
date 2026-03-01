@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { isKitten } from '../../../../shared/utils/ageUtils.jsx';
 import Tooltip from './partials/Tooltip.jsx';
 import TooltipCloseArea from './partials/TooltipCloseArea.jsx';
 import SvgLoveHateLines from './partials/SvgLoveHateLines.jsx';
@@ -8,7 +9,7 @@ import SvgMatchedRelationships from './partials/SvgMatchedRelationships/SvgMatch
 import SvgRelationLines from './partials/SvgRelationLines.jsx';
 import SvgCatNodes from './partials/SvgCatNodes/SvgCatNodes.jsx';
 
-export default function RelationshipSVG({ cats, allCats, hoveredCatId, setHoveredCatId, getAge }) {
+export default function RelationshipSVG({ cats, allCats, hoveredCatId, setHoveredCatId }) {
 	const [selectedCatId, setSelectedCatId] = useState(null);
 
 	// Reorder cats: 1. mutual pairs, 2. one-way lovers, 3. others
@@ -74,10 +75,7 @@ export default function RelationshipSVG({ cats, allCats, hoveredCatId, setHovere
 
 	// Node radius based on age
 	const getNodeRadius = (cat) => {
-		if (getAge) {
-			const age = getAge(cat);
-			if (age !== null && age <= 1) return 18; // kitten
-		}
+		if (isKitten(cat)) return 18;
 		return 28;
 	};
 

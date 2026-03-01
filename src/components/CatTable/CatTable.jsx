@@ -11,7 +11,6 @@ export function CatTable({ cats, rooms, activeRoom, setActiveRoom }) {
 		sorted,
 		aggroColor,
 		totalStat,
-		getAge,
 		sortCol,
 		sortAsc,
 		statFilters,
@@ -31,7 +30,6 @@ export function CatTable({ cats, rooms, activeRoom, setActiveRoom }) {
 			<TableCatData
 				cats={cats}
 				totalStat={totalStat}
-				getAge={getAge}
 				aggroColor={aggroColor}
 				hoveredCatId={hoveredCatId}
 				setHoveredCatId={setHoveredCatId}

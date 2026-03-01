@@ -13,7 +13,6 @@ export default function App() {
 	const {
 		cats,
 		rooms,
-		getAge,
 		dataTimeLineText,
 		activeRoom,
 		setActiveRoom,
@@ -30,7 +29,6 @@ export default function App() {
 			<Header
 				cats={cats}
 				rooms={rooms}
-				getAge={getAge}
 				dataTimeLineText={dataTimeLineText}
 				onUploadJson={handleUploadJson}
 				onUploadSav={handleUploadSav}
@@ -49,7 +47,6 @@ export default function App() {
 					allCats={cats}
 					hoveredCatId={hoveredCatId}
 					setHoveredCatId={setHoveredCatId}
-					getAge={getAge}
 					activeRoom={activeRoom}
 				/>
 			</main>

@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { STATS } from '../../shared/config/config.jsx';
+import { getAge } from '../../shared/utils/ageUtils.jsx';
 
 export function CatTableLogic({ cats, activeRoom }) {
 	// Table-specific state
@@ -35,12 +36,6 @@ export function CatTableLogic({ cats, activeRoom }) {
 		[sortCol, sortAsc]
 	);
 	const totalStat = (cat) => STATS.reduce((sum, s) => sum + cat[s], 0);
-	const getAge = (cat) => {
-		if (typeof cat.saveDay === 'number' && typeof cat.birthday === 'number') {
-			return cat.saveDay - cat.birthday;
-		}
-		return null;
-	};
 	const roomCats = cats.filter((c) => c.room === activeRoom);
 	const activeFilters = Object.entries(statFilters);
 	const filtered = activeFilters.length > 0
@@ -75,7 +70,6 @@ export function CatTableLogic({ cats, activeRoom }) {
 		sorted,
 		aggroColor,
 		totalStat,
-		getAge,
 		sortCol,
 		sortAsc,
 		statFilters,

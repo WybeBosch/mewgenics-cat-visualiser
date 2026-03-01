@@ -3,7 +3,7 @@ import RelationshipLegendBar from './partials/RelationshipLegendBar/Relationship
 import RelationshipSVG from './partials/RelationshipSVG/RelationshipSVG.jsx';
 import './RelationshipGraph.css';
 
-function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId, getAge, activeRoom }) {
+function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId, activeRoom }) {
 	if (cats.length === 0) return '';
 
 	return (
@@ -15,7 +15,6 @@ function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId, getAg
 					allCats={allCats}
 					hoveredCatId={hoveredCatId}
 					setHoveredCatId={setHoveredCatId}
-					getAge={getAge}
 				/>
 				<RelationshipLegendBar />
 			</div>

@@ -48,7 +48,6 @@ export function TableCatData({
 	sortAsc,
 	sorted,
 	totalStat,
-	getAge,
 	statFilters,
 	setStatFilter,
 }) {
@@ -239,7 +238,6 @@ export function TableCatData({
 							hoveredCatId={hoveredCatId}
 							setHoveredCatId={setHoveredCatId}
 							totalStat={totalStat}
-							getAge={getAge}
 							isPartnerInOtherRoom={isPartnerInOtherRoom}
 							highlightedCatId={highlightedCatId}
 						/>
