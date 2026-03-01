@@ -64,6 +64,20 @@ function RelationshipLegendBar() {
 			<span className="item">
 				<svg width="32" height="8">
 					<line
+						className="legend-line-grandparent"
+						x1="0"
+						y1="4"
+						x2="30"
+						y2="4"
+						strokeWidth="2"
+						strokeDasharray="6,3"
+					/>
+				</svg>
+				<span className="label">Grandparent</span>
+			</span>
+			<span className="item">
+				<svg width="32" height="8">
+					<line
 						className="legend-line-sibling"
 						x1="0"
 						y1="4"

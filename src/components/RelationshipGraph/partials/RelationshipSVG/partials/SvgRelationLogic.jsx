@@ -9,6 +9,12 @@ function getParentNames(cat) {
 	return [cat.parent1, cat.parent2].map(normalizeLineageName).filter(Boolean);
 }
 
+function getGrandparentNames(cat) {
+	return [cat.grandparent1, cat.grandparent2, cat.grandparent3, cat.grandparent4]
+		.map(normalizeLineageName)
+		.filter(Boolean);
+}
+
 function getAncestorNames(cat) {
 	return [
 		cat.parent1,
@@ -39,6 +45,15 @@ function isParentChild(a, b) {
 	return aIsParentOfB || bIsParentOfA;
 }
 
+function isGrandparentGrandchild(a, b) {
+	const aGrandparents = getGrandparentNames(a);
+	const bGrandparents = getGrandparentNames(b);
+	const aName = normalizeLineageName(a.name);
+	const bName = normalizeLineageName(b.name);
+
+	return bGrandparents.includes(aName) || aGrandparents.includes(bName);
+}
+
 function isSibling(a, b) {
 	return hasOverlap(getParentNames(a), getParentNames(b));
 }
@@ -50,6 +65,7 @@ function isRelated(a, b) {
 function getFamilySummary(cats) {
 	const siblingCats = new Set();
 	const parentChildCats = new Set();
+	const grandparentChildCats = new Set();
 	const distantCats = new Set();
 
 	for (let i = 0; i < cats.length; i++) {
@@ -63,6 +79,12 @@ function getFamilySummary(cats) {
 			if (isParentChild(a, b)) {
 				parentChildCats.add(aKey);
 				parentChildCats.add(bKey);
+				continue;
+			}
+
+			if (isGrandparentGrandchild(a, b)) {
+				grandparentChildCats.add(aKey);
+				grandparentChildCats.add(bKey);
 				continue;
 			}
 
@@ -82,17 +104,24 @@ function getFamilySummary(cats) {
 	return {
 		siblings: siblingCats.size,
 		parentChild: parentChildCats.size,
+		grandparentChild: grandparentChildCats.size,
 		distantlyRelated: distantCats.size,
-		hasFamily: siblingCats.size > 0 || parentChildCats.size > 0 || distantCats.size > 0,
+		hasFamily:
+			siblingCats.size > 0 ||
+			parentChildCats.size > 0 ||
+			grandparentChildCats.size > 0 ||
+			distantCats.size > 0,
 	};
 }
 
 export {
 	normalizeLineageName,
 	getParentNames,
+	getGrandparentNames,
 	getAncestorNames,
 	hasOverlap,
 	isParentChild,
+	isGrandparentGrandchild,
 	isSibling,
 	isRelated,
 	getFamilySummary,
