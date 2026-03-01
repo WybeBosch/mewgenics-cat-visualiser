@@ -12,7 +12,7 @@ export function Heading({ cats, rooms, dataTimeLineText }) {
 
 	return (
 		<div className="heading">
-			<h1 className="title">{headingEmoji} Mewgenics Cat Visualiser</h1>
+			<h1 className="title">{headingEmoji} Mewgenics - Visual cat organizer</h1>
 			<p className="meta-text">{dataTimeLineText}</p>
 			<div className="meta-text">
 				{/* [x rooms, x cats] */}
