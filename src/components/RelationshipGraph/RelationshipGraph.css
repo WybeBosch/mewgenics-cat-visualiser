@@ -49,6 +49,12 @@
 		fill: var(--color-relation-related);
 	}
 
+	.kin-label {
+		stroke: var(--color-bg-page);
+		stroke-width: 3px;
+		paint-order: stroke;
+	}
+
 	.kin-parent .kin-line {
 		stroke: var(--color-relation-parent);
 	}
@@ -65,13 +71,8 @@
 		stroke: var(--color-relation-related);
 	}
 
-	.kin-inbreeding .kin-line,
 	.kin-inbreeding .kin-label {
 		fill: var(--color-relation-inbreeding);
-	}
-
-	.kin-inbreeding .kin-line {
-		stroke: var(--color-relation-inbreeding);
 	}
 
 	.tooltip-panel {
@@ -113,10 +114,6 @@
 
 	.legend-line-related {
 		stroke: var(--color-relation-related);
-	}
-
-	.legend-line-inbreeding {
-		stroke: var(--color-relation-inbreeding);
 	}
 
 	.legend-node-female {
