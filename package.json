@@ -1,15 +1,15 @@
 {
-	"name": "mewgenics-cat-visualiser",
+	"name": "mewgenics-visual-cat-organizer",
 	"version": "1.3.1",
 	"private": true,
 	"description": "Visualize Mewgenics cat relationships and attributes from .sav or JSON data directly in the browser.",
-	"homepage": "https://wybebosch.github.io/mewgenics-cat-visualiser/",
+	"homepage": "https://wybebosch.github.io/mewgenics-visual-cat-organizer/",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/WybeBosch/mewgenics-cat-visualiser.git"
+		"url": "git+https://github.com/WybeBosch/mewgenics-visual-cat-organizer.git"
 	},
 	"bugs": {
-		"url": "https://github.com/WybeBosch/mewgenics-cat-visualiser/issues"
+		"url": "https://github.com/WybeBosch/mewgenics-visual-cat-organizer/issues"
 	},
 	"keywords": [
 		"mewgenics",

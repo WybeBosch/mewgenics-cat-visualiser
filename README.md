@@ -2,7 +2,7 @@
 
 This project can be run locally
 or by visiting the web url: </br>
-https://wybebosch.github.io/mewgenics-cat-visualiser/
+https://wybebosch.github.io/mewgenics-visual-cat-organizer/
 
 This project is only meant as a visualiser, you cannot edit your save file with it.
 <img width="1415" height="1259" alt="afbeelding" src="https://github.com/user-attachments/assets/2deeb3e3-6eb4-4e72-8600-fa6fd55a1d30" />
@@ -59,7 +59,7 @@ If a cat has a matching partner (they both love each other) but are not in the s
 
 ## How to use on the web
 
-https://wybebosch.github.io/mewgenics-cat-visualiser/
+https://wybebosch.github.io/mewgenics-visual-cat-organizer/
 
 ## How to Use locally
 
