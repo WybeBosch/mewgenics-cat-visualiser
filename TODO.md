@@ -1,3 +1,5 @@
+TODO:
+
 - move more logic from the svg inside chunk functions
 - make the "hover over something" and it highlighting in the graph and the table work again
 - implement typescript
