@@ -84,6 +84,13 @@ function RelationshipLegendBar({ hiddenLineTypes, onToggle }) {
 				strokeWidth: 2,
 				strokeDasharray: '8,4',
 			})}
+			{renderToggleItem({
+				key: 'inbreeding',
+				lineClassName: 'legend-line-inbreeding',
+				label: 'Inbreeding',
+				strokeWidth: 1.5,
+				strokeDasharray: '2,4',
+			})}
 		</aside>
 	);
 }

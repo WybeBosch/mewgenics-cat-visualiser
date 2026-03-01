@@ -7,6 +7,7 @@ import SvgLoveHateLines from './partials/SvgLoveHateLines.jsx';
 import SvgMarkers from './partials/SvgMarkers.jsx';
 import SvgMatchedRelationships from './partials/SvgMatchedRelationships/SvgMatchedRelationships.jsx';
 import SvgRelationLines from './partials/SvgRelationLines.jsx';
+import SvgInbreedingLines from './partials/SvgInbreedingLines.jsx';
 import SvgCatNodes from './partials/SvgCatNodes/SvgCatNodes.jsx';
 import {
 	areMutualLovePair,
@@ -143,6 +144,13 @@ export default function RelationshipSVG({
 				ordered={ordered}
 				positions={positions}
 				hiddenLineTypes={hiddenLineTypes}
+			/>
+			<SvgInbreedingLines
+				hovIdx={hovIdx}
+				ordered={ordered}
+				positions={positions}
+				hiddenLineTypes={hiddenLineTypes}
+				allCats={allCats}
 			/>
 
 			<TooltipCloseArea selectedCatId={selectedCatId} setSelectedCatId={setSelectedCatId} />

@@ -7,7 +7,7 @@ import './RelationshipGraph.css';
 
 function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId, activeRoom }) {
 	const [hiddenLineTypes, setHiddenLineTypes] = useState(
-		() => new Set(['grandparent', 'related'])
+		() => new Set(['grandparent', 'related', 'inbreeding'])
 	);
 
 	const toggleLineType = useCallback((type) => {
