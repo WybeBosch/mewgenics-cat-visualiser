@@ -57,6 +57,17 @@ function hasOneWayLoveInRoom(cat, cats) {
 	);
 }
 
+function buildCatLookup(cats) {
+	const lookup = new Map();
+	for (const cat of cats) {
+		const key = normalizeLineageName(cat.name);
+		if (key && !lookup.has(key)) {
+			lookup.set(key, cat);
+		}
+	}
+	return lookup;
+}
+
 function findCatByName(cats, name) {
 	if (!name) return null;
 	const clean = normalizeLineageName(name);
@@ -186,11 +197,12 @@ function canBreed(a, b) {
 	if (!a || !b || a.id === b.id) return false;
 	const sa = a.sex?.toLowerCase();
 	const sb = b.sex?.toLowerCase();
+	if (!sa || !sb) return false;
 	if (sa === 'herm' || sb === 'herm') return true;
 	return sa !== sb;
 }
 
-function kinship(x, y, allCats, memo) {
+function kinship(x, y, lookup, memo) {
 	if (!x || !y) return 0;
 
 	const nameX = normalizeLineageName(x.name);
@@ -211,6 +223,21 @@ function kinship(x, y, allCats, memo) {
 		keyB = nameX;
 	}
 
+	// When birthdays are tied/missing, prefer the cat with more known ancestors
+	// as "second" (descendant) since we recurse through second's parents
+	if (bx === by) {
+		const firstAncestors = getAncestorNames(first).length;
+		const secondAncestors = getAncestorNames(second).length;
+		if (secondAncestors < firstAncestors) {
+			const tmp = first;
+			first = second;
+			second = tmp;
+			const tmpKey = keyA;
+			keyA = keyB;
+			keyB = tmpKey;
+		}
+	}
+
 	const key = `${keyA}|${keyB}`;
 	if (memo.has(key)) return memo.get(key);
 
@@ -220,23 +247,23 @@ function kinship(x, y, allCats, memo) {
 	let result;
 	if (keyA === keyB) {
 		// Self-kinship: ψ(x,x) = 0.5(1 + f_x)
-		const mother = findCatByName(allCats, first.parent1);
-		const father = findCatByName(allCats, first.parent2);
+		const mother = lookup.get(normalizeLineageName(first.parent1));
+		const father = lookup.get(normalizeLineageName(first.parent2));
 		if (mother && father) {
-			result = 0.5 * (1 + kinship(mother, father, allCats, memo));
+			result = 0.5 * (1 + kinship(mother, father, lookup, memo));
 		} else {
 			result = 0.5; // Founder: assume not inbred
 		}
 	} else {
 		// ψ(x,y) = 0.5(ψ(x, φ(y)) + ψ(x, ρ(y)))
-		const motherY = findCatByName(allCats, second.parent1);
-		const fatherY = findCatByName(allCats, second.parent2);
+		const motherY = lookup.get(normalizeLineageName(second.parent1));
+		const fatherY = lookup.get(normalizeLineageName(second.parent2));
 		if (!motherY && !fatherY) {
 			result = 0; // y is a founder, unrelated
 		} else {
 			result = 0;
-			if (motherY) result += 0.5 * kinship(first, motherY, allCats, memo);
-			if (fatherY) result += 0.5 * kinship(first, fatherY, allCats, memo);
+			if (motherY) result += 0.5 * kinship(first, motherY, lookup, memo);
+			if (fatherY) result += 0.5 * kinship(first, fatherY, lookup, memo);
 		}
 	}
 
@@ -244,20 +271,24 @@ function kinship(x, y, allCats, memo) {
 	return result;
 }
 
-function getInbreedingCoefficient(catX, catY, allCats) {
-	// Inbreeding coefficient of offspring = kinship between the two parents
-	return kinship(catX, catY, allCats, new Map());
+function createKinshipContext(allCats) {
+	return { lookup: buildCatLookup(allCats), memo: new Map() };
+}
+
+function getInbreedingCoefficient(catX, catY, allCats, ctx) {
+	const { lookup, memo } = ctx || createKinshipContext(allCats);
+	return kinship(catX, catY, lookup, memo);
 }
 
 function getRoomInbreedingStats(roomCats, allCats) {
-	const memo = new Map();
+	const ctx = createKinshipContext(allCats);
 	let totalPairs = 0;
 	let riskyPairs = 0;
 	for (let i = 0; i < roomCats.length; i++) {
 		for (let j = i + 1; j < roomCats.length; j++) {
 			if (!canBreed(roomCats[i], roomCats[j])) continue;
 			totalPairs++;
-			const coeff = kinship(roomCats[i], roomCats[j], allCats, memo);
+			const coeff = kinship(roomCats[i], roomCats[j], ctx.lookup, ctx.memo);
 			if (coeff > 0) riskyPairs++;
 		}
 	}
@@ -286,6 +317,7 @@ export {
 	getUncleAuntLabel,
 	getFamilySummary,
 	canBreed,
+	createKinshipContext,
 	getInbreedingCoefficient,
 	getRoomInbreedingStats,
 };

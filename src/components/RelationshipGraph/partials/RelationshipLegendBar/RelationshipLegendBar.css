@@ -68,7 +68,8 @@
 			white-space: nowrap;
 		}
 
-		&:hover .inbreeding-tooltip {
+		&:hover .inbreeding-tooltip,
+		&:focus-within .inbreeding-tooltip {
 			display: block;
 		}
 	}

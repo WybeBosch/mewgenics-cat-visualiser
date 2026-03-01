@@ -92,7 +92,7 @@ function RelationshipLegendBar({ hiddenLineTypes, onToggle }) {
 					className={hiddenLineTypes.has('inbreeding') ? 'disabled' : ''}
 					aria-pressed={!hiddenLineTypes.has('inbreeding')}
 				>
-					<span className="label legend-label-inbreeding">0% – 37.5% Inbreeding</span>
+					<span className="label legend-label-inbreeding">0% - 25% Inbreeding</span>
 				</button>
 				<div className="inbreeding-tooltip">
 					<InbreedingTable />
