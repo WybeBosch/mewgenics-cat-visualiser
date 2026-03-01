@@ -46,7 +46,9 @@ export function TableBody({
 	}
 
 	function getStatClass(statValue) {
-		return statValue >= 7 ? 'high' : '';
+		if (statValue >= 7) return 'high';
+		if (statValue <= 4) return 'low';
+		return '';
 	}
 
 	return (

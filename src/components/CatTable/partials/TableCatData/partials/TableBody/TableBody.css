@@ -106,6 +106,10 @@
 			font-size: 1.05em;
 			font-weight: 800;
 		}
+
+		&.low {
+			color: var(--color-negative-softer);
+		}
 	}
 
 	.total {
