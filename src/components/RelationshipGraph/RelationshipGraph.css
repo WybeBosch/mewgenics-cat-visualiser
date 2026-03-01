@@ -29,6 +29,12 @@
 		stroke: var(--color-relation-hate);
 	}
 
+	.kin-label {
+		paint-order: stroke;
+		stroke: var(--color-bg-page);
+		stroke-width: 3px;
+	}
+
 	.kin-parent .kin-line,
 	.kin-parent .kin-label {
 		fill: var(--color-relation-parent);
@@ -47,12 +53,6 @@
 	.kin-related .kin-line,
 	.kin-related .kin-label {
 		fill: var(--color-relation-related);
-	}
-
-	.kin-label {
-		paint-order: stroke;
-		stroke: var(--color-bg-page);
-		stroke-width: 3px;
 	}
 
 	.kin-parent .kin-line {
