@@ -1,6 +1,6 @@
 {
 	"name": "mewgenics-cat-visualiser",
-	"version": "1.3.0",
+	"version": "1.3.1",
 	"private": true,
 	"description": "Visualize Mewgenics cat relationships and attributes from .sav or JSON data directly in the browser.",
 	"homepage": "https://wybebosch.github.io/mewgenics-cat-visualiser/",
