@@ -1,6 +1,11 @@
 import './SvgMatchedRelationships.css';
+import { isLineTypeActive } from '../SvgRelationLogic.jsx';
 
-export default function SvgMatchedRelationships({ hovIdx, ordered, positions }) {
+export default function SvgMatchedRelationships({ hovIdx, ordered, positions, hiddenLineTypes }) {
+	if (!isLineTypeActive(hiddenLineTypes, 'love')) {
+		return null;
+	}
+
 	return (
 		<g className="love-boxes">
 			{/* Draw shared box for mutual love pairs */}

@@ -33,6 +33,42 @@ function hasOverlap(a, b) {
 	return a.some((item) => bSet.has(item));
 }
 
+function isSameRoom(a, b) {
+	return Boolean(a && b && a.room && b.room && a.room === b.room);
+}
+
+function isLineTypeActive(hiddenLineTypes, lineType) {
+	return !hiddenLineTypes?.has(lineType);
+}
+
+function areMutualLovePair(a, b) {
+	if (!a || !b || a.id === b.id) return false;
+	const aLoves = normalizeLineageName(a.loves);
+	const bLoves = normalizeLineageName(b.loves);
+	if (!aLoves || !bLoves) return false;
+	return aLoves === normalizeLineageName(b.name) && bLoves === normalizeLineageName(a.name);
+}
+
+function hasOneWayLoveInRoom(cat, cats) {
+	const lovesName = normalizeLineageName(cat?.loves);
+	if (!lovesName) return false;
+	return cats.some(
+		(other) => other.id !== cat.id && normalizeLineageName(other.name) === lovesName
+	);
+}
+
+function findCatByName(cats, name) {
+	if (!name) return null;
+	const clean = normalizeLineageName(name);
+	return cats.find((cat) => normalizeLineageName(cat.name) === clean) || null;
+}
+
+function findPositionByName(positions, name) {
+	if (!name) return null;
+	const clean = normalizeLineageName(name);
+	return positions.find((position) => normalizeLineageName(position.name) === clean) || null;
+}
+
 function isParentChild(a, b) {
 	const aParents = getParentNames(a);
 	const bParents = getParentNames(b);
@@ -120,6 +156,12 @@ export {
 	getGrandparentNames,
 	getAncestorNames,
 	hasOverlap,
+	isSameRoom,
+	isLineTypeActive,
+	areMutualLovePair,
+	hasOneWayLoveInRoom,
+	findCatByName,
+	findPositionByName,
 	isParentChild,
 	isGrandparentGrandchild,
 	isSibling,

@@ -12,6 +12,32 @@
 		display: flex;
 		align-items: center;
 		gap: 6px;
+
+		button {
+			display: flex;
+			align-items: center;
+			padding: 2px 4px;
+			border: 2px solid transparent;
+			border-radius: var(--radius-sm);
+			background: transparent;
+			color: inherit;
+			cursor: pointer;
+			font: inherit;
+			gap: 6px;
+			transition:
+				opacity 0.15s ease,
+				background-color 0.15s ease,
+				border-color 0.15s ease;
+
+			&:hover {
+				border-color: color-mix(in srgb, var(--color-text-muted) 30%, transparent);
+				background: color-mix(in srgb, var(--color-text-muted) 10%, transparent);
+			}
+
+			&.disabled {
+				opacity: 0.4;
+			}
+		}
 	}
 
 	.label {
