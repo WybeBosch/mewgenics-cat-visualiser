@@ -94,8 +94,35 @@ function isSibling(a, b) {
 	return hasOverlap(getParentNames(a), getParentNames(b));
 }
 
+function isFullSibling(a, b) {
+	const aParents = getParentNames(a);
+	const bParents = getParentNames(b);
+	if (aParents.length < 2 || bParents.length < 2) return false;
+	const aSet = new Set(aParents);
+	return bParents.every((p) => aSet.has(p));
+}
+
 function isRelated(a, b) {
 	return hasOverlap(getAncestorNames(a), getAncestorNames(b));
+}
+
+function isUncleAunt(a, b) {
+	const aParents = getParentNames(a);
+	const bParents = getParentNames(b);
+	const aGrandparents = getGrandparentNames(a);
+	const bGrandparents = getGrandparentNames(b);
+	return hasOverlap(aParents, bGrandparents) || hasOverlap(bParents, aGrandparents);
+}
+
+function getUncleAuntLabel(a, b) {
+	const aParents = getParentNames(a);
+	const bGrandparents = getGrandparentNames(b);
+	// If a's parent is in b's grandparents, a is the uncle/aunt
+	const uncleAuntCat = hasOverlap(aParents, bGrandparents) ? a : b;
+	const sex = uncleAuntCat.sex?.toLowerCase();
+	if (sex === 'female') return 'aunt';
+	if (sex === 'male') return 'uncle';
+	return 'uncle/aunt';
 }
 
 function getFamilySummary(cats) {
@@ -234,7 +261,10 @@ export {
 	isParentChild,
 	isGrandparentGrandchild,
 	isSibling,
+	isFullSibling,
 	isRelated,
+	isUncleAunt,
+	getUncleAuntLabel,
 	getFamilySummary,
 	canBreed,
 	getInbreedingCoefficient,

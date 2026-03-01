@@ -6,6 +6,9 @@ import {
 	isGrandparentGrandchild,
 	isParentChild,
 	isSibling,
+	isFullSibling,
+	isUncleAunt,
+	getUncleAuntLabel,
 	normalizeLineageName,
 } from './SvgRelationLogic.jsx';
 import { joinClass } from '../../../../../shared/utils/utils.jsx';
@@ -197,7 +200,13 @@ export default function SvgRelationLines({ hovIdx, ordered, positions, hiddenLin
 									fontSize={9}
 									opacity={0.8}
 								>
-									{sibling ? 'sibling' : 'related'}
+									{sibling
+									? isFullSibling(hovCat, other)
+										? 'sibling'
+										: 'half-sibling'
+									: isUncleAunt(hovCat, other)
+										? getUncleAuntLabel(hovCat, other)
+										: 'cousin'}
 								</text>
 							</g>
 						);
