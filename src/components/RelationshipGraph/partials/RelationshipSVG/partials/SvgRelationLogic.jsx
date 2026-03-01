@@ -61,7 +61,7 @@ function addGhost(lookup, name, parent1, parent2) {
 	if (!name) return;
 	const key = normalizeLineageName(name);
 	if (lookup.has(key)) return;
-	lookup.set(key, { name, parent1: parent1 || '', parent2: parent2 || '' });
+	lookup.set(key, { name, parent1: parent1 || '', parent2: parent2 || '', birthday: -Infinity });
 }
 
 function buildGhostAncestors(cats, lookup) {
