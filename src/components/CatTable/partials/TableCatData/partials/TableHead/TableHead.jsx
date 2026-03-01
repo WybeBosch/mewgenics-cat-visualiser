@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { joinClass } from '../../../../../../shared/utils/utils.jsx';
 import './TableHead.css';
 
-export function TableHead({ columns, handleSort, sortCol, sortAsc, searchQuery, onSearchChange, onSearchSubmit }) {
+export function TableHead({ columns, handleSort, sortCol, sortAsc, searchQuery, onSearchChange, onSearchSubmit, statFilters, setStatFilter }) {
 	const [hoveredColumn, setHoveredColumn] = useState(null);
 
 	return (
@@ -24,6 +24,8 @@ export function TableHead({ columns, handleSort, sortCol, sortAsc, searchQuery, 
 					const tooltipWidthClass = col.key === 'partner-room' ? 'wide' : '';
 					const columnClass = `col-${col.key}`;
 					const statClass = col.isStat ? 'col-stat' : '';
+					const hasFilter = col.isStat && statFilters[col.key] != null;
+					const hasFilterClass = hasFilter ? 'has-filter' : '';
 
 					return (
 						<th
@@ -34,12 +36,24 @@ export function TableHead({ columns, handleSort, sortCol, sortAsc, searchQuery, 
 								statClass,
 								textAlignClass,
 								staticClass,
-								sortedClass
+								sortedClass,
+								hasFilterClass
 							)}
 							onMouseEnter={() => setHoveredColumn(col.key)}
 							onMouseLeave={() => setHoveredColumn(null)}
 							onClick={isSortable ? () => handleSort(col.key) : undefined}
 						>
+							{hasFilter && (
+								<span
+									className="filter-clear"
+									onClick={(e) => {
+										e.stopPropagation();
+										setStatFilter(col.key, null);
+									}}
+								>
+									×
+								</span>
+							)}
 							{col.key === 'name' ? (
 								<input
 									type="text"
@@ -58,7 +72,33 @@ export function TableHead({ columns, handleSort, sortCol, sortAsc, searchQuery, 
 							{isSorted && (
 								<span className="sort-indicator">{sortAsc ? '▲' : '▼'}</span>
 							)}
-							{hoveredColumn === col.key && col.key !== 'name' && col.tooltip && (
+							{hoveredColumn === col.key && col.isStat && (
+								<div
+									className={joinClass(
+										'tooltip',
+										'stat-filter',
+										tooltipAlignClass
+									)}
+								>
+									<input
+										type="text"
+										className="filter-input"
+										placeholder="1-9"
+										maxLength={1}
+										value={statFilters[col.key] ?? ''}
+										onChange={(e) => {
+											const v = e.target.value;
+											if (v === '') {
+												setStatFilter(col.key, null);
+											} else if (/^[1-9]$/.test(v)) {
+												setStatFilter(col.key, Number(v));
+											}
+										}}
+										onClick={(e) => e.stopPropagation()}
+									/>
+								</div>
+							)}
+							{hoveredColumn === col.key && !col.isStat && col.key !== 'name' && col.tooltip && (
 								<div
 									className={joinClass(
 										'tooltip',

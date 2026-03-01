@@ -1,7 +1,7 @@
 import { joinClass } from '../../../../shared/utils/utils.jsx';
 import './TableRoomTabs.css';
 
-export function TableRoomTabs({ cats, rooms, activeRoom, setActiveRoom, sortedRooms }) {
+export function TableRoomTabs({ cats, rooms, activeRoom, setActiveRoom, sortedRooms, statFilters, clearStatFilters }) {
 	// Always sort rooms alphabetically for tab rendering
 	sortedRooms = [...rooms].sort((a, b) => a.localeCompare(b));
 
@@ -22,6 +22,11 @@ export function TableRoomTabs({ cats, rooms, activeRoom, setActiveRoom, sortedRo
 							</button>
 						</div>
 					))}
+					{Object.keys(statFilters).length > 0 && (
+						<button className="clear-filters" onClick={clearStatFilters}>
+							Clear Filters
+						</button>
+					)}
 				</nav>
 			)}
 		</>
