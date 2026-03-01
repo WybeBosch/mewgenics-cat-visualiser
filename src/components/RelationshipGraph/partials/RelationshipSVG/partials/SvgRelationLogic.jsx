@@ -57,6 +57,24 @@ function hasOneWayLoveInRoom(cat, cats) {
 	);
 }
 
+function addGhost(lookup, name, parent1, parent2) {
+	if (!name) return;
+	const key = normalizeLineageName(name);
+	if (lookup.has(key)) return;
+	lookup.set(key, { name, parent1: parent1 || '', parent2: parent2 || '' });
+}
+
+function buildGhostAncestors(cats, lookup) {
+	for (const cat of cats) {
+		addGhost(lookup, cat.parent1, cat.grandparent1, cat.grandparent2);
+		addGhost(lookup, cat.parent2, cat.grandparent3, cat.grandparent4);
+		addGhost(lookup, cat.grandparent1, '', '');
+		addGhost(lookup, cat.grandparent2, '', '');
+		addGhost(lookup, cat.grandparent3, '', '');
+		addGhost(lookup, cat.grandparent4, '', '');
+	}
+}
+
 function buildCatLookup(cats) {
 	const lookup = new Map();
 	for (const cat of cats) {
@@ -65,6 +83,7 @@ function buildCatLookup(cats) {
 			lookup.set(key, cat);
 		}
 	}
+	buildGhostAncestors(cats, lookup);
 	return lookup;
 }
 
