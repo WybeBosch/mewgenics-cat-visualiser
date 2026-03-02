@@ -60,7 +60,15 @@ function hasOneWayLoveInRoom(cat, cats) {
 function addGhost(lookup, name, parent1, parent2) {
 	if (!name) return;
 	const key = normalizeLineageName(name);
-	if (lookup.has(key)) return;
+	if (lookup.has(key)) {
+		const existing = lookup.get(key);
+		// Only update ghosts (birthday === -Infinity), never overwrite real cats
+		if (existing.birthday !== -Infinity) return;
+		// Fill in missing parents if the new call provides them
+		if (!existing.parent1 && parent1) existing.parent1 = parent1;
+		if (!existing.parent2 && parent2) existing.parent2 = parent2;
+		return;
+	}
 	lookup.set(key, { name, parent1: parent1 || '', parent2: parent2 || '', birthday: -Infinity });
 }
 
