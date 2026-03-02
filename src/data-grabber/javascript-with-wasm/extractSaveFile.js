@@ -85,11 +85,18 @@ export async function extractSaveFile(file) {
 			[...roomMap.entries()].slice(0, 5)
 		);
 
-		const housedKeys = Array.from(roomMap.keys());
-		if (housedKeys.length === 0) return [];
-		if (housedKeys.length > SECURITY_LIMITS.maxCatsProcessed) {
+		let selectedCatKeys = Array.from(roomMap.keys());
+		if (selectedCatKeys.length === 0) {
+			logIfEnabled('[extract] roomMap is empty; falling back to all cats from cats table');
+			const allKeysResult = db.exec('SELECT key FROM cats ORDER BY key');
+			if (allKeysResult.length && allKeysResult[0].values.length) {
+				selectedCatKeys = allKeysResult[0].values.map(([key]) => key);
+			}
+		}
+		if (selectedCatKeys.length === 0) return [];
+		if (selectedCatKeys.length > SECURITY_LIMITS.maxCatsProcessed) {
 			throw new Error(
-				`Too many cats in save (${housedKeys.length}). Max supported is ${SECURITY_LIMITS.maxCatsProcessed}.`
+				`Too many cats in save (${selectedCatKeys.length}). Max supported is ${SECURITY_LIMITS.maxCatsProcessed}.`
 			);
 		}
 
@@ -116,10 +123,10 @@ export async function extractSaveFile(file) {
 
 		// --- 4. Fetch and parse housed cat blobs ---
 		// Note: sql.js db.exec() doesn't reliably bind arrays for IN clauses the same
-		// way Python's sqlite3 does. Since housedKeys are parsed integers (not user input),
+		// way Python's sqlite3 does. Since selectedCatKeys are parsed integers (not user input),
 		// inlining them directly is safe and works correctly.
 		const catsResult = db.exec(
-			`SELECT key, data FROM cats WHERE key IN (${housedKeys.join(',')}) ORDER BY key`
+			`SELECT key, data FROM cats WHERE key IN (${selectedCatKeys.join(',')}) ORDER BY key`
 		);
 		logIfEnabled('[extract] cat rows fetched:', catsResult[0]?.values?.length ?? 0);
 

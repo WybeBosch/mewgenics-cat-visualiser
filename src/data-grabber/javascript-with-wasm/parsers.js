@@ -74,7 +74,7 @@ export function parseRoomAssignments(houseState) {
 		if (pos + 16 > buf.length) break;
 		const catKey = view.getUint32(pos, true);
 		const slen = view.getUint32(pos + 8, true);
-		if (slen < 1 || slen > 30) break;
+		if (slen > 30) break;
 		if (pos + 16 + slen + 24 > buf.length) break;
 		const roomName = new TextDecoder('ascii').decode(buf.subarray(pos + 16, pos + 16 + slen));
 		roomMap.set(catKey, roomName);
