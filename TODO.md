@@ -18,3 +18,11 @@ TODO:
  -make a demo mode that moves the moves lol
 
 - add support for mutations showing (Can use .json we save of the guy on mod site that had a json or python file with all mutations)
+
+- try and use custom hooks more stuff like const { age, isKitten } = useCatAge(cat);
+
+check either
+https://feature-sliced.design/
+or atomic
+https://atomicdesign.bradfrost.com/
+(brave-dashboard also uses this)
