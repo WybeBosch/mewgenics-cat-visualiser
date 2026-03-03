@@ -88,73 +88,6 @@ def lz4_decompress_block(src: bytes, dst_size: int) -> bytes:
     return bytes(dst)
 
 
-def lz4_compress_block(src: bytes) -> bytes:
-    """Simple LZ4 block compression"""
-    dst = bytearray()
-    src_pos = 0
-    src_len = len(src)
-
-    while src_pos < src_len:
-        # Find match (simple greedy approach)
-        best_len = 0
-        best_off = 0
-        max_match = min(src_len - src_pos, 0xFFFF)
-        search_start = max(0, src_pos - 0xFFFF)
-
-        for off in range(1, min(src_pos - search_start + 1, 0xFFFF)):
-            match_len = 0
-            while (match_len < max_match and
-                   src_pos + match_len < src_len and
-                   src[src_pos + match_len] == src[src_pos - off + match_len]):
-                match_len += 1
-            if match_len > best_len and match_len >= 4:
-                best_len = match_len
-                best_off = off
-
-        # Determine literal length
-        if best_len >= 4:
-            literal_len = 0
-        else:
-            literal_len = min(src_len - src_pos, src_len)
-            best_len = 0
-
-        literal_len = min(literal_len, src_len - src_pos)
-
-        # Write token
-        lit_field = min(literal_len, 15)
-        match_field = 0 if best_len < 4 else min(best_len - 4, 15)
-        dst.append((lit_field << 4) | match_field)
-
-        # Write literal length extension
-        if literal_len >= 15:
-            remaining = literal_len - 15
-            while remaining >= 255:
-                dst.append(255)
-                remaining -= 255
-            dst.append(remaining)
-
-        # Write literals
-        for i in range(literal_len):
-            dst.append(src[src_pos + i])
-        src_pos += literal_len
-
-        # Write match
-        if best_len >= 4 and src_pos < src_len:
-            dst.append(best_off & 0xFF)
-            dst.append((best_off >> 8) & 0xFF)
-            src_pos += best_len
-
-            # Write match length extension
-            if best_len - 4 >= 15:
-                remaining = best_len - 4 - 15
-                while remaining >= 255:
-                    dst.append(255)
-                    remaining -= 255
-                dst.append(remaining)
-
-    return bytes(dst)
-
-
 # Binary helpers
 def u16_le(b: bytes, off: int) -> int:
     return struct.unpack_from("<H", b, off)[0]
@@ -166,10 +99,6 @@ def u32_le(b: bytes, off: int) -> int:
 
 def u64_le(b: bytes, off: int) -> int:
     return struct.unpack_from("<Q", b, off)[0]
-
-
-def f64_le(b: bytes, off: int) -> float:
-    return struct.unpack_from("<d", b, off)[0]
 
 
 def decompress_cat_blob(wrapped: bytes) -> Tuple[bytes, str]:
@@ -192,14 +121,6 @@ def decompress_cat_blob(wrapped: bytes) -> Tuple[bytes, str]:
     stream = wrapped[4:]
     dec = lz4_decompress_block(stream, uncomp)
     return dec, "A"
-
-
-def recompress_cat_blob(dec: bytes, variant: str) -> bytes:
-    """Recompress cat BLOB"""
-    comp = lz4_compress_block(dec)
-    if variant == "A":
-        return struct.pack("<I", len(dec)) + comp
-    return struct.pack("<I", len(dec)) + struct.pack("<I", len(comp)) + comp
 
 
 # Constants
@@ -350,188 +271,6 @@ def find_stats(dec: bytes, expected_off: int = 0x1CC, window: int = 0x140) -> Op
     return best_off, list(best)
 
 
-def write_abilities_to_blob(dec_mut: bytearray, abilities: Dict[str, List[str]]) -> bool:
-    """Write abilities back to blob by rebuilding the structure. Returns True if successful."""
-    n = len(dec_mut)
-
-    # Find u64-run starting with "DefaultMove"
-    for start in range(0, n - 16):
-        if start + 8 > n:
-            break
-        ln = u64_le(dec_mut, start)
-        if ln != 11 or start + 8 + ln > n:
-            continue
-        sb = bytes(dec_mut[start + 8:start + 8 + ln])
-        if sb != b"DefaultMove":
-            continue
-
-        # Found the run, now parse all abilities
-        items = []
-        i = start
-
-        # Parse u64-run items
-        for _ in range(64):
-            if i + 8 > n:
-                break
-            ln = u64_le(dec_mut, i)
-
-            # Validate
-            if ln < 0 or ln > 96 or i + 8 + ln > n:
-                # Check if it's a StringRec marker
-                if i + 4 <= n and bytes(dec_mut[i:i+4]) in (b'\x01\x00\x00\x00', b'\x02\x00\x00\x00'):
-                    break
-                break
-
-            if ln == 0:
-                items.append(("u64", i, 0, ""))
-                i += 8
-                continue
-
-            sb = bytes(dec_mut[i + 8:i + 8 + ln])
-            try:
-                s = sb.decode("ascii")
-                items.append(("u64", i, ln, s))
-            except UnicodeDecodeError:
-                break
-            i += 8 + ln
-
-        # Check for separator and secondary u64-run (Passive2)
-        has_separator = False
-        o = i
-        if o + 4 <= n and bytes(dec_mut[o:o+4]) == b'\x02\x00\x00\x00':
-            has_separator = True
-            o += 4
-            if o + 8 <= n:
-                ln = u64_le(dec_mut, o)
-                if 0 < ln <= 96 and o + 8 + ln <= n:
-                    o += 8 + ln
-
-        # Parse StringRec blocks
-        stringrec_items = []
-        disorder_start = i  # Start from original position for size calculation
-        sig = b"\x01\x00\x00\x00"
-        for _ in range(4):
-            if o + 12 > n:
-                break
-            if bytes(dec_mut[o:o+4]) != sig:
-                break
-            ln = u64_le(dec_mut, o + 4)
-            if ln < 0 or ln > 96 or o + 12 + ln > n:
-                break
-            sb = bytes(dec_mut[o + 12:o + 12 + ln])
-            try:
-                s = sb.decode("ascii")
-                stringrec_items.append(("strrec", o, ln, s))
-            except UnicodeDecodeError:
-                break
-            o += 12 + ln
-
-        # Get new ability values
-        active = abilities.get("active", [])
-        passive = abilities.get("passive", [])
-        disorder = abilities.get("disorder", [])
-
-        # Build new u64-run section
-        new_u64_data = bytearray()
-        for idx in range(len(items)):
-            orig_type, orig_pos, orig_len, orig_val = items[idx]
-
-            # Determine new value based on position
-            new_val = None
-            if idx < 6 and idx < len(active) and active[idx]:  # Active 0-5
-                new_val = active[idx]
-            elif idx == 10 and len(passive) > 0 and passive[0]:  # Passive 1
-                new_val = passive[0]
-            elif idx == 11 and len(passive) > 1 and passive[1]:  # Passive 2
-                new_val = passive[1]
-            else:
-                new_val = orig_val
-
-            # Encode value: [u64 len][bytes]
-            if new_val:
-                val_bytes = new_val.encode("ascii")
-                new_u64_data.extend(struct.pack("<Q", len(val_bytes)))
-                new_u64_data.extend(val_bytes)
-            else:
-                # Empty string
-                new_u64_data.extend(struct.pack("<Q", 0))
-
-        # Build new separator + secondary u64-run if needed
-        new_separator_data = bytearray()
-        if has_separator:
-            new_separator_data.extend(b'\x02\x00\x00\x00')
-            # Passive2 from u64-run items[11] (already encoded above)
-            # We don't need to add anything here since Passive2 is in the u64-run
-
-        # Build new StringRec section
-        # Need to handle two formats:
-        # 1. With separator: StringRec[0-1] = Disorder
-        # 2. Without separator: StringRec[0] = Passive2, StringRec[1-2] = Disorder
-        new_strrec_data = bytearray()
-        for idx in range(len(stringrec_items)):
-            orig_type, orig_pos, orig_len, orig_val = stringrec_items[idx]
-
-            # Determine new value based on format
-            new_val = None
-            if has_separator:
-                # With separator: all StringRec are disorders
-                if idx < len(disorder):
-                    # Use provided value (even if empty) to allow clearing
-                    new_val = disorder[idx] if disorder[idx] else None
-                else:
-                    new_val = orig_val
-            else:
-                # Without separator: StringRec[0] = Passive2, [1-2] = Disorder
-                if idx == 0:
-                    # Passive2
-                    if len(passive) > 1:
-                        new_val = passive[1] if passive[1] else None
-                    else:
-                        new_val = orig_val
-                elif idx <= 2:
-                    # Disorder[idx-1]
-                    disorder_idx = idx - 1
-                    if disorder_idx < len(disorder):
-                        new_val = disorder[disorder_idx] if disorder[disorder_idx] else None
-                    else:
-                        new_val = orig_val
-                else:
-                    new_val = orig_val
-
-            # Encode value: [u32=1][u64 len][bytes]
-            new_strrec_data.extend(b'\x01\x00\x00\x00')
-            # Game stores "None" string for empty slots, not empty string
-            val_to_write = new_val if new_val else "None"
-            val_bytes = val_to_write.encode("ascii")
-            new_strrec_data.extend(struct.pack("<Q", len(val_bytes)))
-            new_strrec_data.extend(val_bytes)
-
-        # Calculate size difference
-        old_section_len = disorder_start - start
-        new_section_len = len(new_u64_data) + len(new_separator_data) + len(new_strrec_data)
-        size_diff = new_section_len - old_section_len
-
-        # Build new blob: [prefix][new_abilities][suffix]
-        # prefix = everything before the u64-run
-        # suffix = everything after the StringRec section
-
-        prefix = bytes(dec_mut[0:start])
-        suffix_start = disorder_start + sum(12 + orig_len for _, _, orig_len, _ in stringrec_items)
-        suffix = bytes(dec_mut[suffix_start:])
-
-        new_dec = bytearray(prefix)
-        new_dec.extend(new_u64_data)
-        new_dec.extend(new_separator_data)
-        new_dec.extend(new_strrec_data)
-        new_dec.extend(suffix)
-
-        # Replace dec_mut contents
-        dec_mut[:] = new_dec
-        return True
-
-    return False
-
-
 def find_class_and_level(dec: bytes, name_end: int) -> Tuple[str, int, int, int]:
     """Find class, level and birthDay offsets"""
     cat_class = ""
@@ -653,24 +392,6 @@ def read_t_array(dec: bytes, name_end: int) -> Dict[str, int]:
             mutations[field_name] = val
 
     return mutations
-
-
-def write_t_array(dec_mut: bytearray, name_end: int, mutations: Dict[str, int]) -> bool:
-    """Write T-array mutations to cat blob. Returns True if successful."""
-    t_start = name_end + 0x74
-
-    # Build reverse mapping: field_name -> idx
-    for idx, field_name in MUTATION_SLOT_MAP.items():
-        offset = t_start + idx * 4
-        if offset + 4 > len(dec_mut):
-            continue
-
-        # If this mutation is in the changes, write it
-        if field_name in mutations:
-            val = mutations[field_name]
-            struct.pack_into("<I", dec_mut, offset, val)
-
-    return True
 
 
 def parse_abilities_and_mutations(dec: bytes, name_end: int = 0) -> Tuple[Dict[str, List[Optional[str]]], Dict[str, int]]:
@@ -828,135 +549,6 @@ def parse_abilities_and_mutations(dec: bytes, name_end: int = 0) -> Tuple[Dict[s
     return abilities, mutations
 
 
-def parse_furniture_data(conn: sqlite3.Connection) -> Dict[str, List[Dict[str, Any]]]:
-    """Parse furniture data from database and categorize by status.
-
-    Returns:
-        Dict with keys:
-        - 'backpack': Furniture with no room assigned (in backpack)
-        - 'placed': Furniture placed in rooms (has coordinates)
-        - 'unplaced': Furniture assigned to room but not placed (no coordinates)
-
-    Furniture BLOB structure:
-    - u32 uncomp_len (=1, meaning minimal compressed data)
-    - u32 comp_len
-    - null-terminated furniture_id string (e.g., "set_wooden_lamp")
-    - padding zeros
-    - u64 room_name_len
-    - room_name string (e.g., "Floor2_Large")
-    - position data (x, y as i32)
-    """
-    result = {
-        "backpack": [],    # room is None/empty
-        "placed": [],      # room exists and has coordinates
-        "unplaced": [],    # room exists but no coordinates
-    }
-
-    def read_null_terminated(data: bytes, start: int) -> tuple:
-        """Read null-terminated ASCII string, return (string, next_offset)"""
-        end = start
-        while end < len(data) and data[end] != 0:
-            end += 1
-        if end > start:
-            return data[start:end].decode('ascii', errors='replace'), end + 1
-        return "", end + 1
-
-    try:
-        cursor = conn.execute("SELECT key, data FROM furniture")
-        for row in cursor.fetchall():
-            key = row[0]
-            data = to_bytes(row[1])
-
-            if not data or len(data) < 16:
-                continue
-
-            try:
-                # Skip header
-                offset = 8
-
-                # Skip any zero bytes before furniture_id
-                while offset < len(data) and data[offset] == 0:
-                    offset += 1
-
-                # Read furniture ID (null-terminated)
-                furniture_id, offset = read_null_terminated(data, offset)
-
-                # Check if this is backpack furniture (no room)
-                # Skip null and padding, then check if next value is room_len (small) or coordinates (huge)
-                check_offset = offset
-                while check_offset < len(data) and data[check_offset] == 0:
-                    check_offset += 1
-
-                # Read room name if exists (u64 length prefix + string)
-                room = None
-                if check_offset + 8 <= len(data):
-                    room_len = u64_le(data, check_offset)
-                    # If room_len is a small value (1-100), it's a valid room name length
-                    # If room_len is 0 or huge, it's coordinates (backpack furniture)
-                    if 0 < room_len < 64 and check_offset + 8 + room_len <= len(data):
-                        room = data[check_offset + 8:check_offset + 8 + room_len].decode('ascii', errors='replace')
-                        offset = check_offset + 8 + room_len
-
-                # Look for position data
-                x, y = None, None
-                # For backpack furniture (no room), coordinates are at check_offset
-                # For placed furniture, search after room name
-                if room is None:
-                    # Backpack: coordinates directly at check_offset
-                    if check_offset + 8 <= len(data):
-                        x = struct.unpack_from("<i", data, check_offset)[0]
-                        y = struct.unpack_from("<i", data, check_offset + 4)[0]
-                        if not (-1000 <= x <= 1000 and -1000 <= y <= 1000):
-                            x, y = None, None
-                else:
-                    # Placed: search for coordinates after room
-                    for i in range(offset, min(len(data) - 8, offset + 100)):
-                        if i % 4 != 0:
-                            continue
-                        val1 = struct.unpack_from("<i", data, i)[0]
-                        val2 = struct.unpack_from("<i", data, i + 4)[0]
-                        if -1000 <= val1 <= 1000 and -1000 <= val2 <= 1000:
-                            x, y = val1, val2
-                            break
-
-                furniture = {
-                    "key": key,
-                    "furniture_id": furniture_id or "unknown",
-                }
-
-                if x is not None:
-                    furniture["x"] = x
-                if y is not None:
-                    furniture["y"] = y
-
-                # Categorize based on room and position
-                if room is None or room == "":
-                    # In backpack (no room assigned)
-                    furniture["room"] = None
-                    result["backpack"].append(furniture)
-                elif x is not None and y is not None:
-                    # Placed in room
-                    furniture["room"] = room
-                    result["placed"].append(furniture)
-                else:
-                    # Assigned to room but not placed
-                    furniture["room"] = room
-                    result["unplaced"].append(furniture)
-
-            except Exception as e:
-                print(f"Error parsing furniture {key}: {e}")
-                result["backpack"].append({
-                    "key": key,
-                    "error": str(e),
-                })
-                continue
-
-    except Exception as e:
-        print(f"Error reading furniture table: {e}")
-
-    return result
-
-
 def parse_save_file(data: bytes) -> Dict[str, Any]:
     """Parse entire save file from bytes"""
     conn = sqlite3.connect(":memory:")
@@ -964,12 +556,9 @@ def parse_save_file(data: bytes) -> Dict[str, Any]:
 
     # Read current_day
     current_day = 0
-    props = conn.execute("SELECT key, data FROM properties WHERE key IN ('current_day', 'house_gold', 'house_food', 'save_file_percent')")
+    props = conn.execute("SELECT key, data FROM properties WHERE key = 'current_day'")
     basic_data = {
         "current_day": 0,
-        "house_gold": 0,
-        "house_food": 0,
-        "save_percent": 0
     }
     for row in props.fetchall():
         key, raw_data = row
@@ -993,12 +582,6 @@ def parse_save_file(data: bytes) -> Dict[str, Any]:
         if key == 'current_day':
             basic_data["current_day"] = val
             current_day = val
-        elif key == 'house_gold':
-            basic_data["house_gold"] = val
-        elif key == 'house_food':
-            basic_data["house_food"] = val
-        elif key == 'save_file_percent':
-            basic_data["save_percent"] = val
 
     # Read house_state
     hs_row = conn.execute("SELECT data FROM files WHERE key='house_state'").fetchone()
@@ -1088,225 +671,18 @@ def parse_save_file(data: bytes) -> Dict[str, Any]:
                 "_level_offset": level_off,
                 "_birth_day_offset": birth_day_off,
                 "_stats_offset": stats_off,
-                "_birth_day": birth_day
+                "_birth_day": birth_day,
             })
         except Exception as e:
             print(f"Error parsing cat {key}: {e}")
             continue
-
-    # Read furniture data
-    furniture_data = parse_furniture_data(conn)
 
     conn.close()
 
     return {
         "basic": basic_data,
         "cats": cats,
-        "furniture": furniture_data,
-        "total_cats": len(cats),
-        "total_furniture": len(furniture_data.get("placed", [])) + len(furniture_data.get("unplaced", [])) + len(furniture_data.get("backpack", []))
     }
-
-
-def modify_save_file(data: bytes, modified_basic: Dict[str, int], cat_changes: Dict[int, Dict[str, Any]], furniture_changes: Optional[Dict[str, Any]] = None, output_path: str = "/tmp/mewgenics_modified.sav") -> str:
-    """Modify save file with changes and save to Pyodide virtual FS, return output path"""
-    # Ensure data is bytes (Pyodide may pass memoryview)
-    if not isinstance(data, bytes):
-        data = bytes(data)
-
-    conn = sqlite3.connect(":memory:")
-    conn.deserialize(data)
-
-    # Apply furniture changes
-    if furniture_changes:
-        added = furniture_changes.get("added", [])
-        removed = furniture_changes.get("removed", [])
-
-        # Remove furniture by key
-        for key in removed:
-            conn.execute("DELETE FROM furniture WHERE key = ?", (key,))
-            print(f"DEBUG: Removed furniture key={key}")
-
-        # Add new furniture
-        for furn in added:
-            key = furn.get("key")
-            furniture_id = furn.get("furniture_id")
-            x = furn.get("x", 256)
-            y = furn.get("y", 256)
-            room = furn.get("room")
-
-            # Check if this is a replacement for an existing row
-            existing = conn.execute("SELECT key FROM furniture WHERE key = ?", (key,)).fetchone()
-            if existing:
-                conn.execute("DELETE FROM furniture WHERE key = ?", (key,))
-
-            # Build furniture BLOB for backpack furniture
-            # Structure based on add_furniture.py reference:
-            # - u32 uncomp_len = 1
-            # - u32 comp_len = len(furniture_id) (without null)
-            # - padding (4 bytes)
-            # - furniture_id (null-terminated)
-            # - padding (28 bytes fixed)
-            # - i32 x, i32 y
-            # - trailing: u32(1), u32(1)
-            fid_bytes = furniture_id.encode('ascii')
-            comp_len = len(fid_bytes)
-
-            blob_data = bytearray()
-            # Header
-            blob_data.extend(struct.pack('<I', 1))  # uncomp_len = 1
-            blob_data.extend(struct.pack('<I', comp_len))  # comp_len
-            # Padding (4 bytes)
-            blob_data.extend(b'\x00\x00\x00\x00')
-            # Furniture ID (null-terminated)
-            blob_data.extend(fid_bytes)
-            blob_data.append(0)
-            # Padding (28 bytes fixed)
-            blob_data.extend(b'\x00' * 28)
-            # Coordinates
-            blob_data.extend(struct.pack('<i', x))
-            blob_data.extend(struct.pack('<i', y))
-            # Trailing data
-            blob_data.extend(struct.pack('<I', 1))
-            blob_data.extend(struct.pack('<I', 1))
-
-            conn.execute(
-                "INSERT INTO furniture (key, data) VALUES (?, ?)",
-                (key, sqlite3.Binary(bytes(blob_data)))
-            )
-            print(f"DEBUG: Added furniture key={key}, id={furniture_id}, x={x}, y={y}, room=None")
-
-    # Update basic data - values are stored as ASCII strings in the save file
-    if "current_day" in modified_basic:
-        day_data = str(modified_basic["current_day"]).encode("ascii")
-        conn.execute("UPDATE properties SET data = ? WHERE key = 'current_day'", (sqlite3.Binary(day_data),))
-
-    if "house_gold" in modified_basic:
-        gold_data = str(modified_basic["house_gold"]).encode("ascii")
-        conn.execute("UPDATE properties SET data = ? WHERE key = 'house_gold'", (sqlite3.Binary(gold_data),))
-
-    if "house_food" in modified_basic:
-        food_data = str(modified_basic["house_food"]).encode("ascii")
-        conn.execute("UPDATE properties SET data = ? WHERE key = 'house_food'", (sqlite3.Binary(food_data),))
-
-    if "save_percent" in modified_basic:
-        percent_data = str(modified_basic["save_percent"]).encode("ascii")
-        conn.execute("UPDATE properties SET data = ? WHERE key = 'save_file_percent'", (sqlite3.Binary(percent_data),))
-
-    # Apply cat changes
-    for cat_key_str, changes in cat_changes.items():
-        # JSON keys are strings, convert to int
-        cat_key = int(cat_key_str)
-        print(f"DEBUG: Processing cat {cat_key}, changes={changes}")
-        row = conn.execute("SELECT data FROM cats WHERE key=?", (cat_key,)).fetchone()
-        if not row or row[0] is None:
-            continue
-
-        # Ensure BLOB data is bytes (Pyodide may return memoryview)
-        wrapped = to_bytes(row[0])
-        try:
-            dec, variant = decompress_cat_blob(wrapped)
-            dec_mut = bytearray(dec)
-
-            # Get offsets from changes or defaults
-            name_end = changes.get("_name_end", 0x14)
-            level_offset = changes.get("_level_offset", len(dec) - 115)
-            birth_day_offset = changes.get("_birth_day_offset", len(dec) - 103)
-            stats_offset = changes.get("_stats_offset", -1)
-            birth_day = changes.get("_birth_day", 0)
-            current_day = changes.get("_current_day", 0)
-
-            # Modify name
-            if "name" in changes and name_end > 0:
-                name_len = (name_end - 0x14) // 2
-                new_name = changes["name"][:32]
-                new_name_bytes = new_name.encode("utf-16le")
-                old_name_len_bytes = name_len * 2
-                if len(new_name_bytes) <= old_name_len_bytes:
-                    name_start = 0x14
-                    for i in range(old_name_len_bytes):
-                        dec_mut[name_start + i] = new_name_bytes[i] if i < len(new_name_bytes) else 0
-
-            # Modify sex
-            if "sex" in changes:
-                sex_map = {"Male": 0, "Female": 1, "Ditto": 2}
-                sex_value = sex_map.get(changes["sex"], 0)
-                off_a = name_end + 8
-                off_b = name_end + 12
-                if off_b + 2 <= len(dec_mut):
-                    dec_mut[off_a] = sex_value
-                    dec_mut[off_a + 1] = 0
-                    dec_mut[off_b] = sex_value
-                    dec_mut[off_b + 1] = 0
-
-            # Modify age (via birthDay)
-            if "age" in changes and birth_day_offset >= 0:
-                new_birth_day = max(0, current_day - changes["age"])
-                struct.pack_into("<I", dec_mut, birth_day_offset, new_birth_day)
-
-            # Modify retired status
-            if "retired" in changes:
-                flags_off = name_end + 0x10
-                if flags_off + 2 <= len(dec_mut):
-                    flags = u16_le(bytes(dec_mut), flags_off)
-                    if changes["retired"]:
-                        flags |= 0x0002
-                    else:
-                        flags &= ~0x0002
-                    struct.pack_into("<H", dec_mut, flags_off, flags)
-
-            # Modify stats
-            if "stats" in changes and stats_offset >= 0:
-                stats = changes["stats"]
-                struct.pack_into("<7i", dec_mut, stats_offset,
-                    stats.get("STR", 5),
-                    stats.get("DEX", 5),
-                    stats.get("CON", 5),
-                    stats.get("INT", 5),
-                    stats.get("SPD", 5),
-                    stats.get("CHA", 5),
-                    stats.get("LUCK", 5)
-                )
-
-            # Modify level
-            if "level" in changes and level_offset >= 0:
-                struct.pack_into("<I", dec_mut, level_offset, changes["level"])
-
-            # Modify abilities
-            if "abilities" in changes:
-                abilities = changes["abilities"]
-                write_abilities_to_blob(dec_mut, abilities)
-
-            # Modify mutations
-            if "mutations" in changes:
-                mutations = changes["mutations"]
-                write_t_array(dec_mut, name_end, mutations)
-
-            # Re-compress and save
-            new_wrapped = recompress_cat_blob(bytes(dec_mut), variant)
-            # Use sqlite3.Binary to ensure proper BLOB handling in Pyodide
-            conn.execute("UPDATE cats SET data = ? WHERE key = ?", (sqlite3.Binary(new_wrapped), cat_key))
-            print(f"DEBUG: Updated cat {cat_key}, variant={variant}")
-
-        except Exception as e:
-            print(f"DEBUG: Error modifying cat {cat_key}: {e}")
-            continue
-
-    # Serialize database - Pyodide sqlite3 doesn't support serialize()
-    # Use backup to Pyodide virtual file system, JS will read via pyodide.FS.readFile
-    conn.commit()
-
-    # Backup to virtual FS path that JS can access
-    file_conn = sqlite3.connect(output_path)
-    with file_conn:
-        conn.backup(file_conn)
-    file_conn.close()
-
-    # Close original connection
-    conn.close()
-
-    # Return the output path for JS to read
-    return output_path
 
 
 # Export functions for JavaScript bridge
@@ -1314,22 +690,6 @@ def parse_save(data_bytes: bytes) -> str:
     """Parse save file and return JSON string"""
     result = parse_save_file(data_bytes)
     return json.dumps(result)
-
-
-def modify_save(data_bytes: bytes, modified_basic_json: str, cat_changes_json: str, furniture_changes_json: str = "{\"added\": [], \"removed\": []}", output_path: str = "/tmp/mewgenics_modified.sav") -> str:
-    """Modify save file with JSON changes and save to virtual FS, return output path"""
-    modified_basic = json.loads(modified_basic_json)
-    cat_changes = json.loads(cat_changes_json)
-    furniture_changes = json.loads(furniture_changes_json)
-
-    # Debug: print received changes
-    print(f"DEBUG: modified_basic = {modified_basic}")
-    print(f"DEBUG: cat_changes keys = {list(cat_changes.keys())}")
-    for k, v in cat_changes.items():
-        print(f"DEBUG: cat_changes[{k}] = {v}")
-    print(f"DEBUG: furniture_changes = {furniture_changes}")
-
-    return modify_save_file(data_bytes, modified_basic, cat_changes, furniture_changes, output_path)
 
 
 # Usage:
