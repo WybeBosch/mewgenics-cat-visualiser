@@ -1,19 +1,20 @@
 import { useState } from 'react';
 
 import { getCatId, isKitten } from '../../../../shared/utils/catDataUtils.ts';
-import Tooltip from './partials/Tooltip.jsx';
-import TooltipCloseArea from './partials/TooltipCloseArea.jsx';
-import SvgLoveHateLines from './partials/SvgLoveHateLines.jsx';
-import SvgMarkers from './partials/SvgMarkers.jsx';
-import SvgMatchedRelationships from './partials/SvgMatchedRelationships/SvgMatchedRelationships.jsx';
-import SvgRelationLines from './partials/SvgRelationLines.jsx';
-import SvgInbreedingPercentages from './partials/SvgInbreedingPercentages.jsx';
-import SvgCatNodes from './partials/SvgCatNodes/SvgCatNodes.jsx';
+import type { GraphPosition, RelationshipSVGProps } from '../../RelationshipGraph.types.ts';
+import Tooltip from './partials/Tooltip.tsx';
+import TooltipCloseArea from './partials/TooltipCloseArea.tsx';
+import SvgLoveHateLines from './partials/SvgLoveHateLines.tsx';
+import SvgMarkers from './partials/SvgMarkers.tsx';
+import SvgMatchedRelationships from './partials/SvgMatchedRelationships/SvgMatchedRelationships.tsx';
+import SvgRelationLines from './partials/SvgRelationLines.tsx';
+import SvgInbreedingPercentages from './partials/SvgInbreedingPercentages.tsx';
+import SvgCatNodes from './partials/SvgCatNodes/SvgCatNodes.tsx';
 import {
 	areMutualLovePair,
 	hasOneWayLoveInRoom,
 	isLineTypeActive,
-} from './partials/SvgRelationLogic.jsx';
+} from './partials/SvgRelationLogic.tsx';
 
 export default function RelationshipSVG({
 	cats,
@@ -21,17 +22,16 @@ export default function RelationshipSVG({
 	hoveredCatId,
 	setHoveredCatId,
 	hiddenLineTypes,
-}) {
-	const [selectedCatId, setSelectedCatId] = useState(null);
+}: RelationshipSVGProps) {
+	const [selectedCatId, setSelectedCatId] = useState<string | number | null>(null);
 
-	// Reorder cats: 1. mutual pairs, 2. one-way lovers, 3. others
 	const ordered = (() => {
 		if (!isLineTypeActive(hiddenLineTypes, 'love')) {
 			return [...cats];
 		}
 
-		const pairs = [];
-		const paired = new Set();
+		const pairs: Array<[(typeof cats)[number], (typeof cats)[number]]> = [];
+		const paired = new Set<string>();
 		cats.forEach((a) => {
 			const aId = getCatId(a);
 			if (paired.has(aId)) return;
@@ -43,12 +43,10 @@ export default function RelationshipSVG({
 			}
 		});
 
-		// Unpaired cats
 		const unpaired = cats.filter((c) => !paired.has(getCatId(c)));
 
-		// One-way lovers: cats that love someone in the room, but are not in a mutual pair
-		const oneWayLovers = [];
-		const others = [];
+		const oneWayLovers: typeof cats = [];
+		const others: typeof cats = [];
 		unpaired.forEach((cat) => {
 			if (hasOneWayLoveInRoom(cat, cats)) {
 				oneWayLovers.push(cat);
@@ -57,7 +55,7 @@ export default function RelationshipSVG({
 			}
 		});
 
-		const result = [];
+		const result: typeof cats = [];
 		for (const [a, b] of pairs) {
 			result.push(a, b);
 		}
@@ -70,7 +68,6 @@ export default function RelationshipSVG({
 		return result;
 	})();
 
-	// Switch to row layout if there are 15 or more cats
 	const useRowLayout = ordered.length >= 15;
 
 	const selected = ordered.findIndex((c) => getCatId(c) === selectedCatId);
@@ -78,21 +75,19 @@ export default function RelationshipSVG({
 	const hovered = ordered.findIndex((c) => getCatId(c) === hoveredCatId);
 	const hovIdx = hovered >= 0 ? hovered : null;
 
-	const W = 800,
-		H = useRowLayout ? 20 + Math.ceil(ordered.length / 8) * 110 : 500;
-	const cx = W / 2,
-		cy = H / 2;
+	const W = 800;
+	const H = useRowLayout ? 20 + Math.ceil(ordered.length / 8) * 110 : 500;
+	const cx = W / 2;
+	const cy = H / 2;
 	const radius = Math.min(200, 60 + ordered.length * 12);
 
-	// Node radius based on age
-	const getNodeRadius = (cat) => {
+	const getNodeRadius = (cat: (typeof ordered)[number]) => {
 		if (isKitten(cat)) return 18;
 		return 28;
 	};
 
-	let positions;
+	let positions: GraphPosition[];
 	if (useRowLayout) {
-		// Place cats in rows, 8 per row, with more spacing
 		const perRow = 8;
 		const rowHeight = 110;
 		const startY = 70;
@@ -104,7 +99,7 @@ export default function RelationshipSVG({
 			const y = startY + row * rowHeight;
 			const x = marginX + col * (usableW / (Math.min(perRow, ordered.length) - 1));
 			return {
-				name: cat.name,
+				name: String(cat.name || ''),
 				sex: cat.sex,
 				x,
 				y,
@@ -115,7 +110,7 @@ export default function RelationshipSVG({
 		positions = ordered.map((cat, i) => {
 			const angle = (i / ordered.length) * 2 * Math.PI - Math.PI / 2;
 			return {
-				name: cat.name,
+				name: String(cat.name || ''),
 				sex: cat.sex,
 				x: cx + radius * Math.cos(angle),
 				y: cy + radius * Math.sin(angle),

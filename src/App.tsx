@@ -1,4 +1,4 @@
-import { RelationshipGraph } from './components/RelationshipGraph/RelationshipGraph.jsx';
+import { RelationshipGraph } from './components/RelationshipGraph/RelationshipGraph.tsx';
 import { CatTable } from './components/CatTable/CatTable.tsx';
 import { Header } from './components/Header/Header.tsx';
 import { useMewgenicsCatsLogic } from './AppLogic.tsx';

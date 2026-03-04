@@ -1,16 +1,23 @@
 import { useCallback, useState } from 'react';
 
-import RelationshipHeader from './partials/RelationshipHeader/RelationshipHeader.jsx';
-import RelationshipLegendBar from './partials/RelationshipLegendBar/RelationshipLegendBar.jsx';
-import RelationshipSVG from './partials/RelationshipSVG/RelationshipSVG.jsx';
+import RelationshipHeader from './partials/RelationshipHeader/RelationshipHeader.tsx';
+import RelationshipLegendBar from './partials/RelationshipLegendBar/RelationshipLegendBar.tsx';
+import RelationshipSVG from './partials/RelationshipSVG/RelationshipSVG.tsx';
+import type { HiddenLineType, RelationshipGraphProps } from './RelationshipGraph.types.ts';
 import './RelationshipGraph.css';
 
-function RelationshipGraph({ cats, allCats, hoveredCatId, setHoveredCatId, activeRoom }) {
-	const [hiddenLineTypes, setHiddenLineTypes] = useState(
+function RelationshipGraph({
+	cats,
+	allCats,
+	hoveredCatId,
+	setHoveredCatId,
+	activeRoom,
+}: RelationshipGraphProps) {
+	const [hiddenLineTypes, setHiddenLineTypes] = useState<Set<HiddenLineType | string>>(
 		() => new Set(['grandparent', 'related'])
 	);
 
-	const toggleLineType = useCallback((type) => {
+	const toggleLineType = useCallback((type: HiddenLineType | string) => {
 		setHiddenLineTypes((prev) => {
 			const next = new Set(prev);
 			if (next.has(type)) next.delete(type);

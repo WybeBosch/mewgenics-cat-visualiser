@@ -3,20 +3,38 @@ import {
 	findPositionByName,
 	isLineTypeActive,
 	isSameRoom,
-} from './SvgRelationLogic.jsx';
+} from './SvgRelationLogic.tsx';
 import { getCatId } from '../../../../../shared/utils/catDataUtils.ts';
+import type { GraphPosition, HiddenLineTypes } from '../../../RelationshipGraph.types.ts';
+import type { CatRecord } from '../../../../../AppLogic.types.ts';
 
-export default function SvgLoveHateLines({ hovIdx, ordered, positions, hiddenLineTypes }) {
-	// Add hate and love edges
-	const edges = [];
+export default function SvgLoveHateLines({
+	hovIdx,
+	ordered,
+	positions,
+	hiddenLineTypes,
+}: {
+	hovIdx: number | null;
+	ordered: CatRecord[];
+	positions: GraphPosition[];
+	hiddenLineTypes: HiddenLineTypes;
+}) {
+	const edges: Array<{
+		from: GraphPosition;
+		to: GraphPosition;
+		type: 'love' | 'hate';
+		fromId: string;
+		toId: string;
+		toName: string;
+	}> = [];
+
 	ordered.forEach((cat) => {
 		const from = findPositionByName(positions, cat.name);
 		if (!from) return;
-		// Hate edges
 		if (cat.hates) {
 			const toCat = findCatByName(ordered, cat.hates);
-			if (isSameRoom(cat, toCat)) {
-				const to = findPositionByName(positions, toCat.name);
+			if (isSameRoom(cat, toCat || undefined)) {
+				const to = findPositionByName(positions, toCat?.name);
 				if (to)
 					edges.push({
 						from,
@@ -24,15 +42,14 @@ export default function SvgLoveHateLines({ hovIdx, ordered, positions, hiddenLin
 						type: 'hate',
 						fromId: getCatId(cat),
 						toId: getCatId(toCat),
-						toName: toCat.name,
+						toName: String(toCat?.name || ''),
 					});
 			}
 		}
-		// Love edges
 		if (cat.loves) {
 			const toCat = findCatByName(ordered, cat.loves);
-			if (isSameRoom(cat, toCat)) {
-				const to = findPositionByName(positions, toCat.name);
+			if (isSameRoom(cat, toCat || undefined)) {
+				const to = findPositionByName(positions, toCat?.name);
 				if (to) {
 					edges.push({
 						from,
@@ -40,25 +57,25 @@ export default function SvgLoveHateLines({ hovIdx, ordered, positions, hiddenLin
 						type: 'love',
 						fromId: getCatId(cat),
 						toId: getCatId(toCat),
-						toName: toCat.name,
+						toName: String(toCat?.name || ''),
 					});
 				}
 			}
 		}
 	});
 
-	const getPath = (from, to, type) => {
-		const dx = to.x - from.x,
-			dy = to.y - from.y;
+	const getPath = (from: GraphPosition, to: GraphPosition, type: 'love' | 'hate') => {
+		const dx = to.x - from.x;
+		const dy = to.y - from.y;
 		const dist = Math.sqrt(dx * dx + dy * dy) || 1;
 		const nodeR1 = from.nodeR || 28;
 		const nodeR2 = to.nodeR || 28;
-		const x1 = from.x + dx * (nodeR1 / dist),
-			y1 = from.y + dy * (nodeR1 / dist);
-		const x2 = from.x + dx * ((dist - nodeR2) / dist),
-			y2 = from.y + dy * ((dist - nodeR2) / dist);
-		const mx = (x1 + x2) / 2,
-			my = (y1 + y2) / 2;
+		const x1 = from.x + dx * (nodeR1 / dist);
+		const y1 = from.y + dy * (nodeR1 / dist);
+		const x2 = from.x + dx * ((dist - nodeR2) / dist);
+		const y2 = from.y + dy * ((dist - nodeR2) / dist);
+		const mx = (x1 + x2) / 2;
+		const my = (y1 + y2) / 2;
 		const offset = type === 'love' ? 25 : -25;
 		return {
 			x1,
@@ -70,21 +87,21 @@ export default function SvgLoveHateLines({ hovIdx, ordered, positions, hiddenLin
 		};
 	};
 
-	const visibleEdges = edges.filter((e) => {
-		if (!isLineTypeActive(hiddenLineTypes, e.type)) return false;
+	const visibleEdges = edges.filter((edge) => {
+		if (!isLineTypeActive(hiddenLineTypes as Set<string>, edge.type)) return false;
 		if (hovIdx === null) return true;
 		const hoveredCatId = getCatId(ordered[hovIdx]);
-		return e.fromId === hoveredCatId || e.toId === hoveredCatId;
+		return edge.fromId === hoveredCatId || edge.toId === hoveredCatId;
 	});
 
-	const loveEdges = visibleEdges.filter((e) => e.type === 'love');
-	const hateEdges = visibleEdges.filter((e) => e.type === 'hate');
+	const loveEdges = visibleEdges.filter((edge) => edge.type === 'love');
+	const hateEdges = visibleEdges.filter((edge) => edge.type === 'hate');
 
 	return (
 		<>
 			<g className="edge-love-group">
-				{loveEdges.map((e, i) => {
-					const p = getPath(e.from, e.to, e.type);
+				{loveEdges.map((edge, i) => {
+					const p = getPath(edge.from, edge.to, edge.type);
 					return (
 						<path
 							key={`love-${i}`}
@@ -101,8 +118,8 @@ export default function SvgLoveHateLines({ hovIdx, ordered, positions, hiddenLin
 			</g>
 
 			<g className="edge-hate-group">
-				{hateEdges.map((e, i) => {
-					const p = getPath(e.from, e.to, e.type);
+				{hateEdges.map((edge, i) => {
+					const p = getPath(edge.from, edge.to, edge.type);
 					return (
 						<path
 							key={`hate-${i}`}
