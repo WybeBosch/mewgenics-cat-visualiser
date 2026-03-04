@@ -4,6 +4,7 @@ import {
 	getAge,
 	getAggressionScore,
 	getCatId,
+	getCatGenealogyValue,
 	getCatStat,
 	getLibidoScore,
 } from '../../shared/utils/catDataUtils.ts';
@@ -114,6 +115,12 @@ export function CatTableLogic({ cats, activeRoom }: CatTableLogicParams): CatTab
 			const libidoA = getLibidoScore(a) ?? -1;
 			const libidoB = getLibidoScore(b) ?? -1;
 			return sortAsc ? libidoA - libidoB : libidoB - libidoA;
+		}
+
+		if (sortCol === 'stray') {
+			const strayA = getCatGenealogyValue(a, 'stray') ? 1 : 0;
+			const strayB = getCatGenealogyValue(b, 'stray') ? 1 : 0;
+			return sortAsc ? strayA - strayB : strayB - strayA;
 		}
 
 		const valueA = (a as Record<string, unknown>)[sortCol];

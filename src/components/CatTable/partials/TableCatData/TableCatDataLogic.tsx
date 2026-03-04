@@ -1,9 +1,6 @@
 import { STAT_ICONS, STATS, OTHER_INFO_ICONS } from '../../../../shared/config/config.ts';
 import { getCatId } from '../../../../shared/utils/catDataUtils.ts';
-import type {
-	TableCatDataLogicParams,
-	TableCatDataLogicResult,
-} from './TableCatDataLogic.types.ts';
+import type { TableCatDataLogicParams, TableCatDataLogicResult } from './TableCatDataLogic.types.ts';
 
 function toStringValue(value: unknown): string {
 	if (value === null || value === undefined) return '';
@@ -20,6 +17,7 @@ export function TableCatDataLogic({ cats }: TableCatDataLogicParams): TableCatDa
 			tooltip:
 				'Matching partner in another room. Shows when this cat and another cat love each other, but they are currently in different rooms. A detective icon appears in this column for those separated matching partners.',
 		},
+		{ key: 'stray', label: 'Stray', tooltip: 'Whether this cat has no family' },
 		{ key: 'age', label: 'Age', tooltip: 'Cat age in days' },
 		{ key: 'sex', label: 'Sex', tooltip: 'Sex (male, female, or herm)' },
 		{ key: 'icon', label: '🔷', tooltip: 'Cat icon badge' },
@@ -75,8 +73,7 @@ export function TableCatDataLogic({ cats }: TableCatDataLogicParams): TableCatDa
 	}
 
 	function getStatStyle(value: number) {
-		if (value >= 7)
-			return { fontWeight: 800, color: 'var(--color-positive)', fontSize: '1.05em' };
+		if (value >= 7) return { fontWeight: 800, color: 'var(--color-positive)', fontSize: '1.05em' };
 		return { fontWeight: 400, color: 'var(--color-text-neutral)', fontSize: '1em' };
 	}
 

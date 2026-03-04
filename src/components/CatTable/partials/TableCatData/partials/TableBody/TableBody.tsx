@@ -6,6 +6,7 @@ import {
 	getAggressionLabel,
 	getAggressionScore,
 	getCatId,
+	getCatGenealogyValue,
 	getLibidoLabel,
 	getLibidoScore,
 	getCatSex,
@@ -112,6 +113,9 @@ export function TableBody({
 					>
 						<TableTooltipPopup cat={cat} allCats={cats} />
 						<td className="cell partner-indicator">{partnerInOtherRoom ? '🕵️‍♂️' : ''}</td>
+						<td className="cell stray">
+							{getCatGenealogyValue(cat, 'stray') ? '✔' : ''}
+						</td>
 						<td
 							className={joinClass('cell age', getAgeClass(age))}
 							title={
