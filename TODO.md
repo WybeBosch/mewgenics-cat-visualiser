@@ -26,3 +26,7 @@ https://feature-sliced.design/
 or atomic
 https://atomicdesign.bradfrost.com/
 (brave-dashboard also uses this)
+
+- fix add gif's to the readme of features we have
+
+- move more css into variables especially if they share the same values.
