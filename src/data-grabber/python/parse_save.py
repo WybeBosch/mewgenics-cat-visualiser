@@ -456,8 +456,8 @@ def parse_pedigree(blob: bytes, max_cat_key: int) -> Dict[int, Tuple[int, int]]:
             return 2
         return 2
 
-    parent_map: Dict[int, Tuple[int, int]] = {}
-    parent_score_map: Dict[int, int] = {}
+    # Collect all candidate triplets with their offsets first
+    candidates: List[Tuple[int, int, int, int]] = []  # (offset, child, parent1, parent2)
 
     for i in range(len(all_vals) - 2):
         o1, v1 = all_vals[i]
@@ -477,8 +477,27 @@ def parse_pedigree(blob: bytes, max_cat_key: int) -> Dict[int, Tuple[int, int]]:
         if v3 != -1 and v1 <= v3:
             continue
 
-        parent1_key = v3
-        parent2_key = v2
+        candidates.append((o1, v1, v3, v2))  # (offset, child, parent1, parent2)
+
+    # The pedigree blob contains a second data structure (flat key list) after
+    # the real pedigree triplets, separated by a large gap. Detect and exclude
+    # false triplets from that tail region.
+    GAP_THRESHOLD = 5000
+    if len(candidates) >= 2:
+        max_gap = 0
+        max_gap_idx = -1
+        for ci in range(1, len(candidates)):
+            gap = candidates[ci][0] - candidates[ci - 1][0]
+            if gap > max_gap:
+                max_gap = gap
+                max_gap_idx = ci
+        if max_gap > GAP_THRESHOLD:
+            candidates = candidates[:max_gap_idx]
+
+    parent_map: Dict[int, Tuple[int, int]] = {}
+    parent_score_map: Dict[int, int] = {}
+
+    for _, v1, parent1_key, parent2_key in candidates:
         pair_score = score_parent_pair(parent1_key, parent2_key)
 
         if v1 not in parent_map:
