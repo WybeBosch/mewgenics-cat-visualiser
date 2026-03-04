@@ -1,9 +1,7 @@
-// Icon and config constants for Mewgenics - Visual cat organizer
-
 const APP_EMOJIS = {
 	default: '🐱',
 	local: '🐈',
-};
+} as const;
 
 const STAT_ICONS = {
 	STR: '💪',
@@ -13,18 +11,18 @@ const STAT_ICONS = {
 	SPD: '🥾',
 	CHA: '💋',
 	LCK: '🍀',
-};
+} as const;
 
-const STATS = ['STR', 'DEX', 'CON', 'INT', 'SPD', 'CHA', 'LCK'];
+const STATS = ['STR', 'DEX', 'CON', 'INT', 'SPD', 'CHA', 'LCK'] as const;
 
 const OTHER_INFO_ICONS = {
 	libido: '💕',
 	aggression: '😾',
 	loves: '❤️',
-	hates: '⚔️', // Changed to two cross swords
-};
+	hates: '⚔️',
+} as const;
 
-const SEX_ICON = { male: '♂', female: '♀', herm: '⚥' };
+const SEX_ICON = { male: '♂', female: '♀', herm: '⚥' } as const;
 
 const CAT_ICON = {
 	triangle: '▲',
@@ -39,13 +37,13 @@ const CAT_ICON = {
 	lck: STAT_ICONS.LCK,
 	health: '⚕️',
 	evolution: '🧬',
-};
+} as const;
 
 const SECURITY_LIMITS = {
-	maxSaveUploadKb: 5000, // normal saves are around 300 - 400 kb
+	maxSaveUploadKb: 5000,
 	maxJsonUploadKb: 5000,
 	maxLz4DecompressedKb: 2000,
 	maxCatsProcessed: 5000,
-};
+} as const;
 
 export { APP_EMOJIS, STAT_ICONS, STATS, SEX_ICON, OTHER_INFO_ICONS, CAT_ICON, SECURITY_LIMITS };

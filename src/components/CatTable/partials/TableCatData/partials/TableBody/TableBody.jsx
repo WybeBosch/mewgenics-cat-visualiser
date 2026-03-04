@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react';
-import { STATS, SEX_ICON, CAT_ICON } from '../../../../../../shared/config/config.jsx';
+import { STATS, SEX_ICON, CAT_ICON } from '../../../../../../shared/config/config.ts';
 import { TableTooltipPopup, joinClass } from '../../../../../../shared/utils/utils.jsx';
 import {
 	getAge,
 	getCatId,
 	getCatSex,
 	getCatStat,
-} from '../../../../../../shared/utils/catDataUtils.jsx';
+} from '../../../../../../shared/utils/catDataUtils.ts';
 import './TableBody.css';
 
 function NoCatsFoundWarning({ columnsLength }) {

@@ -1,5 +1,5 @@
-import { SEX_ICON } from '../../../../../../shared/config/config.jsx';
-import { getCatId, getCatSex } from '../../../../../../shared/utils/catDataUtils.jsx';
+import { SEX_ICON } from '../../../../../../shared/config/config.ts';
+import { getCatId, getCatSex } from '../../../../../../shared/utils/catDataUtils.ts';
 import { joinClass } from '../../../../../../shared/utils/utils.jsx';
 import './SvgCatNodes.css';
 

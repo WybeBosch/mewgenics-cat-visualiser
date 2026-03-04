@@ -2,7 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { TableCatDataLogic } from './TableCatDataLogic.jsx';
 import { TableHead } from './partials/TableHead/TableHead.jsx';
 import { TableBody } from './partials/TableBody/TableBody.jsx';
-import { getCatId } from '../../../../shared/utils/catDataUtils.jsx';
+import { getCatId } from '../../../../shared/utils/catDataUtils.ts';
 import './TableCatData.css';
 
 const MIN_VISIBLE_ROWS = 4;

@@ -14,12 +14,7 @@ export type PayloadMeta = {
 	script_start_time: string;
 };
 
-export type SourceType =
-	| 'preload-json'
-	| 'upload-json'
-	| 'upload-sav'
-	| 'demo'
-	| 'legacy-storage';
+export type SourceType = 'preload-json' | 'upload-json' | 'upload-sav' | 'demo' | 'legacy-storage';
 
 export type SourceMeta = {
 	sourceType: SourceType;

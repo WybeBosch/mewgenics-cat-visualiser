@@ -1,5 +1,5 @@
-import { APP_EMOJIS } from '../../../../shared/config/config.jsx';
-import { getCatSex, isKitten } from '../../../../shared/utils/catDataUtils.jsx';
+import { APP_EMOJIS } from '../../../../shared/config/config.ts';
+import { getCatSex, isKitten } from '../../../../shared/utils/catDataUtils.ts';
 import './Heading.css';
 
 export function Heading({ cats, rooms, dataTimeLineText }) {

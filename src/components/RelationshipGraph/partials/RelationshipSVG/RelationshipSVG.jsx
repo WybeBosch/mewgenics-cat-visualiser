@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { getCatId, isKitten } from '../../../../shared/utils/catDataUtils.jsx';
+import { getCatId, isKitten } from '../../../../shared/utils/catDataUtils.ts';
 import Tooltip from './partials/Tooltip.jsx';
 import TooltipCloseArea from './partials/TooltipCloseArea.jsx';
 import SvgLoveHateLines from './partials/SvgLoveHateLines.jsx';

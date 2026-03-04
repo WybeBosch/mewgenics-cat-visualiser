@@ -2,7 +2,7 @@ import {
 	getCatBirthday,
 	getCatGenealogyValue,
 	getCatId,
-} from '../../../../../shared/utils/catDataUtils.jsx';
+} from '../../../../../shared/utils/catDataUtils.ts';
 
 function normalizeLineageName(value) {
 	return String(value || '')

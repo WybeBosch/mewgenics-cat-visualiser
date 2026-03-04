@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getCatGenealogyValue, getCatId } from './catDataUtils.jsx';
+import { getCatGenealogyValue, getCatId } from './catDataUtils.ts';
 import './utils.css';
 
 function joinClass(...parts) {

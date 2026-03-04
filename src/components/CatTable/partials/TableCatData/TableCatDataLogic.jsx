@@ -1,5 +1,5 @@
-import { STAT_ICONS, STATS, OTHER_INFO_ICONS } from '../../../../shared/config/config.jsx';
-import { getCatId } from '../../../../shared/utils/catDataUtils.jsx';
+import { STAT_ICONS, STATS, OTHER_INFO_ICONS } from '../../../../shared/config/config.ts';
+import { getCatId } from '../../../../shared/utils/catDataUtils.ts';
 
 export function TableCatDataLogic({ cats }) {
 	// Derived columns for table header
