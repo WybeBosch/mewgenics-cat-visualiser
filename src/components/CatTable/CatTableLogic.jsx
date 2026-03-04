@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import { STATS } from '../../shared/config/config.jsx';
-import { getAge, getCatId, getCatStat } from '../../shared/utils/catDataUtils.jsx';
+import { STATS } from '../../shared/config/config.ts';
+import { getAge, getCatId, getCatStat } from '../../shared/utils/catDataUtils.ts';
 
 export function CatTableLogic({ cats, activeRoom }) {
 	// Table-specific state

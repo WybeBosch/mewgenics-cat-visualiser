@@ -1,5 +1,5 @@
 import { ButtonCopySavePath } from '../ButtonCopySavePath/ButtonCopySavePath.jsx';
-import { SECURITY_LIMITS } from '../../../../shared/config/config.jsx';
+import { SECURITY_LIMITS } from '../../../../shared/config/config.ts';
 import { joinClass } from '../../../../shared/utils/utils.jsx';
 import './ButtonUploadSave.css';
 

@@ -5,7 +5,7 @@ import {
 	getCatsFromPayload,
 	getCurrentDayFromPayload,
 	getScriptStartTimeFromPayload,
-} from './shared/utils/catDataUtils.jsx';
+} from './shared/utils/catDataUtils.ts';
 import {
 	defaultPayloadMeta,
 	type CatId,
@@ -30,12 +30,10 @@ function isCatLike(value: unknown): value is { room?: unknown; [key: string]: un
 function toCatRecords(value: unknown): CatRecord[] {
 	if (!Array.isArray(value)) return [];
 
-	return value
-		.filter(isCatLike)
-		.map((cat) => ({
-			...cat,
-			room: typeof cat.room === 'string' ? cat.room : String(cat.room ?? ''),
-		}));
+	return value.filter(isCatLike).map((cat) => ({
+		...cat,
+		room: typeof cat.room === 'string' ? cat.room : String(cat.room ?? ''),
+	}));
 }
 
 function isPayloadObject(value: unknown): value is Record<string, unknown> {
@@ -59,12 +57,8 @@ export function useMewgenicsCatsLogic() {
 		return {
 			cats: unpackedCats,
 			payloadMeta: {
-				basic:
-					typeof currentDay === 'number'
-						? { current_day: currentDay }
-						: null,
-				script_start_time:
-					typeof scriptStartTime === 'string' ? scriptStartTime : '',
+				basic: typeof currentDay === 'number' ? { current_day: currentDay } : null,
+				script_start_time: typeof scriptStartTime === 'string' ? scriptStartTime : '',
 			},
 		};
 	}, []);
@@ -195,8 +189,8 @@ export function useMewgenicsCatsLogic() {
 							basic:
 								typeof parsed?.payloadMeta?.basic?.current_day === 'number'
 									? {
-										current_day: parsed.payloadMeta.basic.current_day,
-									}
+											current_day: parsed.payloadMeta.basic.current_day,
+										}
 									: typeof parsed?.current_day === 'number'
 										? { current_day: parsed.current_day }
 										: null,

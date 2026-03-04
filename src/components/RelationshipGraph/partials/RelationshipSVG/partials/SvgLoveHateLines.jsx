@@ -4,7 +4,7 @@ import {
 	isLineTypeActive,
 	isSameRoom,
 } from './SvgRelationLogic.jsx';
-import { getCatId } from '../../../../../shared/utils/catDataUtils.jsx';
+import { getCatId } from '../../../../../shared/utils/catDataUtils.ts';
 
 export default function SvgLoveHateLines({ hovIdx, ordered, positions, hiddenLineTypes }) {
 	// Add hate and love edges
