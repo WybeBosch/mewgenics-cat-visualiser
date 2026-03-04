@@ -7,9 +7,20 @@ import {
 	getCatSex,
 	getCatStat,
 } from '../../../../../../shared/utils/catDataUtils.ts';
+import type { NoCatsFoundWarningProps, TableBodyProps } from './TableBody.types.ts';
 import './TableBody.css';
 
-function NoCatsFoundWarning({ columnsLength }) {
+function toDisplayText(value: unknown): string {
+	if (value === null || value === undefined || value === '') return '—';
+	return String(value);
+}
+
+function toIconValue(value: unknown): string {
+	if (value === null || value === undefined) return '';
+	return String(value);
+}
+
+function NoCatsFoundWarning({ columnsLength }: NoCatsFoundWarningProps) {
 	return (
 		<tr>
 			<td colSpan={columnsLength} className="no-cats-warning">
@@ -28,9 +39,9 @@ export function TableBody({
 	totalStat,
 	isPartnerInOtherRoom,
 	highlightedCatId,
-}) {
+}: TableBodyProps) {
 	const noCatsFound = sorted.length === 0;
-	const highlightedRowRef = useRef(null);
+	const highlightedRowRef = useRef<HTMLTableRowElement | null>(null);
 
 	useEffect(() => {
 		if (highlightedCatId && highlightedRowRef.current) {
@@ -38,19 +49,19 @@ export function TableBody({
 		}
 	}, [highlightedCatId]);
 
-	function getAggressionClass(aggression) {
+	function getAggressionClass(aggression: number): string {
 		if (aggression <= 3) return 'low';
 		if (aggression <= 6) return '';
 		return 'high';
 	}
 
-	function getAgeClass(age) {
+	function getAgeClass(age: number | null): string {
 		if (age === null) return 'unknown';
 		if (age <= 1) return 'kitten';
 		return '';
 	}
 
-	function getStatClass(statValue) {
+	function getStatClass(statValue: number): string {
 		if (statValue >= 7) return 'high';
 		if (statValue <= 4) return 'low';
 		return '';
@@ -59,8 +70,9 @@ export function TableBody({
 	return (
 		<tbody className="table-body">
 			{noCatsFound ? <NoCatsFoundWarning columnsLength={columns.length} /> : null}
-			{sorted.map((cat, i) => {
-				const catId = getCatId(cat, `${cat.name}-${i}`);
+			{sorted.map((cat, index) => {
+				const fallbackName = toIconValue(cat.name);
+				const catId = getCatId(cat, `${fallbackName}-${index}`);
 				const catSex = getCatSex(cat);
 				const total = totalStat(cat);
 				const age = getAge(cat);
@@ -68,9 +80,15 @@ export function TableBody({
 				const isHighlighted = highlightedCatId === catId;
 				const partnerInOtherRoom = isPartnerInOtherRoom(cat);
 
+				const iconValue = toIconValue(cat.icon);
+				const sexLabel = toIconValue(cat.sex);
+				const libido = toDisplayText(cat.libido);
+				const aggressionNumber = Number(cat.aggression ?? 0);
+				const aggression = Number.isFinite(aggressionNumber) ? aggressionNumber : 0;
+
 				return (
 					<tr
-						key={catId + i}
+						key={`${catId}${index}`}
 						ref={isHighlighted ? highlightedRowRef : undefined}
 						className={joinClass('row', {
 							hovered: isHovered,
@@ -90,29 +108,34 @@ export function TableBody({
 							{age !== null ? age : '—'}
 						</td>
 						<td className={joinClass('cell sex', catSex || 'unknown')}>
-							{SEX_ICON[catSex] || cat.sex}
+							{SEX_ICON[catSex as keyof typeof SEX_ICON] || sexLabel}
 						</td>
-						<td className="cell icon">{CAT_ICON[cat.icon] || cat.icon || ''}</td>
-						{STATS.map((s) => (
+						<td className="cell icon">
+							{CAT_ICON[iconValue as keyof typeof CAT_ICON] || iconValue || ''}
+						</td>
+						{STATS.map((statKey) => (
 							<td
-								key={s}
-								className={joinClass('cell stat', getStatClass(getCatStat(cat, s)))}
+								key={statKey}
+								className={joinClass(
+									'cell stat',
+									getStatClass(getCatStat(cat, statKey))
+								)}
 							>
-								{getCatStat(cat, s)}
+								{getCatStat(cat, statKey)}
 							</td>
 						))}
 						<td className="cell total">{total}</td>
-						<td className="cell info libido">{cat.libido}</td>
+						<td className="cell info libido">{libido}</td>
 						<td
 							className={joinClass(
 								'cell info aggression',
-								getAggressionClass(cat.aggression)
+								getAggressionClass(aggression)
 							)}
 						>
-							{cat.aggression}
+							{aggression}
 						</td>
-						<td className="cell info loves">{cat.loves || '—'}</td>
-						<td className="cell info hates">{cat.hates || '—'}</td>
+						<td className="cell info loves">{toDisplayText(cat.loves)}</td>
+						<td className="cell info hates">{toDisplayText(cat.hates)}</td>
 						<td className="cell spacer" aria-hidden="true"></td>
 					</tr>
 				);

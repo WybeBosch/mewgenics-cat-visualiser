@@ -1,4 +1,5 @@
 import { joinClass } from '../../../../shared/utils/utils.jsx';
+import type { TableRoomTabsProps } from './TableRoomTabs.types.ts';
 import './TableRoomTabs.css';
 
 export function TableRoomTabs({
@@ -9,15 +10,14 @@ export function TableRoomTabs({
 	sortedRooms,
 	statFilters,
 	clearStatFilters,
-}) {
-	// Always sort rooms alphabetically for tab rendering
-	sortedRooms = [...rooms].sort((a, b) => a.localeCompare(b));
+}: TableRoomTabsProps) {
+	const roomList = (sortedRooms ?? [...rooms]).sort((a, b) => a.localeCompare(b));
 
 	return (
 		<>
-			{sortedRooms.length > 0 && (
+			{roomList.length > 0 && (
 				<nav className="table-room-tabs" aria-label="Room tabs">
-					{sortedRooms.map((room) => (
+					{roomList.map((room) => (
 						<div key={room} className="item">
 							<button
 								className={joinClass('button', { active: activeRoom === room })}
@@ -25,7 +25,7 @@ export function TableRoomTabs({
 							>
 								{room}{' '}
 								<span className="count">
-									({cats.filter((c) => c.room === room).length})
+									({cats.filter((cat) => cat.room === room).length})
 								</span>
 							</button>
 						</div>

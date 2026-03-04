@@ -1,9 +1,10 @@
-import { TableRoomTabs } from './partials/TableRoomTabs/TableRoomTabs';
-import { TableCatData } from './partials/TableCatData/TableCatData';
+import { TableRoomTabs } from './partials/TableRoomTabs/TableRoomTabs.tsx';
+import { TableCatData } from './partials/TableCatData/TableCatData.tsx';
 
-import { CatTableLogic } from './CatTableLogic';
+import { CatTableLogic } from './CatTableLogic.tsx';
+import type { CatTableProps } from './CatTable.types.ts';
 
-export function CatTable({ cats, rooms, activeRoom, setActiveRoom }) {
+export function CatTable({ cats, rooms, activeRoom, setActiveRoom }: CatTableProps) {
 	const {
 		hoveredCatId,
 		setHoveredCatId,
@@ -17,6 +18,7 @@ export function CatTable({ cats, rooms, activeRoom, setActiveRoom }) {
 		setStatFilter,
 		clearStatFilters,
 	} = CatTableLogic({ cats, activeRoom });
+
 	return (
 		<>
 			<TableRoomTabs

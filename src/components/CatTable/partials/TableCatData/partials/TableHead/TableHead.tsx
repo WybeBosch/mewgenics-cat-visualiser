@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { joinClass } from '../../../../../../shared/utils/utils.jsx';
+import type { TableHeadProps } from './TableHead.types.ts';
 import './TableHead.css';
 
 export function TableHead({
@@ -12,18 +13,18 @@ export function TableHead({
 	onSearchSubmit,
 	statFilters,
 	setStatFilter,
-}) {
-	const [hoveredColumn, setHoveredColumn] = useState(null);
+}: TableHeadProps) {
+	const [hoveredColumn, setHoveredColumn] = useState<string | null>(null);
 
 	return (
 		<thead>
 			<tr className="table-head">
-				{columns.map((col, index) => {
+				{columns.map((column, index) => {
 					const isLeftAlignedTooltip = index < 2;
 					const isRightAlignedTooltip = index === columns.length - 1;
-					const isSortable = !col.isStatic;
-					const isSorted = sortCol === col.key;
-					const textAlignClass = col.key === 'name' ? 'left' : '';
+					const isSortable = !column.isStatic;
+					const isSorted = sortCol === column.key;
+					const textAlignClass = column.key === 'name' ? 'left' : '';
 					const staticClass = isSortable ? '' : 'static';
 					const sortedClass = isSorted ? 'sorted' : '';
 					const tooltipAlignClass = isLeftAlignedTooltip
@@ -31,15 +32,15 @@ export function TableHead({
 						: isRightAlignedTooltip
 							? 'right'
 							: '';
-					const tooltipWidthClass = col.key === 'partner-room' ? 'wide' : '';
-					const columnClass = `col-${col.key}`;
-					const statClass = col.isStat ? 'col-stat' : '';
-					const hasFilter = col.isStat && statFilters[col.key] != null;
+					const tooltipWidthClass = column.key === 'partner-room' ? 'wide' : '';
+					const columnClass = `col-${column.key}`;
+					const statClass = column.isStat ? 'col-stat' : '';
+					const hasFilter = column.isStat && statFilters[column.key] != null;
 					const hasFilterClass = hasFilter ? 'has-filter' : '';
 
 					return (
 						<th
-							key={col.key}
+							key={column.key}
 							className={joinClass(
 								'cell',
 								columnClass,
@@ -49,40 +50,40 @@ export function TableHead({
 								sortedClass,
 								hasFilterClass
 							)}
-							onMouseEnter={() => setHoveredColumn(col.key)}
+							onMouseEnter={() => setHoveredColumn(column.key)}
 							onMouseLeave={() => setHoveredColumn(null)}
-							onClick={isSortable ? () => handleSort(col.key) : undefined}
+							onClick={isSortable ? () => handleSort(column.key) : undefined}
 						>
 							{hasFilter && (
 								<span
 									className="filter-clear"
-									onClick={(e) => {
-										e.stopPropagation();
-										setStatFilter(col.key, null);
+									onClick={(event) => {
+										event.stopPropagation();
+										setStatFilter(column.key, null);
 									}}
 								>
 									×
 								</span>
 							)}
-							{col.key === 'name' ? (
+							{column.key === 'name' ? (
 								<input
 									type="text"
 									className="search-input"
 									placeholder="Search name..."
 									value={searchQuery}
-									onChange={(e) => onSearchChange(e.target.value)}
-									onKeyDown={(e) => {
-										if (e.key === 'Enter') onSearchSubmit(searchQuery);
+									onChange={(event) => onSearchChange(event.target.value)}
+									onKeyDown={(event) => {
+										if (event.key === 'Enter') onSearchSubmit(searchQuery);
 									}}
-									onClick={(e) => e.stopPropagation()}
+									onClick={(event) => event.stopPropagation()}
 								/>
 							) : (
-								col.label
+								column.label
 							)}
 							{isSorted && (
 								<span className="sort-indicator">{sortAsc ? '▲' : '▼'}</span>
 							)}
-							{hoveredColumn === col.key && col.isStat && (
+							{hoveredColumn === column.key && column.isStat && (
 								<div
 									className={joinClass(
 										'tooltip',
@@ -95,23 +96,23 @@ export function TableHead({
 										className="filter-input"
 										placeholder="1-9"
 										maxLength={1}
-										value={statFilters[col.key] ?? ''}
-										onChange={(e) => {
-											const v = e.target.value;
-											if (v === '') {
-												setStatFilter(col.key, null);
-											} else if (/^[1-9]$/.test(v)) {
-												setStatFilter(col.key, Number(v));
+										value={statFilters[column.key] ?? ''}
+										onChange={(event) => {
+											const value = event.target.value;
+											if (value === '') {
+												setStatFilter(column.key, null);
+											} else if (/^[1-9]$/.test(value)) {
+												setStatFilter(column.key, Number(value));
 											}
 										}}
-										onClick={(e) => e.stopPropagation()}
+										onClick={(event) => event.stopPropagation()}
 									/>
 								</div>
 							)}
-							{hoveredColumn === col.key &&
-								!col.isStat &&
-								col.key !== 'name' &&
-								col.tooltip && (
+							{hoveredColumn === column.key &&
+								!column.isStat &&
+								column.key !== 'name' &&
+								column.tooltip && (
 									<div
 										className={joinClass(
 											'tooltip',
@@ -119,7 +120,7 @@ export function TableHead({
 											tooltipWidthClass
 										)}
 									>
-										{col.tooltip}
+										{column.tooltip}
 									</div>
 								)}
 						</th>
