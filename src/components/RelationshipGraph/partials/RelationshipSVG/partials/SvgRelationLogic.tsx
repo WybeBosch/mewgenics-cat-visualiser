@@ -3,21 +3,28 @@ import {
 	getCatGenealogyValue,
 	getCatId,
 } from '../../../../../shared/utils/catDataUtils.ts';
+import type {
+	FamilySummary,
+	RelatedCat,
+	RelatedPosition,
+	RelationKinshipContext,
+	RoomInbreedingStats,
+} from './SvgRelationLogic.types.ts';
 
-function normalizeLineageName(value) {
+function normalizeLineageName(value: unknown): string {
 	return String(value || '')
 		.replace(/☠️/g, '')
 		.trim()
 		.toLowerCase();
 }
 
-function getParentNames(cat) {
+function getParentNames(cat: RelatedCat): string[] {
 	return [getCatGenealogyValue(cat, 'parent1'), getCatGenealogyValue(cat, 'parent2')]
 		.map(normalizeLineageName)
 		.filter(Boolean);
 }
 
-function getGrandparentNames(cat) {
+function getGrandparentNames(cat: RelatedCat): string[] {
 	return [
 		getCatGenealogyValue(cat, 'grandparent1'),
 		getCatGenealogyValue(cat, 'grandparent2'),
@@ -28,7 +35,7 @@ function getGrandparentNames(cat) {
 		.filter(Boolean);
 }
 
-function getAncestorNames(cat) {
+function getAncestorNames(cat: RelatedCat): string[] {
 	return [
 		getCatGenealogyValue(cat, 'parent1'),
 		getCatGenealogyValue(cat, 'parent2'),
@@ -41,20 +48,23 @@ function getAncestorNames(cat) {
 		.filter(Boolean);
 }
 
-function hasOverlap(a, b) {
+function hasOverlap(a: string[], b: string[]): boolean {
 	const bSet = new Set(b);
 	return a.some((item) => bSet.has(item));
 }
 
-function isSameRoom(a, b) {
+function isSameRoom(a: RelatedCat | null | undefined, b: RelatedCat | null | undefined): boolean {
 	return Boolean(a && b && a.room && b.room && a.room === b.room);
 }
 
-function isLineTypeActive(hiddenLineTypes, lineType) {
+function isLineTypeActive(
+	hiddenLineTypes: Set<string> | Set<string | number> | null | undefined,
+	lineType: string
+): boolean {
 	return !hiddenLineTypes?.has(lineType);
 }
 
-function areMutualLovePair(a, b) {
+function areMutualLovePair(a: RelatedCat, b: RelatedCat): boolean {
 	if (!a || !b || getCatId(a) === getCatId(b)) return false;
 	const aLoves = normalizeLineageName(a.loves);
 	const bLoves = normalizeLineageName(b.loves);
@@ -62,7 +72,7 @@ function areMutualLovePair(a, b) {
 	return aLoves === normalizeLineageName(b.name) && bLoves === normalizeLineageName(a.name);
 }
 
-function hasOneWayLoveInRoom(cat, cats) {
+function hasOneWayLoveInRoom(cat: RelatedCat, cats: RelatedCat[]): boolean {
 	const lovesName = normalizeLineageName(cat?.loves);
 	if (!lovesName) return false;
 	return cats.some(
@@ -71,22 +81,31 @@ function hasOneWayLoveInRoom(cat, cats) {
 	);
 }
 
-function addGhost(lookup, name, parent1, parent2) {
+function addGhost(
+	lookup: Map<string, RelatedCat>,
+	name: unknown,
+	parent1: unknown,
+	parent2: unknown
+) {
 	if (!name) return;
 	const key = normalizeLineageName(name);
 	if (lookup.has(key)) {
 		const existing = lookup.get(key);
-		// Only update ghosts (birthday === -Infinity), never overwrite real cats
-		if (existing.birthday !== -Infinity) return;
-		// Fill in missing parents if the new call provides them
+		if (!existing || existing.birthday !== -Infinity) return;
 		if (!existing.parent1 && parent1) existing.parent1 = parent1;
 		if (!existing.parent2 && parent2) existing.parent2 = parent2;
 		return;
 	}
-	lookup.set(key, { name, parent1: parent1 || '', parent2: parent2 || '', birthday: -Infinity });
+	lookup.set(key, {
+		name,
+		parent1: parent1 || '',
+		parent2: parent2 || '',
+		birthday: -Infinity,
+		room: '',
+	});
 }
 
-function buildGhostAncestors(cats, lookup) {
+function buildGhostAncestors(cats: RelatedCat[], lookup: Map<string, RelatedCat>) {
 	for (const cat of cats) {
 		const parent1 = getCatGenealogyValue(cat, 'parent1');
 		const parent2 = getCatGenealogyValue(cat, 'parent2');
@@ -104,8 +123,8 @@ function buildGhostAncestors(cats, lookup) {
 	}
 }
 
-function buildCatLookup(cats) {
-	const lookup = new Map();
+function buildCatLookup(cats: RelatedCat[]): Map<string, RelatedCat> {
+	const lookup = new Map<string, RelatedCat>();
 	for (const cat of cats) {
 		const key = normalizeLineageName(cat.name);
 		if (key && !lookup.has(key)) {
@@ -116,19 +135,19 @@ function buildCatLookup(cats) {
 	return lookup;
 }
 
-function findCatByName(cats, name) {
+function findCatByName(cats: RelatedCat[], name: unknown): RelatedCat | null {
 	if (!name) return null;
 	const clean = normalizeLineageName(name);
 	return cats.find((cat) => normalizeLineageName(cat.name) === clean) || null;
 }
 
-function findPositionByName(positions, name) {
+function findPositionByName(positions: RelatedPosition[], name: unknown): RelatedPosition | null {
 	if (!name) return null;
 	const clean = normalizeLineageName(name);
 	return positions.find((position) => normalizeLineageName(position.name) === clean) || null;
 }
 
-function isParentChild(a, b) {
+function isParentChild(a: RelatedCat, b: RelatedCat): boolean {
 	const aParents = getParentNames(a);
 	const bParents = getParentNames(b);
 	const aName = normalizeLineageName(a.name);
@@ -140,7 +159,7 @@ function isParentChild(a, b) {
 	return aIsParentOfB || bIsParentOfA;
 }
 
-function isGrandparentGrandchild(a, b) {
+function isGrandparentGrandchild(a: RelatedCat, b: RelatedCat): boolean {
 	const aGrandparents = getGrandparentNames(a);
 	const bGrandparents = getGrandparentNames(b);
 	const aName = normalizeLineageName(a.name);
@@ -149,23 +168,23 @@ function isGrandparentGrandchild(a, b) {
 	return bGrandparents.includes(aName) || aGrandparents.includes(bName);
 }
 
-function isSibling(a, b) {
+function isSibling(a: RelatedCat, b: RelatedCat): boolean {
 	return hasOverlap(getParentNames(a), getParentNames(b));
 }
 
-function isFullSibling(a, b) {
+function isFullSibling(a: RelatedCat, b: RelatedCat): boolean {
 	const aParents = getParentNames(a);
 	const bParents = getParentNames(b);
 	if (aParents.length < 2 || bParents.length < 2) return false;
 	const aSet = new Set(aParents);
-	return bParents.every((p) => aSet.has(p));
+	return bParents.every((parent) => aSet.has(parent));
 }
 
-function isRelated(a, b) {
+function isRelated(a: RelatedCat, b: RelatedCat): boolean {
 	return hasOverlap(getAncestorNames(a), getAncestorNames(b));
 }
 
-function isUncleAunt(a, b) {
+function isUncleAunt(a: RelatedCat, b: RelatedCat): boolean {
 	const aParents = getParentNames(a);
 	const bParents = getParentNames(b);
 	const aGrandparents = getGrandparentNames(a);
@@ -173,27 +192,26 @@ function isUncleAunt(a, b) {
 	return hasOverlap(aParents, bGrandparents) || hasOverlap(bParents, aGrandparents);
 }
 
-function getUncleAuntLabel(hovCat, other) {
+function getUncleAuntLabel(hovCat: RelatedCat, other: RelatedCat): string {
 	const hovParents = getParentNames(hovCat);
 	const otherGrandparents = getGrandparentNames(other);
-	const sex = other.sex?.toLowerCase();
-	// If hovCat's parent is in other's grandparents, hovCat is the uncle/aunt → other is nephew/niece
+	const sex = String(other.sex || '').toLowerCase();
+
 	if (hasOverlap(hovParents, otherGrandparents)) {
 		if (sex === 'female') return 'niece';
 		if (sex === 'male') return 'nephew';
 		return 'nephew/niece';
 	}
-	// Otherwise other is the uncle/aunt
 	if (sex === 'female') return 'aunt';
 	if (sex === 'male') return 'uncle';
 	return 'uncle/aunt';
 }
 
-function getFamilySummary(cats) {
-	const siblingCats = new Set();
-	const parentChildCats = new Set();
-	const grandparentChildCats = new Set();
-	const distantCats = new Set();
+function getFamilySummary(cats: RelatedCat[]): FamilySummary {
+	const siblingCats = new Set<string>();
+	const parentChildCats = new Set<string>();
+	const grandparentChildCats = new Set<string>();
+	const distantCats = new Set<string>();
 
 	for (let i = 0; i < cats.length; i++) {
 		const a = cats[i];
@@ -241,29 +259,32 @@ function getFamilySummary(cats) {
 	};
 }
 
-function canBreed(a, b) {
+function canBreed(a: RelatedCat, b: RelatedCat): boolean {
 	if (!a || !b || getCatId(a) === getCatId(b)) return false;
-	const sa = a.sex?.toLowerCase();
-	const sb = b.sex?.toLowerCase();
+	const sa = String(a.sex || '').toLowerCase();
+	const sb = String(b.sex || '').toLowerCase();
 	if (!sa || !sb) return false;
 	if (sa === 'herm' || sb === 'herm') return true;
 	return sa !== sb;
 }
 
-function kinship(x, y, lookup, memo) {
+function kinship(
+	x: RelatedCat,
+	y: RelatedCat,
+	lookup: Map<string, RelatedCat>,
+	memo: Map<string, number>
+): number {
 	if (!x || !y) return 0;
 
 	const nameX = normalizeLineageName(x.name);
 	const nameY = normalizeLineageName(y.name);
 
-	// Normalize order: older cat first (lower birthday = older)
-	// If birthdays are equal or missing, use alphabetical as tiebreaker
 	const bx = getCatBirthday(x) ?? Infinity;
 	const by = getCatBirthday(y) ?? Infinity;
-	let first = x,
-		second = y,
-		keyA = nameX,
-		keyB = nameY;
+	let first = x;
+	let second = y;
+	let keyA = nameX;
+	let keyB = nameY;
 	if (by < bx || (by === bx && nameY < nameX)) {
 		first = y;
 		second = x;
@@ -271,8 +292,6 @@ function kinship(x, y, lookup, memo) {
 		keyB = nameX;
 	}
 
-	// When birthdays are tied/missing, prefer the cat with more known ancestors
-	// as "second" (descendant) since we recurse through second's parents
 	if (bx === by) {
 		const firstAncestors = getAncestorNames(first).length;
 		const secondAncestors = getAncestorNames(second).length;
@@ -287,27 +306,24 @@ function kinship(x, y, lookup, memo) {
 	}
 
 	const key = `${keyA}|${keyB}`;
-	if (memo.has(key)) return memo.get(key);
+	if (memo.has(key)) return memo.get(key) || 0;
 
-	// Prevent infinite recursion while computing
 	memo.set(key, 0);
 
-	let result;
+	let result: number;
 	if (keyA === keyB) {
-		// Self-kinship: ψ(x,x) = 0.5(1 + f_x)
 		const mother = lookup.get(normalizeLineageName(getCatGenealogyValue(first, 'parent1')));
 		const father = lookup.get(normalizeLineageName(getCatGenealogyValue(first, 'parent2')));
 		if (mother && father) {
 			result = 0.5 * (1 + kinship(mother, father, lookup, memo));
 		} else {
-			result = 0.5; // Founder: assume not inbred
+			result = 0.5;
 		}
 	} else {
-		// ψ(x,y) = 0.5(ψ(x, φ(y)) + ψ(x, ρ(y)))
 		const motherY = lookup.get(normalizeLineageName(getCatGenealogyValue(second, 'parent1')));
 		const fatherY = lookup.get(normalizeLineageName(getCatGenealogyValue(second, 'parent2')));
 		if (!motherY && !fatherY) {
-			result = 0; // y is a founder, unrelated
+			result = 0;
 		} else {
 			result = 0;
 			if (motherY) result += 0.5 * kinship(first, motherY, lookup, memo);
@@ -319,16 +335,24 @@ function kinship(x, y, lookup, memo) {
 	return result;
 }
 
-function createKinshipContext(allCats) {
-	return { lookup: buildCatLookup(allCats), memo: new Map() };
+function createKinshipContext(allCats: RelatedCat[]): RelationKinshipContext {
+	return { lookup: buildCatLookup(allCats), memo: new Map<string, number>() };
 }
 
-function getInbreedingCoefficient(catX, catY, allCats, ctx) {
+function getInbreedingCoefficient(
+	catX: RelatedCat,
+	catY: RelatedCat,
+	allCats: RelatedCat[],
+	ctx?: RelationKinshipContext
+): number {
 	const { lookup, memo } = ctx || createKinshipContext(allCats);
 	return kinship(catX, catY, lookup, memo);
 }
 
-function getRoomInbreedingStats(roomCats, allCats) {
+function getRoomInbreedingStats(
+	roomCats: RelatedCat[],
+	allCats: RelatedCat[]
+): RoomInbreedingStats {
 	const ctx = createKinshipContext(allCats);
 	let totalPairs = 0;
 	let riskyPairs = 0;

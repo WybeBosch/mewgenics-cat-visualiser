@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { InbreedingTable } from '../../../../../../shared/common/InbreedingTable/InbreedingTable.tsx';
 import { Pill } from '../../../../../../shared/common/Pill/Pill.tsx';
 import { getCatId } from '../../../../../../shared/utils/catDataUtils.ts';
+import type { CatRecord } from '../../../../../../AppLogic.types.ts';
 import './SvgRelationWarnings.css';
 
 import {
@@ -11,29 +12,39 @@ import {
 	isRelated,
 	isSibling,
 	normalizeLineageName,
-} from '../SvgRelationLogic.jsx';
+} from '../SvgRelationLogic.tsx';
 
-function getCatKey(cat, index) {
-	return getCatId(cat, `${cat.name || 'Unknown'}-${index}`);
+type WarningRow = {
+	key: string;
+	name: string;
+	label: string;
+};
+
+function getCatKey(cat: CatRecord, index: number): string {
+	return getCatId(cat, `${String(cat.name || 'Unknown')}-${index}`);
 }
 
-function getCatDisplayName(cat) {
+function getCatDisplayName(cat: CatRecord): string {
 	const name = String(cat?.name || '').trim();
 	return name || 'Unknown cat';
 }
 
-function addRelatedName(relatedMap, key, relatedName) {
+function addRelatedName(relatedMap: Map<string, Set<string>>, key: string, relatedName: string) {
 	if (!relatedMap.has(key)) {
 		relatedMap.set(key, new Set());
 	}
-	relatedMap.get(key).add(relatedName);
+	relatedMap.get(key)?.add(relatedName);
 }
 
-function toSortedRows(catMap, keySet, roleMap) {
+function toSortedRows(
+	catMap: Map<string, string>,
+	keySet: Set<string>,
+	roleMap?: Map<string, Set<string>>
+): WarningRow[] {
 	return [...keySet]
 		.map((key) => {
-			const name = catMap.get(key);
-			const roles = roleMap?.get(key) || new Set();
+			const name = catMap.get(key) || '';
+			const roles = roleMap?.get(key) || new Set<string>();
 			const isParent = roles.has('parent');
 			const isChild = roles.has('child');
 			const prefix = `${isParent ? '🤰' : ''}${isChild ? '👶' : ''}`;
@@ -48,8 +59,8 @@ function toSortedRows(catMap, keySet, roleMap) {
 		.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
 }
 
-function toSortedRelatedLookup(relatedMap) {
-	const lookup = new Map();
+function toSortedRelatedLookup(relatedMap: Map<string, Set<string>>): Map<string, string[]> {
+	const lookup = new Map<string, string[]>();
 
 	for (const [key, values] of relatedMap.entries()) {
 		lookup.set(
@@ -61,7 +72,7 @@ function toSortedRelatedLookup(relatedMap) {
 	return lookup;
 }
 
-function getParentChildDirection(a, b) {
+function getParentChildDirection(a: CatRecord, b: CatRecord) {
 	const aParents = getParentNames(a);
 	const bParents = getParentNames(b);
 	const aName = normalizeLineageName(a.name);
@@ -73,19 +84,19 @@ function getParentChildDirection(a, b) {
 	};
 }
 
-function getWarningBuckets(cats = []) {
-	const catMap = new Map();
+function getWarningBuckets(cats: CatRecord[] = []) {
+	const catMap = new Map<string, string>();
 	cats.forEach((cat, index) => {
 		catMap.set(getCatKey(cat, index), getCatDisplayName(cat));
 	});
 
-	const siblings = new Set();
-	const parentChild = new Set();
-	const distantlyRelated = new Set();
-	const parentChildRoles = new Map();
-	const siblingRelatedMap = new Map();
-	const parentChildRelatedMap = new Map();
-	const distantlyRelatedMap = new Map();
+	const siblings = new Set<string>();
+	const parentChild = new Set<string>();
+	const distantlyRelated = new Set<string>();
+	const parentChildRoles = new Map<string, Set<string>>();
+	const siblingRelatedMap = new Map<string, Set<string>>();
+	const parentChildRelatedMap = new Map<string, Set<string>>();
+	const distantlyRelatedMap = new Map<string, Set<string>>();
 
 	for (let i = 0; i < cats.length; i++) {
 		const a = cats[i];
@@ -105,12 +116,12 @@ function getWarningBuckets(cats = []) {
 					if (!parentChildRoles.has(aKey)) {
 						parentChildRoles.set(aKey, new Set());
 					}
-					parentChildRoles.get(aKey).add('parent');
+					parentChildRoles.get(aKey)?.add('parent');
 
 					if (!parentChildRoles.has(bKey)) {
 						parentChildRoles.set(bKey, new Set());
 					}
-					parentChildRoles.get(bKey).add('child');
+					parentChildRoles.get(bKey)?.add('child');
 
 					addRelatedName(parentChildRelatedMap, aKey, `👶 ${catMap.get(bKey)}`);
 					addRelatedName(parentChildRelatedMap, bKey, `🤰 ${catMap.get(aKey)}`);
@@ -120,12 +131,12 @@ function getWarningBuckets(cats = []) {
 					if (!parentChildRoles.has(bKey)) {
 						parentChildRoles.set(bKey, new Set());
 					}
-					parentChildRoles.get(bKey).add('parent');
+					parentChildRoles.get(bKey)?.add('parent');
 
 					if (!parentChildRoles.has(aKey)) {
 						parentChildRoles.set(aKey, new Set());
 					}
-					parentChildRoles.get(aKey).add('child');
+					parentChildRoles.get(aKey)?.add('child');
 
 					addRelatedName(parentChildRelatedMap, bKey, `👶 ${catMap.get(aKey)}`);
 					addRelatedName(parentChildRelatedMap, aKey, `🤰 ${catMap.get(bKey)}`);
@@ -137,16 +148,16 @@ function getWarningBuckets(cats = []) {
 			if (isSibling(a, b)) {
 				siblings.add(aKey);
 				siblings.add(bKey);
-				addRelatedName(siblingRelatedMap, aKey, catMap.get(bKey));
-				addRelatedName(siblingRelatedMap, bKey, catMap.get(aKey));
+				addRelatedName(siblingRelatedMap, aKey, String(catMap.get(bKey) || ''));
+				addRelatedName(siblingRelatedMap, bKey, String(catMap.get(aKey) || ''));
 				continue;
 			}
 
 			if (isRelated(a, b)) {
 				distantlyRelated.add(aKey);
 				distantlyRelated.add(bKey);
-				addRelatedName(distantlyRelatedMap, aKey, catMap.get(bKey));
-				addRelatedName(distantlyRelatedMap, bKey, catMap.get(aKey));
+				addRelatedName(distantlyRelatedMap, aKey, String(catMap.get(bKey) || ''));
+				addRelatedName(distantlyRelatedMap, bKey, String(catMap.get(aKey) || ''));
 			}
 		}
 	}
@@ -177,6 +188,16 @@ function WarningPill({
 	onOpen,
 	onClose,
 	popupTitle,
+}: {
+	categoryKey: string;
+	count: number;
+	label: string;
+	rows: WarningRow[];
+	relatedLookup: Map<string, string[]>;
+	isOpen: boolean;
+	onOpen: (value: string) => void;
+	onClose: () => void;
+	popupTitle: string;
 }) {
 	const [hoveredRowKey, setHoveredRowKey] = useState('');
 
@@ -240,12 +261,18 @@ function WarningPill({
 	);
 }
 
-function formatPct(value) {
+function formatPct(value: number): number {
 	const pct = value * 100;
 	return Number.isInteger(pct) ? pct : parseFloat(pct.toFixed(2));
 }
 
-function SvgRelationWarnings({ cats = [], allCats = [] }) {
+function SvgRelationWarnings({
+	cats = [],
+	allCats = [],
+}: {
+	cats?: CatRecord[];
+	allCats?: CatRecord[];
+}) {
 	const [hoveredCategory, setHoveredCategory] = useState('');
 	const warningBuckets = useMemo(() => getWarningBuckets(cats), [cats]);
 	const roomStats = useMemo(() => getRoomInbreedingStats(cats, allCats), [cats, allCats]);

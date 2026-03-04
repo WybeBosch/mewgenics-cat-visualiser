@@ -11,10 +11,22 @@ import {
 	isUncleAunt,
 	getUncleAuntLabel,
 	normalizeLineageName,
-} from './SvgRelationLogic.jsx';
+} from './SvgRelationLogic.tsx';
 import { joinClass } from '../../../../../shared/utils/utils.jsx';
+import type { GraphPosition, HiddenLineTypes } from '../../../RelationshipGraph.types.ts';
+import type { CatRecord } from '../../../../../AppLogic.types.ts';
 
-export default function SvgRelationLines({ hovIdx, ordered, positions, hiddenLineTypes }) {
+export default function SvgRelationLines({
+	hovIdx,
+	ordered,
+	positions,
+	hiddenLineTypes,
+}: {
+	hovIdx: number | null;
+	ordered: CatRecord[];
+	positions: GraphPosition[];
+	hiddenLineTypes: HiddenLineTypes;
+}) {
 	return (
 		<g className="relation-lines">
 			<defs>
@@ -30,7 +42,6 @@ export default function SvgRelationLines({ hovIdx, ordered, positions, hiddenLin
 					<path d="M 0 0 L 10 5 L 0 10 z" className="arrow-related" />
 				</marker>
 			</defs>
-			{/* (shared lineage, nodes) */}
 			{hovIdx !== null &&
 				(() => {
 					const hovCat = ordered[hovIdx];
@@ -38,15 +49,16 @@ export default function SvgRelationLines({ hovIdx, ordered, positions, hiddenLin
 					return ordered.map((other, oi) => {
 						if (oi === hovIdx) return null;
 						if (!isSameRoom(hovCat, other)) return null;
-						const from = positions[hovIdx],
-							to = positions[oi];
+						const from = positions[hovIdx];
+						const to = positions[oi];
 						const hovIsParent = getParentNames(other).includes(
 							normalizeLineageName(hovCat.name)
 						);
 						if (isParentChild(hovCat, other)) {
-							if (!isLineTypeActive(hiddenLineTypes, 'parent')) return null;
-							// Draw line from parent to child, and add emoji at each end
-							let parentPos, childPos;
+							if (!isLineTypeActive(hiddenLineTypes as Set<string>, 'parent'))
+								return null;
+							let parentPos;
+							let childPos;
 							if (hovIsParent) {
 								parentPos = from;
 								childPos = to;
@@ -74,7 +86,6 @@ export default function SvgRelationLines({ hovIdx, ordered, positions, hiddenLin
 										strokeWidth={3}
 										opacity={0.6}
 									/>
-									{/* Pregnant emoji at parent end */}
 									<text
 										x={parentPos.x + dx * ((nodeR + emojiPad - 8) / dist)}
 										y={parentPos.y + dy * ((nodeR + emojiPad - 8) / dist) + 8}
@@ -85,7 +96,6 @@ export default function SvgRelationLines({ hovIdx, ordered, positions, hiddenLin
 									>
 										🤰
 									</text>
-									{/* Baby emoji at child end - smaller and further from node */}
 									<text
 										x={childPos.x - dx * ((nodeR + 20) / dist)}
 										y={childPos.y - dy * ((nodeR + 20) / dist) + 8}
@@ -110,11 +120,14 @@ export default function SvgRelationLines({ hovIdx, ordered, positions, hiddenLin
 							);
 						}
 						if (isGrandparentGrandchild(hovCat, other)) {
-							if (!isLineTypeActive(hiddenLineTypes, 'grandparent')) return null;
+							if (!isLineTypeActive(hiddenLineTypes as Set<string>, 'grandparent')) {
+								return null;
+							}
 							const hovIsGrandparent = getGrandparentNames(other).includes(
 								normalizeLineageName(hovCat.name)
 							);
-							let grandparentPos, grandchildPos;
+							let grandparentPos;
+							let grandchildPos;
 							if (hovIsGrandparent) {
 								grandparentPos = from;
 								grandchildPos = to;
@@ -184,8 +197,18 @@ export default function SvgRelationLines({ hovIdx, ordered, positions, hiddenLin
 						const shared = hovAnc.filter((a) => otherAnc.includes(a));
 						if (shared.length === 0) return null;
 						const sibling = isSibling(hovCat, other);
-						if (sibling && !isLineTypeActive(hiddenLineTypes, 'sibling')) return null;
-						if (!sibling && !isLineTypeActive(hiddenLineTypes, 'related')) return null;
+						if (
+							sibling &&
+							!isLineTypeActive(hiddenLineTypes as Set<string>, 'sibling')
+						) {
+							return null;
+						}
+						if (
+							!sibling &&
+							!isLineTypeActive(hiddenLineTypes as Set<string>, 'related')
+						) {
+							return null;
+						}
 						return (
 							<g
 								key={`kin-${oi}`}

@@ -4,7 +4,9 @@ import {
 	getInbreedingCoefficient,
 	isLineTypeActive,
 	isSameRoom,
-} from './SvgRelationLogic.jsx';
+} from './SvgRelationLogic.tsx';
+import type { GraphPosition, HiddenLineTypes } from '../../../RelationshipGraph.types.ts';
+import type { CatRecord } from '../../../../../AppLogic.types.ts';
 
 export default function SvgInbreedingPercentages({
 	hovIdx,
@@ -12,9 +14,15 @@ export default function SvgInbreedingPercentages({
 	positions,
 	hiddenLineTypes,
 	allCats,
+}: {
+	hovIdx: number | null;
+	ordered: CatRecord[];
+	positions: GraphPosition[];
+	hiddenLineTypes: HiddenLineTypes;
+	allCats: CatRecord[];
 }) {
 	if (hovIdx === null) return null;
-	if (!isLineTypeActive(hiddenLineTypes, 'inbreeding')) return null;
+	if (!isLineTypeActive(hiddenLineTypes as Set<string>, 'inbreeding')) return null;
 
 	const hovCat = ordered[hovIdx];
 	const ctx = createKinshipContext(allCats);
@@ -37,7 +45,7 @@ export default function SvgInbreedingPercentages({
 						<text
 							className="kin-label"
 							x={to.x}
-							y={to.y - to.nodeR - 6}
+							y={to.y - (to.nodeR || 28) - 6}
 							textAnchor="middle"
 							fontSize={hasRisk ? 11 : 9}
 							fontWeight={hasRisk ? 'bold' : 'normal'}

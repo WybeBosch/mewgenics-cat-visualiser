@@ -1,27 +1,41 @@
 import { sharedTooltipContents } from '../../../../../shared/utils/utils.jsx';
+import type { GraphPosition } from '../../../RelationshipGraph.types.ts';
+import type { CatRecord } from '../../../../../AppLogic.types.ts';
 
-export default function Tooltip({ allCats, selIdx, ordered, positions, W }) {
+export default function Tooltip({
+	allCats,
+	selIdx,
+	ordered,
+	positions,
+	W,
+}: {
+	allCats: CatRecord[];
+	selIdx: number | null;
+	ordered: CatRecord[];
+	positions: GraphPosition[];
+	W: number;
+}) {
 	if (selIdx === null || !ordered || !positions || !ordered[selIdx] || !positions[selIdx]) {
 		return <></>;
 	}
 
 	const cat = ordered[selIdx];
 	const pos = positions[selIdx];
-	const buildTooltip = (cat) => sharedTooltipContents(cat, allCats);
+	const buildTooltip = (sourceCat: CatRecord) => sharedTooltipContents(sourceCat, allCats);
 	const lines = buildTooltip(cat);
 
-	// Tooltip positioning and sizing logic
-	const getTooltipProps = (cat, pos, lines) => {
+	const getTooltipProps = (sourcePos: GraphPosition, sourceLines: typeof lines) => {
 		const tipW = 220;
-		const tipH = 20 + lines.length * 22;
-		let tx = pos.x - tipW / 2;
-		let ty = pos.y - 40 - tipH;
-		if (ty < 5) ty = pos.y + 38;
+		const tipH = 20 + sourceLines.length * 22;
+		let tx = sourcePos.x - tipW / 2;
+		let ty = sourcePos.y - 40 - tipH;
+		if (ty < 5) ty = sourcePos.y + 38;
 		if (tx < 5) tx = 5;
 		if (tx + tipW > W - 5) tx = W - tipW - 5;
 		return { tipW, tipH, tx, ty };
 	};
-	const { tipW, tipH, tx, ty } = getTooltipProps(cat, pos, lines);
+
+	const { tipW, tipH, tx, ty } = getTooltipProps(pos, lines);
 
 	return (
 		<g>
@@ -43,7 +57,7 @@ export default function Tooltip({ allCats, selIdx, ordered, positions, W }) {
 				fontSize={12}
 				fontWeight={700}
 			>
-				{cat.name}
+				{String(cat.name || '')}
 			</text>
 			{lines.map((line, li) => (
 				<g key={li}>

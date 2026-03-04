@@ -1,8 +1,27 @@
 import { InbreedingTable } from '../../../../shared/common/InbreedingTable/InbreedingTable.tsx';
+import type { HiddenLineType, HiddenLineTypes } from '../../RelationshipGraph.types.ts';
 import './RelationshipLegendBar.css';
 
-function RelationshipLegendBar({ hiddenLineTypes, onToggle }) {
-	const renderToggleItem = ({ key, lineClassName, label, strokeWidth, strokeDasharray }) => (
+function RelationshipLegendBar({
+	hiddenLineTypes,
+	onToggle,
+}: {
+	hiddenLineTypes: HiddenLineTypes;
+	onToggle: (type: HiddenLineType | string) => void;
+}) {
+	const renderToggleItem = ({
+		key,
+		lineClassName,
+		label,
+		strokeWidth,
+		strokeDasharray,
+	}: {
+		key: HiddenLineType | string;
+		lineClassName: string;
+		label: string;
+		strokeWidth: number;
+		strokeDasharray?: string;
+	}) => (
 		<span className="item" key={key}>
 			<button
 				type="button"
