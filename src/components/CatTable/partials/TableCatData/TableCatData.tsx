@@ -1,29 +1,36 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { TableCatDataLogic } from './TableCatDataLogic.jsx';
-import { TableHead } from './partials/TableHead/TableHead.jsx';
-import { TableBody } from './partials/TableBody/TableBody.jsx';
+import type { PointerEvent as ReactPointerEvent } from 'react';
+import { TableCatDataLogic } from './TableCatDataLogic.tsx';
+import { TableHead } from './partials/TableHead/TableHead.tsx';
+import { TableBody } from './partials/TableBody/TableBody.tsx';
 import { getCatId } from '../../../../shared/utils/catDataUtils.ts';
+import type { TableCatDataProps } from './TableCatData.types.ts';
 import './TableCatData.css';
 
 const MIN_VISIBLE_ROWS = 4;
 
-function parseCssPx(value, fallback) {
+type ResizeState = {
+	startY: number;
+	startHeight: number;
+};
+
+function parseCssPx(value: string, fallback: number): number {
 	const parsedValue = Number.parseFloat(value);
 	return Number.isFinite(parsedValue) ? parsedValue : fallback;
 }
 
-function getDefaultRowCount() {
-	const h = window.innerHeight;
-	if (h <= 900) return 4;
-	if (h <= 1000) return 5;
-	if (h <= 1080) return 6;
-	if (h <= 1200) return 8;
+function getDefaultRowCount(): number {
+	const height = window.innerHeight;
+	if (height <= 900) return 4;
+	if (height <= 1000) return 5;
+	if (height <= 1080) return 6;
+	if (height <= 1200) return 8;
 	return 9;
 }
 
-function computeTableHeightForRows(container, rowCount) {
+function computeTableHeightForRows(container: HTMLElement, rowCount: number): number {
 	const styles = window.getComputedStyle(container);
-	const get = (prop) => parseCssPx(styles.getPropertyValue(prop), 0);
+	const get = (property: string) => parseCssPx(styles.getPropertyValue(property), 0);
 
 	const rowHeight =
 		get('--table-row-font-size') * get('--table-row-line-height') +
@@ -40,6 +47,11 @@ function computeTableHeightForRows(container, rowCount) {
 	return headerHeight + rowHeight * rowCount - 6 + handleHeight;
 }
 
+function toName(value: unknown): string {
+	if (value === null || value === undefined) return '';
+	return String(value);
+}
+
 export function TableCatData({
 	cats,
 	activeRoom,
@@ -53,32 +65,35 @@ export function TableCatData({
 	totalStat,
 	statFilters,
 	setStatFilter,
-}) {
-	const tableContainerRef = useRef(null);
-	const tableRef = useRef(null);
-	const resizeHandleRef = useRef(null);
-	const resizeStateRef = useRef(null);
-	const activeHandlersRef = useRef(null);
-	const userPreferredHeightRef = useRef(null);
-	const searchTimerRef = useRef(null);
+}: TableCatDataProps) {
+	const tableContainerRef = useRef<HTMLElement | null>(null);
+	const tableRef = useRef<HTMLTableElement | null>(null);
+	const resizeHandleRef = useRef<HTMLDivElement | null>(null);
+	const resizeStateRef = useRef<ResizeState | null>(null);
+	const activeHandlersRef = useRef<{
+		move: (event: PointerEvent) => void;
+		stop: () => void;
+	} | null>(null);
+	const userPreferredHeightRef = useRef<number | null>(null);
+	const searchTimerRef = useRef<number | null>(null);
 
 	const [searchQuery, setSearchQuery] = useState('');
-	const [highlightedCatId, setHighlightedCatId] = useState(null);
+	const [highlightedCatId, setHighlightedCatId] = useState<string | number | null>(null);
 
 	const { columns, isPartnerInOtherRoom } = TableCatDataLogic({ cats });
 
-	const normalize = (str) => (str || '').toLowerCase().replace(/\s+/g, ' ').trim();
+	const normalize = (text: string) => text.toLowerCase().replace(/\s+/g, ' ').trim();
 
 	const executeSearch = useCallback(
-		(query) => {
-			const normalizedQuery = normalize(query);
+		(query: string) => {
+			const normalizedQuery = normalize(query || '');
 			if (!normalizedQuery) {
 				setHighlightedCatId(null);
 				return;
 			}
 
 			const currentRoomMatch = sorted.find((cat) =>
-				normalize(cat.name).includes(normalizedQuery)
+				normalize(toName(cat.name)).includes(normalizedQuery)
 			);
 
 			if (currentRoomMatch) {
@@ -89,7 +104,7 @@ export function TableCatData({
 			const fallbackMatch = cats.find((cat) => {
 				if (cat.room === activeRoom) return false;
 
-				const normalizedName = normalize(cat.name);
+				const normalizedName = normalize(toName(cat.name));
 				if (normalizedName === normalizedQuery) return true;
 
 				const nameParts = normalizedName.split(' ');
@@ -110,17 +125,17 @@ export function TableCatData({
 	);
 
 	const handleSearchChange = useCallback(
-		(query) => {
+		(query: string) => {
 			setSearchQuery(query);
-			if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
-			searchTimerRef.current = setTimeout(() => executeSearch(query), 500);
+			if (searchTimerRef.current !== null) window.clearTimeout(searchTimerRef.current);
+			searchTimerRef.current = window.setTimeout(() => executeSearch(query), 500);
 		},
 		[executeSearch]
 	);
 
 	const handleSearchSubmit = useCallback(
-		(query) => {
-			if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+		(query: string) => {
+			if (searchTimerRef.current !== null) window.clearTimeout(searchTimerRef.current);
 			executeSearch(query);
 		},
 		[executeSearch]
@@ -128,19 +143,19 @@ export function TableCatData({
 
 	useEffect(() => {
 		return () => {
-			if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+			if (searchTimerRef.current !== null) window.clearTimeout(searchTimerRef.current);
 		};
 	}, []);
 
-	const getHeightBounds = useCallback((tableContainer) => {
+	const getHeightBounds = useCallback((tableContainer: HTMLElement) => {
 		const computedStyles = window.getComputedStyle(tableContainer);
 		const preferredMinHeight = computeTableHeightForRows(tableContainer, MIN_VISIBLE_ROWS);
 		const viewportMaxHeight = parseCssPx(computedStyles.maxHeight, Number.POSITIVE_INFINITY);
 
-		const tableEl = tableRef.current;
+		const tableElement = tableRef.current;
 		const resizeHandle = resizeHandleRef.current;
-		const contentHeight = tableEl
-			? tableEl.getBoundingClientRect().height
+		const contentHeight = tableElement
+			? tableElement.getBoundingClientRect().height
 			: Number.POSITIVE_INFINITY;
 		const handleHeight = resizeHandle ? resizeHandle.getBoundingClientRect().height : 0;
 		const borderBottom = parseCssPx(computedStyles.borderBottomWidth, 0);
@@ -155,7 +170,7 @@ export function TableCatData({
 	}, []);
 
 	const handleResizeMove = useCallback(
-		(event) => {
+		(event: PointerEvent) => {
 			const tableContainer = tableContainerRef.current;
 			const resizeState = resizeStateRef.current;
 
@@ -191,7 +206,7 @@ export function TableCatData({
 	}, []);
 
 	const handleResizeStart = useCallback(
-		(event) => {
+		(event: ReactPointerEvent<HTMLDivElement>) => {
 			if (event.button !== 0) return;
 
 			event.preventDefault();
@@ -244,7 +259,6 @@ export function TableCatData({
 
 	return (
 		<>
-			{/* Table */}
 			<section className="table-cat-data" aria-label="Cats table" ref={tableContainerRef}>
 				<div className="table-scroll">
 					<table className="table" ref={tableRef}>
