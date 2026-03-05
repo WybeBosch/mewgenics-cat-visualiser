@@ -1,4 +1,4 @@
-import { STAT_ICONS, STATS, OTHER_INFO_ICONS } from '../../../../shared/config/config.ts';
+import { STAT_ICONS, STATS, OTHER_INFO_ICONS, PARTNER_ICONS } from '../../../../shared/config/config.ts';
 import { getCatId } from '../../../../shared/utils/catDataUtils.ts';
 import type { TableCatDataLogicParams, TableCatDataLogicResult } from './TableCatDataLogic.types.ts';
 
@@ -12,7 +12,7 @@ export function TableCatDataLogic({ cats }: TableCatDataLogicParams): TableCatDa
 		{ key: 'name', label: 'Name', tooltip: 'Cat name' },
 		{
 			key: 'partner-room',
-			label: '💞',
+			label: PARTNER_ICONS.partnerRoom,
 			isStatic: true,
 			tooltip:
 				'Matching partner in another room. Shows when this cat and another cat love each other, but they are currently in different rooms. A detective icon appears in this column for those separated matching partners.',
@@ -43,9 +43,9 @@ export function TableCatDataLogic({ cats }: TableCatDataLogicParams): TableCatDa
 		{ key: 'spacer', label: '', isStatic: true },
 	];
 
-	function isPartnerInOtherRoom(cat: { [key: string]: unknown; room: string }): boolean {
+	function getPartnerInOtherRoom(cat: { [key: string]: unknown; room: string }) {
 		const loves = toStringValue(cat.loves);
-		if (!loves) return false;
+		if (!loves) return null;
 
 		const catId = getCatId(cat);
 		const partner = cats.find((candidate) => {
@@ -54,11 +54,18 @@ export function TableCatDataLogic({ cats }: TableCatDataLogicParams): TableCatDa
 			return candidateName === loves || candidateId === loves;
 		});
 
-		if (!partner || !partner.room || partner.room === cat.room) return false;
+		if (!partner || !partner.room || partner.room === cat.room) return null;
 
 		const partnerLoves = toStringValue(partner.loves);
 		const catName = toStringValue(cat.name);
-		return partnerLoves === catName || partnerLoves === catId;
+		const isMutual = partnerLoves === catName || partnerLoves === catId;
+
+		if (!isMutual) return null;
+
+		return {
+			partnerName: toStringValue(partner.name),
+			partnerRoom: partner.room,
+		};
 	}
 
 	function getRowBg(isHovered: boolean, index: number): string {
@@ -89,7 +96,7 @@ export function TableCatDataLogic({ cats }: TableCatDataLogicParams): TableCatDa
 
 	return {
 		columns,
-		isPartnerInOtherRoom,
+		getPartnerInOtherRoom,
 		getRowBg,
 		getAgeStyle,
 		getStatStyle,

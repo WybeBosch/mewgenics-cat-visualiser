@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react';
 import type { CatId, CatRecord } from '../../../../../../AppLogic.types.ts';
-import type { TableColumn } from '../../TableCatDataLogic.types.ts';
+import type { PartnerRoomInfo, TableColumn } from '../../TableCatDataLogic.types.ts';
 
 export type NoCatsFoundWarningProps = {
 	columnsLength: number;
@@ -13,6 +13,7 @@ export type TableBodyProps = {
 	hoveredCatId: CatId | null;
 	setHoveredCatId: Dispatch<SetStateAction<CatId | null>>;
 	totalStat: (cat: CatRecord) => number;
-	isPartnerInOtherRoom: (cat: CatRecord) => boolean;
+	getPartnerInOtherRoom: (cat: CatRecord) => PartnerRoomInfo;
 	highlightedCatId: CatId | null;
+	onPartnerSearch: (partnerName: string) => void;
 };

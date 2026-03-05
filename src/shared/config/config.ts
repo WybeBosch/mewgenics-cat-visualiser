@@ -22,6 +22,11 @@ const OTHER_INFO_ICONS = {
 	hates: '⚔️',
 } as const;
 
+const PARTNER_ICONS = {
+	partnerRoom: '💞',
+	detective: '🕵️‍♂️',
+} as const;
+
 const SEX_ICON = { male: '♂', female: '♀', herm: '⚥' } as const;
 
 const CAT_ICON = {
@@ -46,4 +51,4 @@ const SECURITY_LIMITS = {
 	maxCatsProcessed: 5000,
 } as const;
 
-export { APP_EMOJIS, STAT_ICONS, STATS, SEX_ICON, OTHER_INFO_ICONS, CAT_ICON, SECURITY_LIMITS };
+export { APP_EMOJIS, STAT_ICONS, STATS, SEX_ICON, OTHER_INFO_ICONS, CAT_ICON, PARTNER_ICONS, SECURITY_LIMITS };

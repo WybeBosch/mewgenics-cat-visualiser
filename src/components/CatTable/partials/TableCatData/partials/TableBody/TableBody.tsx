@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { STATS, SEX_ICON, CAT_ICON } from '../../../../../../shared/config/config.ts';
+import { STATS, SEX_ICON, CAT_ICON, PARTNER_ICONS } from '../../../../../../shared/config/config.ts';
 import { TableTooltipPopup, joinClass } from '../../../../../../shared/utils/utils.tsx';
 import {
 	getAge,
@@ -42,8 +42,9 @@ export function TableBody({
 	hoveredCatId,
 	setHoveredCatId,
 	totalStat,
-	isPartnerInOtherRoom,
+	getPartnerInOtherRoom,
 	highlightedCatId,
+	onPartnerSearch,
 }: TableBodyProps) {
 	const noCatsFound = sorted.length === 0;
 	const highlightedRowRef = useRef<HTMLTableRowElement | null>(null);
@@ -91,7 +92,7 @@ export function TableBody({
 				const age = getAge(cat);
 				const isHovered = hoveredCatId === catId;
 				const isHighlighted = highlightedCatId === catId;
-				const partnerInOtherRoom = isPartnerInOtherRoom(cat);
+				const partnerInfo = getPartnerInOtherRoom(cat);
 
 				const iconValue = toIconValue(cat.icon);
 				const sexLabel = toIconValue(cat.sex);
@@ -112,7 +113,20 @@ export function TableBody({
 						onMouseLeave={() => setHoveredCatId(null)}
 					>
 						<TableTooltipPopup cat={cat} allCats={cats} />
-						<td className="cell partner-indicator">{partnerInOtherRoom ? '🕵️‍♂️' : ''}</td>
+						<td className="cell partner-indicator">
+						{partnerInfo ? (
+							<span
+								className="partner-detective"
+								title={`This cat's partner is in room ${partnerInfo.partnerRoom} and its partner's name is ${partnerInfo.partnerName}`}
+								onClick={() => onPartnerSearch(partnerInfo.partnerName)}
+								style={{ cursor: 'pointer' }}
+							>
+								{PARTNER_ICONS.detective}
+							</span>
+						) : (
+							''
+						)}
+					</td>
 						<td className="cell stray">
 							{getCatGenealogyValue(cat, 'stray') ? '✔' : ''}
 						</td>

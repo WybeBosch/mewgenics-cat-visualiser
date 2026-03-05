@@ -80,7 +80,7 @@ export function TableCatData({
 	const [searchQuery, setSearchQuery] = useState('');
 	const [highlightedCatId, setHighlightedCatId] = useState<string | number | null>(null);
 
-	const { columns, isPartnerInOtherRoom } = TableCatDataLogic({ cats });
+	const { columns, getPartnerInOtherRoom } = TableCatDataLogic({ cats });
 
 	const normalize = (text: string) => text.toLowerCase().replace(/\s+/g, ' ').trim();
 
@@ -137,6 +137,15 @@ export function TableCatData({
 		(query: string) => {
 			if (searchTimerRef.current !== null) window.clearTimeout(searchTimerRef.current);
 			executeSearch(query);
+		},
+		[executeSearch]
+	);
+
+	const handlePartnerSearch = useCallback(
+		(partnerName: string) => {
+			setSearchQuery(partnerName);
+			if (searchTimerRef.current !== null) window.clearTimeout(searchTimerRef.current);
+			executeSearch(partnerName);
 		},
 		[executeSearch]
 	);
@@ -280,8 +289,9 @@ export function TableCatData({
 							hoveredCatId={hoveredCatId}
 							setHoveredCatId={setHoveredCatId}
 							totalStat={totalStat}
-							isPartnerInOtherRoom={isPartnerInOtherRoom}
+							getPartnerInOtherRoom={getPartnerInOtherRoom}
 							highlightedCatId={highlightedCatId}
+							onPartnerSearch={handlePartnerSearch}
 						/>
 					</table>
 				</div>

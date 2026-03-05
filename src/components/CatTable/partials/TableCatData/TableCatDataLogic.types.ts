@@ -9,13 +9,18 @@ export type TableColumn = {
 	isStat?: boolean;
 };
 
+export type PartnerRoomInfo = {
+	partnerName: string;
+	partnerRoom: string;
+} | null;
+
 export type TableCatDataLogicParams = {
 	cats: CatRecord[];
 };
 
 export type TableCatDataLogicResult = {
 	columns: TableColumn[];
-	isPartnerInOtherRoom: (cat: CatRecord) => boolean;
+	getPartnerInOtherRoom: (cat: CatRecord) => PartnerRoomInfo;
 	getRowBg: (isHovered: boolean, index: number) => string;
 	getAgeStyle: (age: number | null) => CSSProperties;
 	getStatStyle: (value: number) => CSSProperties;
