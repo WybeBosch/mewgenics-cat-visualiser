@@ -2,7 +2,6 @@ TODO:
 
 - move more logic from the svg inside chunk functions
 - make the "hover over something" and it highlighting in the graph and the table work again
-- implement typescript
 - add global css variables for fontsize and fontweight
 - start scaling headings to be smaller on smaller screens
 - take care of the issue with the button bar that now falls outside the screen on small devices causing overflow issues.
@@ -13,11 +12,10 @@ TODO:
 
 - also start scraping the Actual stats not just the base stats and add checkmark somewhere in the table to toggle between em.
 
-- have some logic to easily identify strays in the house
 
-    -make a demo mode that moves the moves lol
+- make a demo mode that moves the moves lol
 
-- add support for mutations showing (Can use .json we save of the guy on mod site that had a json or python file with all mutations)
+- add support for mutations showing (Can use .json we save of the guy on mod site that had a json or python file with all mutations) (Work in progress)
 
 - try and use custom hooks more stuff like const { age, isKitten } = useCatAge(cat);
 
@@ -30,3 +28,5 @@ https://atomicdesign.bradfrost.com/
 - fix add gif's to the readme of features we have
 
 - move more css into variables especially if they share the same values.
+
+- make the svg tooltip also use the generic component using foreign dom element in svg or something.
